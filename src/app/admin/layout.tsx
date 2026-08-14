@@ -37,6 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', label: 'Métricas Globales', icon: LayoutDashboard, exact: true },
     { href: '/admin/solicitudes', label: 'Solicitudes Pendientes', icon: CheckSquare },
     { href: '/admin/negocios', label: 'Gestión de Emprendimientos', icon: Building2 },
+    { href: '/admin/usuarios', label: 'Gestión de Usuarios & Cuentas', icon: Users },
   ];
 
   return (
@@ -46,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-black uppercase tracking-wider bg-red-600 text-white px-2 py-0.5 rounded-full">
-              Panel Administrativo
+              Panel Administrativo RapiNorte
             </span>
             <span className="text-xs text-red-200 font-semibold flex items-center gap-1">
               <Shield className="w-3.5 h-3.5 text-uninorte-red" />
@@ -54,10 +55,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Gestión Central Uninorte Emprende
+            Gestión Central RapiNorte Campus
           </h1>
           <p className="text-xs text-gray-300 mt-1">
-            Aprobación de negocios estudiantiles, supervisión de métricas y cumplimiento de normas
+            Eliminación y aprobación de negocios, moderación de cuentas de usuario y supervisión de métricas
           </p>
         </div>
 
