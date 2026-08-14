@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { OrderDetail, OrderStatus } from '@/types';
 import { formatPrice, formatShortDate } from '@/lib/utils';
@@ -16,9 +16,6 @@ import {
   RefreshCw,
   ArrowRight,
   CheckCircle,
-  Navigation,
-  Smartphone,
-  Sparkles,
 } from 'lucide-react';
 
 export default function EmprendedorPedidosPage() {
@@ -27,12 +24,6 @@ export default function EmprendedorPedidosPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-
-  // Estado de transmisión GPS del celular del repartidor
-  const [activeTrackingOrderId, setActiveTrackingOrderId] = useState<string | null>(null);
-  const [currentGps, setCurrentGps] = useState<{ lat: number; lng: number } | null>(null);
-  const [gpsError, setGpsError] = useState<string | null>(null);
-  const watchIdRef = useRef<number | null>(null);
 
   const fetchOrders = async (showRefresh = false) => {
     try {
@@ -57,70 +48,6 @@ export default function EmprendedorPedidosPage() {
       return () => clearInterval(interval);
     }
   }, [user]);
-
-  // Transmisión de ubicación GPS del celular del repartidor
-  const toggleGpsBroadcast = (orderId: string) => {
-    if (activeTrackingOrderId === orderId) {
-      // Detener transmisión
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = null;
-      }
-      setActiveTrackingOrderId(null);
-      setCurrentGps(null);
-      return;
-    }
-
-    if (!navigator.geolocation) {
-      setGpsError('Tu navegador no soporta geolocalización GPS.');
-      return;
-    }
-
-    setGpsError(null);
-    setActiveTrackingOrderId(orderId);
-
-    // Iniciar rastreo con alta precisión
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        setCurrentGps({ lat, lng });
-
-        try {
-          await fetch(`/api/orders/${orderId}/status`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              estado: 'EN_CAMINO',
-              repartidorLat: lat,
-              repartidorLng: lng,
-              ubicacionRepartidorNombre: `Repartidor en movimiento (Precisión: ${Math.round(pos.coords.accuracy)}m)`,
-            }),
-          });
-        } catch (err) {
-          console.error('Error enviando coordenadas GPS:', err);
-        }
-      },
-      (err) => {
-        console.error('Error obteniendo GPS:', err);
-        setGpsError('No se pudo acceder al GPS. Asegúrate de dar permisos de ubicación.');
-        setActiveTrackingOrderId(null);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
-  };
-
-  useEffect(() => {
-    return () => {
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-      }
-    };
-  }, []);
 
   const updateOrderStatus = async (orderId: string, nuevoEstado: OrderStatus) => {
     try {
@@ -153,11 +80,11 @@ export default function EmprendedorPedidosPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
-            <span>Gestor de Pedidos y GPS RapiNorte</span>
+            <span>Gestor de Pedidos en Vivo</span>
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
           </h2>
           <p className="text-xs text-gray-500">
-            Acepta pedidos entrantes y transmite tu GPS en vivo por el campus de Uninorte
+            Acepta pedidos entrantes y actualiza el estado para que los estudiantes sigan el progreso de su entrega
           </p>
         </div>
 
@@ -170,41 +97,6 @@ export default function EmprendedorPedidosPage() {
           <span>{refreshing ? 'Actualizando...' : 'Refrescar Tablero'}</span>
         </button>
       </div>
-
-      {/* Banner de Transmisión GPS Activa */}
-      {activeTrackingOrderId && (
-        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-3xl p-4 sm:p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 backdrop-blur-xs">
-              <Navigation className="w-5 h-5 text-white animate-spin-slow" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping" />
-                <h4 className="font-black text-sm">Transmitiendo tu ubicación GPS en vivo</h4>
-              </div>
-              <p className="text-xs text-emerald-100 mt-0.5">
-                {currentGps
-                  ? `Lat: ${currentGps.lat.toFixed(5)}, Lng: ${currentGps.lng.toFixed(5)} — El estudiante te ve en el mapa de Uninorte en vivo`
-                  : 'Obteniendo señal GPS del teléfono...'}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => toggleGpsBroadcast(activeTrackingOrderId)}
-            className="w-full sm:w-auto px-4 py-2 bg-white text-emerald-900 hover:bg-emerald-50 text-xs font-bold rounded-xl shadow-sm transition"
-          >
-            Detener Transmisión GPS
-          </button>
-        </div>
-      )}
-
-      {gpsError && (
-        <div className="p-3 bg-red-50 text-red-700 text-xs rounded-2xl font-medium">
-          {gpsError}
-        </div>
-      )}
 
       {/* Tablero Kanban de Pedidos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -327,7 +219,7 @@ export default function EmprendedorPedidosPage() {
           </div>
         </div>
 
-        {/* Columna 3: EN CAMINO (Con soporte de GPS) */}
+        {/* Columna 3: EN CAMINO */}
         <div className="space-y-3">
           <div className="flex items-center justify-between bg-emerald-50 px-4 py-2.5 rounded-2xl border border-emerald-100">
             <div className="flex items-center gap-2 text-xs font-black text-emerald-900">
@@ -340,60 +232,40 @@ export default function EmprendedorPedidosPage() {
           </div>
 
           <div className="space-y-3">
-            {pedidosEnCamino.map((order) => {
-              const isTracking = activeTrackingOrderId === order.id;
-
-              return (
-                <div key={order.id} className="bg-white rounded-2xl p-4 border-2 border-emerald-400 shadow-md space-y-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-xs font-black text-gray-900">{order.codigoPedido}</span>
-                      <p className="text-[10px] text-gray-400">{order.zonaEntregaNombre}</p>
-                    </div>
-                    <span className="text-xs font-extrabold text-uninorte-red">{formatPrice(order.total)}</span>
+            {pedidosEnCamino.map((order) => (
+              <div key={order.id} className="bg-white rounded-2xl p-4 border border-emerald-300 shadow-sm space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-xs font-black text-gray-900">{order.codigoPedido}</span>
+                    <p className="text-[10px] text-gray-400">{order.zonaEntregaNombre}</p>
                   </div>
-
-                  <div className="text-xs space-y-1">
-                    <p className="font-semibold text-gray-800">Entregar a: {order.cliente?.nombre}</p>
-                    <p className="text-gray-500 text-[11px]">📍 {order.detalleUbicacion || 'Campus'}</p>
-                    {order.cliente?.telefono && (
-                      <a
-                        href={`tel:${order.cliente.telefono}`}
-                        className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-bold hover:underline"
-                      >
-                        <Phone className="w-3 h-3" />
-                        <span>{order.cliente.telefono}</span>
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Botón de Transmisión GPS Celular */}
-                  <button
-                    onClick={() => toggleGpsBroadcast(order.id)}
-                    className={`w-full py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition ${
-                      isTracking
-                        ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 animate-pulse'
-                        : 'bg-slate-900 hover:bg-black text-white'
-                    }`}
-                  >
-                    <Smartphone className="w-3.5 h-3.5" />
-                    <span>{isTracking ? '📡 GPS Activo (Transmitiendo)' : '📍 Activar GPS de mi Celular'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (isTracking) toggleGpsBroadcast(order.id);
-                      updateOrderStatus(order.id, 'ENTREGADO');
-                    }}
-                    disabled={updatingId === order.id}
-                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center justify-center gap-1.5"
-                  >
-                    <PackageCheck className="w-3.5 h-3.5" />
-                    <span>Marcar como Entregado</span>
-                  </button>
+                  <span className="text-xs font-extrabold text-uninorte-red">{formatPrice(order.total)}</span>
                 </div>
-              );
-            })}
+
+                <div className="text-xs space-y-1">
+                  <p className="font-semibold text-gray-800">Entregar a: {order.cliente?.nombre}</p>
+                  <p className="text-gray-500 text-[11px]">📍 {order.detalleUbicacion || 'Campus'}</p>
+                  {order.cliente?.telefono && (
+                    <a
+                      href={`tel:${order.cliente.telefono}`}
+                      className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-bold hover:underline"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>{order.cliente.telefono}</span>
+                    </a>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => updateOrderStatus(order.id, 'ENTREGADO')}
+                  disabled={updatingId === order.id}
+                  className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center justify-center gap-1.5"
+                >
+                  <PackageCheck className="w-3.5 h-3.5" />
+                  <span>Marcar como Entregado</span>
+                </button>
+              </div>
+            ))}
             {pedidosEnCamino.length === 0 && (
               <div className="p-6 text-center text-xs text-gray-400 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
                 Ningún pedido en camino
