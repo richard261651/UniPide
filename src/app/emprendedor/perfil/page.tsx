@@ -1,0 +1,277 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { BusinessItem, CampusZoneItem } from '@/types';
+import { Store, MapPin, Clock, Check, Loader2, Image, Layers, Sparkles } from 'lucide-react';
+
+export default function EmprendedorPerfilPage() {
+  const { user } = useAuth();
+  const [business, setBusiness] = useState<BusinessItem | null>(null);
+  const [zones, setZones] = useState<CampusZoneItem[]>([]);
+
+  const [nombre, setNombre] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [logo, setLogo] = useState('');
+  const [banner, setBanner] = useState('');
+  const [ubicacionCampus, setUbicacionCampus] = useState('');
+  const [zonaCampusCodigo, setZonaCampusCodigo] = useState('ZONA_EMPRENDIMIENTOS');
+  const [tiempoBasePrepMin, setTiempoBasePrepMin] = useState(15);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        if (user?.businessId) {
+          const res = await fetch(`/api/businesses/${user.businessId}`);
+          if (res.ok) {
+            const data = await res.json();
+            const b = data.business;
+            setBusiness(b);
+            setNombre(b.nombre);
+            setCategoria(b.categoria);
+            setDescripcion(b.descripcion || '');
+            setLogo(b.logo || '');
+            setBanner(b.banner || '');
+            setUbicacionCampus(b.ubicacionCampus || '');
+            setZonaCampusCodigo(b.zonaCampusCodigo || 'ZONA_EMPRENDIMIENTOS');
+            setTiempoBasePrepMin(b.tiempoBasePrepMin || 15);
+          }
+        }
+
+        const zRes = await fetch('/api/zones');
+        if (zRes.ok) {
+          const zData = await zRes.json();
+          setZones(zData.zones || []);
+        }
+      } catch (err) {
+        console.error('Error cargando perfil:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user) {
+      loadData();
+    }
+  }, [user]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    setSavedSuccess(false);
+
+    try {
+      const res = await fetch(`/api/businesses/${user?.businessId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre,
+          categoria,
+          descripcion,
+          logo,
+          banner,
+          ubicacionCampus,
+          zonaCampusCodigo,
+          tiempoBasePrepMin,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al actualizar información');
+      }
+
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Error guardando cambios');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto py-12">
+        <div className="h-96 bg-white rounded-3xl animate-pulse border border-gray-100" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h2 className="text-xl font-black text-gray-900">
+          Información y Ubicación del Negocio
+        </h2>
+        <p className="text-xs text-gray-500">
+          Modifica los detalles visibles para los clientes y el cálculo de entrega en campus
+        </p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm space-y-6">
+        {savedSuccess && (
+          <div className="p-3.5 bg-emerald-50 text-emerald-700 text-xs rounded-2xl font-bold flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-600" />
+            <span>¡Información del emprendimiento actualizada correctamente!</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-3.5 bg-red-50 text-red-700 text-xs rounded-2xl font-medium">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                Nombre del Negocio *
+              </label>
+              <input
+                type="text"
+                required
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                Categoría *
+              </label>
+              <select
+                value={categoria}
+                onChange={(e) => setCategoria(e.target.value)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none bg-white"
+              >
+                <option value="Comida Rápida">🍔 Comida Rápida</option>
+                <option value="Postres & Dulces">🍰 Postres & Dulces</option>
+                <option value="Bebidas & Café">☕ Bebidas & Café</option>
+                <option value="Accesorios & Merch">🎨 Accesorios & Merch</option>
+                <option value="Ropa & Moda">👕 Ropa & Moda</option>
+                <option value="Servicios">📋 Servicios Estudiantiles</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                Zona Principal en Campus (Cálculo de Distancia) *
+              </label>
+              <select
+                value={zonaCampusCodigo}
+                onChange={(e) => setZonaCampusCodigo(e.target.value)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none bg-white font-medium"
+              >
+                {zones.map((z) => (
+                  <option key={z.codigo} value={z.codigo}>
+                    {z.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                Tiempo Base de Preparación (Minutos) *
+              </label>
+              <input
+                type="number"
+                min="3"
+                max="60"
+                required
+                value={tiempoBasePrepMin}
+                onChange={(e) => setTiempoBasePrepMin(Number(e.target.value))}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-gray-700 mb-1">
+              Ubicación o Punto Exacto de Preparación en Campus *
+            </label>
+            <input
+              type="text"
+              required
+              value={ubicacionCampus}
+              onChange={(e) => setUbicacionCampus(e.target.value)}
+              placeholder="Ej: Zona de Emprendimientos - Kiosco 03 (Frente al Bloque F)"
+              className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block font-semibold text-gray-700 mb-1">
+              Descripción del Emprendimiento
+            </label>
+            <textarea
+              rows={3}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                URL del Logo
+              </label>
+              <input
+                type="url"
+                value={logo}
+                onChange={(e) => setLogo(e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-gray-700 mb-1">
+                URL del Banner / Portada
+              </label>
+              <input
+                type="url"
+                value={banner}
+                onChange={(e) => setBanner(e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="w-full py-3 bg-uninorte-red hover:bg-uninorte-darkRed text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-xs"
+          >
+            {saving ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Guardando...</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Actualizar Perfil del Negocio</span>
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

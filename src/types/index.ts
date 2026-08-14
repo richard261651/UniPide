@@ -1,0 +1,157 @@
+export type Role = 'CLIENTE' | 'EMPRENDEDOR' | 'ADMIN';
+
+export type BusinessStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'SUSPENDIDO';
+
+export type OrderStatus = 'RECIBIDO' | 'EN_PREPARACION' | 'EN_CAMINO' | 'ENTREGADO' | 'CANCELADO';
+
+export interface UserSession {
+  id: string;
+  nombre: string;
+  correo: string;
+  rol: Role;
+  telefono?: string | null;
+  foto?: string | null;
+  businessId?: string | null;
+  businessSlug?: string | null;
+  businessName?: string | null;
+}
+
+export interface BusinessItem {
+  id: string;
+  userId: string;
+  nombre: string;
+  slug: string;
+  categoria: string;
+  descripcion: string;
+  logo: string | null;
+  banner: string | null;
+  ubicacionCampus: string;
+  zonaCampusCodigo: string;
+  tiempoBasePrepMin: number;
+  estadoAprobacion: BusinessStatus;
+  activo: boolean;
+  fechaCreacion: string | Date;
+  user?: {
+    nombre: string;
+    correo: string;
+    telefono?: string | null;
+  };
+  products?: ProductItem[];
+  ratings?: RatingItem[];
+  _count?: {
+    products?: number;
+    orders?: number;
+    ratings?: number;
+  };
+  avgRating?: number;
+}
+
+export interface ProductItem {
+  id: string;
+  businessId: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  foto: string | null;
+  stock: number;
+  disponible: boolean;
+  categoria?: string | null;
+  esOferta: boolean;
+  precioOferta?: number | null;
+  descripcionOferta?: string | null;
+  fechaInicioOferta?: string | Date | null;
+  fechaFinOferta?: string | Date | null;
+  business?: {
+    id: string;
+    nombre: string;
+    slug: string;
+    ubicacionCampus: string;
+    zonaCampusCodigo: string;
+    tiempoBasePrepMin: number;
+  };
+}
+
+export interface CartItem {
+  product: ProductItem;
+  cantidad: number;
+  notas?: string;
+}
+
+export interface CampusZoneItem {
+  id: string;
+  codigo: string;
+  nombre: string;
+  descripcion: string | null;
+  coordenadaRefX?: number | null;
+  coordenadaRefY?: number | null;
+}
+
+export interface OrderItemDetail {
+  id: string;
+  orderId: string;
+  productId: string;
+  nombreProducto: string;
+  cantidad: number;
+  precioUnitario: number;
+  notas?: string | null;
+  product?: ProductItem;
+}
+
+export interface OrderDetail {
+  id: string;
+  codigoPedido: string;
+  clienteId: string;
+  businessId: string;
+  estado: OrderStatus;
+  subtotal: number;
+  total: number;
+  zonaEntregaCodigo: string;
+  zonaEntregaNombre: string;
+  detalleUbicacion?: string | null;
+  tiempoEstimadoMin: number;
+  instrucciones?: string | null;
+  metodoPago: string;
+  fechaCreacion: string | Date;
+  fechaActualizacion: string | Date;
+  cliente?: {
+    id: string;
+    nombre: string;
+    correo: string;
+    telefono?: string | null;
+    foto?: string | null;
+  };
+  business?: {
+    id: string;
+    nombre: string;
+    slug: string;
+    logo?: string | null;
+    ubicacionCampus: string;
+    zonaCampusCodigo: string;
+    telefono?: string | null;
+  };
+  items: OrderItemDetail[];
+  rating?: RatingItem | null;
+}
+
+export interface RatingItem {
+  id: string;
+  orderId: string;
+  clienteId: string;
+  businessId: string;
+  puntuacion: number;
+  comentario: string | null;
+  fechaCreacion: string | Date;
+  cliente?: {
+    nombre: string;
+    foto?: string | null;
+  };
+}
+
+export interface DeliveryEstimateResult {
+  tiempoTotalMin: number;
+  tiempoBasePrepMin: number;
+  tiempoTrasladoMin: number;
+  rangoTexto: string;
+  origenNombre: string;
+  destinoNombre: string;
+}

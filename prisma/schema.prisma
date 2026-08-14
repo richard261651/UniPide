@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  nombre        String
+  correo        String      @unique
+  passwordHash  String
+  rol           String      @default("CLIENTE") // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
+  telefono      String?
+  foto          String?
+  activo        Boolean     @default(true)
+  fechaRegistro DateTime    @default(now())
+
+  businesses    Business[]
+  orders        Order[]
+  ratings       Rating[]
+}
+
+model Business {
+  id                String       @id @default(cuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nombre            String
+  slug              String       @unique
+  categoria         String       // "Comida Rápida", "Postres & Dulces", "Bebidas & Café", "Accesorios & Merch", "Ropa & Moda", "Papelería & Stickers", "Servicios"
+  descripcion       String
+  logo              String?
+  banner            String?
+  ubicacionCampus   String       // Ej: "Zona de Emprendimientos - Pasillo Ágora", "Bloque F", "Plaza de la Paz"
+  zonaCampusCodigo  String       @default("ZONA_EMPRENDIMIENTOS") // Código de CampusZone para cálculo de distancia
+  tiempoBasePrepMin Int          @default(15) // Minutos base de preparación
+  estadoAprobacion  String       @default("PENDIENTE") // "PENDIENTE" | "APROBADO" | "RECHAZADO" | "SUSPENDIDO"
+  activo            Boolean      @default(true)
+  fechaCreacion     DateTime     @default(now())
+
+  products          Product[]
+  orders            Order[]
+  ratings           Rating[]
+}
+
+model Product {
+  id                String       @id @default(cuid())
+  businessId        String
+  business          Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  nombre            String
+  descripcion       String
+  precio            Float
+  foto              String?
+  stock             Int          @default(20)
+  disponible        Boolean      @default(true) // Switch "Agotado hoy"
+  categoria         String?      // Subcategoría interna del negocio (ej. "Combos", "Bebidas", "Postres", "Stickers")
+  esOferta          Boolean      @default(false)
+  precioOferta      Float?
+  descripcionOferta String?      // Ej: "2x1 los Miércoles", "Combo Almuerzo"
+  fechaInicioOferta DateTime?
+  fechaFinOferta    DateTime?
+  fechaCreacion     DateTime     @default(now())
+
+  orderItems        OrderItem[]
+}
+
+model CampusZone {
+  id             String    @id @default(cuid())
+  codigo         String    @unique // Ej: "BLOQUE_A", "BLOQUE_F", "CAFETERIA_CENTRAL", "ZONA_EMPRENDIMIENTOS"
+  nombre         String    // "Bloque A (Ingenierías)", "Cafetería Central / Du Nord"
+  descripcion    String?
+  coordenadaRefX Float?    // Posición porcentual X en el mapa Uninorte (0-100)
+  coordenadaRefY Float?    // Posición porcentual Y en el mapa Uninorte (0-100)
+}
+
+model ZoneDistance {
+  id              String   @id @default(cuid())
+  origenCodigo    String
+  destinoCodigo   String
+  minutosTraslado Int      @default(5)
+
+  @@unique([origenCodigo, destinoCodigo])
+}
+
+model Order {
+  id                 String       @id @default(cuid())
+  codigoPedido       String       @unique // Ej: "ORD-1092"
+  clienteId          String
+  cliente            User         @relation(fields: [clienteId], references: [id])
+  businessId         String
+  business           Business     @relation(fields: [businessId], references: [id])
+  estado             String       @default("RECIBIDO") // "RECIBIDO" | "EN_PREPARACION" | "EN_CAMINO" | "ENTREGADO" | "CANCELADO"
+  subtotal           Float
+  total              Float
+  zonaEntregaCodigo  String       // Código de CampusZone del cliente
+  zonaEntregaNombre  String       // Nombre legible de la zona (ej. "Bloque F - Salón 302")
+  detalleUbicacion   String?      // Ej: "Piso 3 junto a las escaleras"
+  tiempoEstimadoMin  Int          // Minutos calculados: Base + Traslado
+  instrucciones      String?
+  metodoPago         String       @default("Efectivo / Transferencia Nequi/Daviplata al entregar")
+  fechaCreacion      DateTime     @default(now())
+  fechaActualizacion DateTime     @updatedAt
+
+  items              OrderItem[]
+  rating             Rating?
+}
+
+model OrderItem {
+  id             String    @id @default(cuid())
+  orderId        String
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product   @relation(fields: [productId], references: [id])
+  nombreProducto String
+  cantidad       Int
+  precioUnitario Float
+  notas          String?
+}
+
+model Rating {
+  id            String    @id @default(cuid())
+  orderId       String    @unique
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  clienteId     String
+  cliente       User      @relation(fields: [clienteId], references: [id])
+  businessId    String
+  business      Business  @relation(fields: [businessId], references: [id])
+  puntuacion    Int       // 1 a 5 estrellas
+  comentario    String?
+  fechaCreacion DateTime  @default(now())
+}
