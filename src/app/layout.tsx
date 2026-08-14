@@ -10,10 +10,11 @@ import CartDrawer from '@/components/CartDrawer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Marketplace Uninorte | Emprendimientos Universitarios',
+  title: 'RapiNorte | Marketplace de Emprendimientos Uninorte',
   description:
-    'Pide comida, postres, bebidas y accesorios de los emprendimientos de estudiantes dentro del campus de la Universidad del Norte en Barranquilla.',
+    'Pide comida, postres, bebidas y accesorios con RapiNorte, el marketplace de emprendimientos estudiantiles dentro del campus de la Universidad del Norte en Barranquilla.',
   keywords: [
+    'RapiNorte',
     'Uninorte',
     'Marketplace',
     'Emprendimientos',

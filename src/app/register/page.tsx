@@ -62,10 +62,10 @@ export default function RegisterPage() {
             U
           </div>
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Crear Cuenta en Uninorte Emprende
+            Crear Cuenta en RapiNorte
           </h1>
           <p className="text-xs text-gray-500">
-            Únete a la comunidad de estudiantes y emprendimientos del campus
+            Únete a la comunidad de estudiantes y emprendimientos del campus Uninorte
           </p>
         </div>
 

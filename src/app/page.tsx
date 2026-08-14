@@ -77,7 +77,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 animate-pulse-subtle">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Marketplace Oficial de Emprendedores Uninorte</span>
+            <span>RapiNorte — Marketplace & Delivery Campus Uninorte</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">

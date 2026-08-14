@@ -9,13 +9,13 @@ import {
   ShoppingBag,
   Store,
   Shield,
-  User,
   LogOut,
   Menu,
   X,
   Compass,
   Clock,
   ChevronDown,
+  Zap,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -33,23 +33,23 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-4">
-            {/* Logo e Identidad Uninorte */}
+            {/* Logo e Identidad RapiNorte */}
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-2.5 group">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-md shadow-red-900/20 group-hover:scale-105 transition">
-                  <span className="font-extrabold text-lg tracking-tight">U</span>
+                  <Zap className="w-5 h-5 fill-white text-white" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-black text-gray-900 tracking-tight text-base sm:text-lg">
-                      Uninorte<span className="text-uninorte-red">Emprende</span>
+                    <span className="font-black text-gray-900 tracking-tight text-lg sm:text-xl">
+                      Rapi<span className="text-uninorte-red">Norte</span>
                     </span>
                     <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-1.5 py-0.5 rounded">
                       Campus
                     </span>
                   </div>
                   <p className="text-[10px] text-gray-500 font-medium -mt-1 hidden sm:block">
-                    Marketplace Universitario
+                    Marketplace Universitario Uninorte
                   </p>
                 </div>
               </Link>
