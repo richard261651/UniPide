@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BusinessItem } from '@/types';
 import BusinessCard from '@/components/BusinessCard';
-import { Search, Store, Filter, Sparkles, Utensils, Cake, Coffee, Palette, Shirt } from 'lucide-react';
+import { Search, Store, Sparkles, Utensils, Cake, Coffee, Palette, Shirt } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'Todos', icon: Sparkles },
@@ -15,7 +15,7 @@ const CATEGORIES = [
   { name: 'Ropa & Moda', icon: Shirt },
 ];
 
-export default function NegociosPage() {
+function NegociosContent() {
   const searchParams = useSearchParams();
   const initialCat = searchParams.get('cat') || 'Todos';
 
@@ -117,5 +117,24 @@ export default function NegociosPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function NegociosPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-7xl mx-auto px-4 py-12 space-y-6">
+          <div className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      }
+    >
+      <NegociosContent />
+    </Suspense>
   );
 }
