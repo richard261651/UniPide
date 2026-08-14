@@ -429,7 +429,7 @@ export default function CarritoPage() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <p className="text-[11px] text-gray-400 text-center">
-                  O usa el botón "Acceso Rápido Demo" arriba para probar
+                  ¿No tienes cuenta? <Link href="/register" className="text-uninorte-red font-bold hover:underline">Regístrate aquí</Link>
                 </p>
               </div>
             ) : (

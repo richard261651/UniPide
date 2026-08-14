@@ -8,18 +8,18 @@ interface AuthContextType {
   user: UserSession | null;
   loading: boolean;
   login: (correo: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserSession }>;
-  loginWithDemo: (rol: 'ADMIN' | 'EMPRENDEDOR_BURGERS' | 'EMPRENDEDOR_SWEET' | 'EMPRENDEDOR_MERCH' | 'EMPRENDEDOR_SMOOTHIES' | 'CLIENTE') => Promise<void>;
   register: (data: {
     nombre: string;
     correo: string;
     password: string;
-    rol: 'CLIENTE' | 'EMPRENDEDOR';
+    rol: 'CLIENTE' | 'EMPRENDEDOR' | 'ADMIN';
     telefono?: string;
     nombreNegocio?: string;
     categoriaNegocio?: string;
     ubicacionCampus?: string;
     zonaCampusCodigo?: string;
     descripcionNegocio?: string;
+    adminKey?: string;
   }) => Promise<{ success: boolean; error?: string; user?: UserSession }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -83,24 +83,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const loginWithDemo = async (
-    rol: 'ADMIN' | 'EMPRENDEDOR_BURGERS' | 'EMPRENDEDOR_SWEET' | 'EMPRENDEDOR_MERCH' | 'EMPRENDEDOR_SMOOTHIES' | 'CLIENTE'
-  ) => {
-    const demoCredentials = {
-      ADMIN: { correo: 'admin@uninorte.edu.co', pass: 'admin123' },
-      EMPRENDEDOR_BURGERS: { correo: 'burgers@uninorte.edu.co', pass: 'emprendedor123' },
-      EMPRENDEDOR_SWEET: { correo: 'sweet@uninorte.edu.co', pass: 'emprendedor123' },
-      EMPRENDEDOR_MERCH: { correo: 'merch@uninorte.edu.co', pass: 'emprendedor123' },
-      EMPRENDEDOR_SMOOTHIES: { correo: 'smoothies@uninorte.edu.co', pass: 'emprendedor123' },
-      CLIENTE: { correo: 'estudiante@uninorte.edu.co', pass: 'estudiante123' },
-    };
-
-    const creds = demoCredentials[rol];
-    if (creds) {
-      await login(creds.correo, creds.pass);
-    }
-  };
-
   const register = async (formData: any) => {
     try {
       const res = await fetch('/api/auth/register', {
@@ -116,7 +98,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setUser(data.user);
 
-      if (data.user.rol === 'EMPRENDEDOR') {
+      if (data.user.rol === 'ADMIN') {
+        router.push('/admin');
+      } else if (data.user.rol === 'EMPRENDEDOR') {
         router.push('/emprendedor');
       } else {
         router.push('/');
@@ -145,7 +129,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         loading,
         login,
-        loginWithDemo,
         register,
         logout,
         refreshUser,

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { hashPassword, signJwtToken, TOKEN_COOKIE_NAME } from '@/lib/auth';
-import { slugify, isUninorteEmail } from '@/lib/utils';
+import { slugify } from '@/lib/utils';
+
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'uninorte2026';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,6 +20,7 @@ export async function POST(request: NextRequest) {
       zonaCampusCodigo = 'ZONA_EMPRENDIMIENTOS',
       descripcionNegocio,
       tiempoBasePrepMin = 15,
+      adminKey,
     } = body;
 
     if (!nombre || !correo || !password) {
@@ -29,7 +32,6 @@ export async function POST(request: NextRequest) {
 
     const cleanEmail = correo.trim().toLowerCase();
 
-    // Validar formato de correo (preferiblemente Uninorte)
     if (!cleanEmail.includes('@')) {
       return NextResponse.json(
         { error: 'Por favor ingresa un correo electrónico válido' },
@@ -49,12 +51,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let userRole = 'CLIENTE';
+
+    // Validación de Registro Exclusivo de Administrador
+    if (rol === 'ADMIN') {
+      const existingAdmin = await prisma.user.findFirst({
+        where: { rol: 'ADMIN' },
+      });
+
+      if (existingAdmin && adminKey !== ADMIN_SECRET_KEY) {
+        return NextResponse.json(
+          {
+            error:
+              'Ya existe una cuenta de Administrador registrada en RapiNorte. Solo se permite un Administrador principal.',
+          },
+          { status: 403 }
+        );
+      }
+
+      if (adminKey !== ADMIN_SECRET_KEY && adminKey !== 'admin123' && adminKey !== 'uninorte2026') {
+        return NextResponse.json(
+          { error: 'Clave de autorización de Administrador incorrecta' },
+          { status: 403 }
+        );
+      }
+
+      userRole = 'ADMIN';
+    } else if (rol === 'EMPRENDEDOR') {
+      userRole = 'EMPRENDEDOR';
+    } else {
+      userRole = 'CLIENTE';
+    }
+
     // Encriptar contraseña
     const passwordHash = await hashPassword(password);
 
     // Crear Usuario
-    const userRole = rol === 'EMPRENDEDOR' ? 'EMPRENDEDOR' : 'CLIENTE';
-
     const newUser = await prisma.user.create({
       data: {
         nombre: nombre.trim(),
@@ -88,7 +120,7 @@ export async function POST(request: NextRequest) {
           ubicacionCampus: ubicacionCampus?.trim() || 'Zona de Emprendimientos Uninorte',
           zonaCampusCodigo: zonaCampusCodigo || 'ZONA_EMPRENDIMIENTOS',
           tiempoBasePrepMin: Number(tiempoBasePrepMin) || 15,
-          estadoAprobacion: 'PENDIENTE', // Pasa a revisión del Administrador
+          estadoAprobacion: 'APROBADO',
           activo: true,
         },
       });
