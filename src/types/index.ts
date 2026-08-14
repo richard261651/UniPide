@@ -111,6 +111,10 @@ export interface OrderDetail {
   tiempoEstimadoMin: number;
   instrucciones?: string | null;
   metodoPago: string;
+  repartidorLat?: number | null;
+  repartidorLng?: number | null;
+  ubicacionRepartidorNombre?: string | null;
+  ultimaUbicacionActualizada?: string | Date | null;
   fechaCreacion: string | Date;
   fechaActualizacion: string | Date;
   cliente?: {

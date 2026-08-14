@@ -85,26 +85,30 @@ model ZoneDistance {
 }
 
 model Order {
-  id                 String       @id @default(cuid())
-  codigoPedido       String       @unique // Ej: "ORD-1092"
-  clienteId          String
-  cliente            User         @relation(fields: [clienteId], references: [id])
-  businessId         String
-  business           Business     @relation(fields: [businessId], references: [id])
-  estado             String       @default("RECIBIDO") // "RECIBIDO" | "EN_PREPARACION" | "EN_CAMINO" | "ENTREGADO" | "CANCELADO"
-  subtotal           Float
-  total              Float
-  zonaEntregaCodigo  String       // Código de CampusZone del cliente
-  zonaEntregaNombre  String       // Nombre legible de la zona (ej. "Bloque F - Salón 302")
-  detalleUbicacion   String?      // Ej: "Piso 3 junto a las escaleras"
-  tiempoEstimadoMin  Int          // Minutos calculados: Base + Traslado
-  instrucciones      String?
-  metodoPago         String       @default("Efectivo / Transferencia Nequi/Daviplata al entregar")
-  fechaCreacion      DateTime     @default(now())
-  fechaActualizacion DateTime     @updatedAt
+  id                         String       @id @default(cuid())
+  codigoPedido               String       @unique // Ej: "ORD-1092"
+  clienteId                  String
+  cliente                    User         @relation(fields: [clienteId], references: [id])
+  businessId                 String
+  business                   Business     @relation(fields: [businessId], references: [id])
+  estado                     String       @default("RECIBIDO") // "RECIBIDO" | "EN_PREPARACION" | "EN_CAMINO" | "ENTREGADO" | "CANCELADO"
+  subtotal                   Float
+  total                      Float
+  zonaEntregaCodigo          String       // Código de CampusZone del cliente
+  zonaEntregaNombre          String       // Nombre legible de la zona (ej. "Bloque F - Salón 302")
+  detalleUbicacion           String?      // Ej: "Piso 3 junto a las escaleras"
+  tiempoEstimadoMin          Int          // Minutos calculados: Base + Traslado
+  instrucciones              String?
+  metodoPago                 String       @default("Efectivo / Transferencia Nequi/Daviplata al entregar")
+  repartidorLat              Float?       // Latitud GPS en vivo del repartidor
+  repartidorLng              Float?       // Longitud GPS en vivo del repartidor
+  ubicacionRepartidorNombre  String?      // Descripción en vivo de ubicación (ej. "Pasando por Bloque B")
+  ultimaUbicacionActualizada DateTime?    // Timestamp de última coordenada GPS
+  fechaCreacion              DateTime     @default(now())
+  fechaActualizacion         DateTime     @updatedAt
 
-  items              OrderItem[]
-  rating             Rating?
+  items                      OrderItem[]
+  rating                     Rating?
 }
 
 model OrderItem {

@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { OrderDetail } from '@/types';
 import { formatPrice, formatShortDate } from '@/lib/utils';
 import OrderStatusTracker from '@/components/OrderStatusTracker';
+import CampusLiveMapTracker from '@/components/CampusLiveMapTracker';
 import RatingModal from '@/components/RatingModal';
 import {
   Clock,
@@ -126,6 +127,9 @@ export default function OrderTrackingPage() {
         status={order.estado}
         tiempoEstimadoMin={order.tiempoEstimadoMin}
       />
+
+      {/* Mapa Gráfico y Rastreador en Vivo del Campus Uninorte (Estilo Rappi) */}
+      <CampusLiveMapTracker order={order} />
 
       {/* Banner de Calificación si está ENTREGADO */}
       {order.estado === 'ENTREGADO' && !order.rating && (

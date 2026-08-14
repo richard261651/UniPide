@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -14,10 +16,10 @@ export async function PATCH(
 
     const { id } = params;
     const body = await request.json();
-    const { estado } = body;
+    const { estado, repartidorLat, repartidorLng, ubicacionRepartidorNombre } = body;
 
     const validStates = ['RECIBIDO', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO'];
-    if (!estado || !validStates.includes(estado)) {
+    if (estado && !validStates.includes(estado)) {
       return NextResponse.json({ error: 'Estado de pedido inválido' }, { status: 400 });
     }
 
@@ -37,14 +39,27 @@ export async function PATCH(
 
     if (!isBusinessOwner && !isAdmin && !isClientCancelling) {
       return NextResponse.json(
-        { error: 'No tienes permiso para modificar el estado de este pedido' },
+        { error: 'No tienes permiso para modificar este pedido' },
         { status: 403 }
       );
     }
 
+    const updateData: any = {};
+    if (estado) {
+      updateData.estado = estado;
+    }
+    if (typeof repartidorLat === 'number' && typeof repartidorLng === 'number') {
+      updateData.repartidorLat = repartidorLat;
+      updateData.repartidorLng = repartidorLng;
+      updateData.ultimaUbicacionActualizada = new Date();
+    }
+    if (ubicacionRepartidorNombre) {
+      updateData.ubicacionRepartidorNombre = ubicacionRepartidorNombre;
+    }
+
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { estado },
+      data: updateData,
       include: {
         items: true,
         cliente: { select: { nombre: true, correo: true, telefono: true } },
@@ -53,7 +68,7 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, order: updatedOrder });
   } catch (error: any) {
-    console.error('Error actualizando estado de pedido:', error);
+    console.error('Error actualizando estado/GPS de pedido:', error);
     return NextResponse.json(
       { error: error.message || 'Error al actualizar estado del pedido' },
       { status: 500 }
