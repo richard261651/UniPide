@@ -3,14 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { Sparkles, Shield, Store, ShoppingBag, Loader2, ArrowRight, Lock, Mail } from 'lucide-react';
+import { Loader2, ArrowRight, Lock, Mail } from 'lucide-react';
 
 export default function LoginPage() {
-  const { login, loginWithDemo } = useAuth();
+  const { login } = useAuth();
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,17 +21,6 @@ export default function LoginPage() {
     if (!res.success) {
       setError(res.error || 'Credenciales inválidas');
       setLoading(false);
-    }
-  };
-
-  const handleDemoClick = async (role: any, label: string) => {
-    setDemoLoading(label);
-    setError('');
-    try {
-      await loginWithDemo(role);
-    } catch (e: any) {
-      setError('Error al iniciar sesión demo');
-      setDemoLoading(null);
     }
   };
 
@@ -50,82 +38,6 @@ export default function LoginPage() {
           <p className="text-xs text-gray-500">
             Ingresa con tu correo institucional de la Universidad del Norte
           </p>
-        </div>
-
-        {/* Cuentas Demo de 1-Clic */}
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/70 rounded-3xl p-4 shadow-2xs space-y-3">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-600 animate-spin-slow" />
-            <span className="text-xs font-bold text-amber-900">
-              Acceso Rápido para Pruebas (1 Clic)
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleDemoClick('ADMIN', 'Admin')}
-              disabled={demoLoading !== null}
-              className="p-2.5 bg-white hover:bg-red-50 text-gray-800 border border-gray-200 hover:border-red-300 rounded-xl text-left transition text-xs flex items-center gap-2 group"
-            >
-              <div className="p-1 rounded-md bg-red-100 text-uninorte-red group-hover:bg-uninorte-red group-hover:text-white transition shrink-0">
-                <Shield className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-bold text-[11px] truncate">Admin Uninorte</p>
-                <p className="text-[9px] text-gray-400">Moderar y Métricas</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoClick('EMPRENDEDOR_BURGERS', 'Burger Lab')}
-              disabled={demoLoading !== null}
-              className="p-2.5 bg-white hover:bg-amber-50 text-gray-800 border border-gray-200 hover:border-amber-300 rounded-xl text-left transition text-xs flex items-center gap-2 group"
-            >
-              <div className="p-1 rounded-md bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition shrink-0">
-                <Store className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-bold text-[11px] truncate">Burger Lab 🍔</p>
-                <p className="text-[9px] text-gray-400">Emprendedor</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoClick('EMPRENDEDOR_SWEET', 'Sweet Bites')}
-              disabled={demoLoading !== null}
-              className="p-2.5 bg-white hover:bg-pink-50 text-gray-800 border border-gray-200 hover:border-pink-300 rounded-xl text-left transition text-xs flex items-center gap-2 group"
-            >
-              <div className="p-1 rounded-md bg-pink-100 text-pink-700 group-hover:bg-pink-600 group-hover:text-white transition shrink-0">
-                <Store className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-bold text-[11px] truncate">Sweet Bites 🍰</p>
-                <p className="text-[9px] text-gray-400">Postres</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoClick('CLIENTE', 'Cliente')}
-              disabled={demoLoading !== null}
-              className="p-2.5 bg-white hover:bg-blue-50 text-gray-800 border border-gray-200 hover:border-blue-300 rounded-xl text-left transition text-xs flex items-center gap-2 group"
-            >
-              <div className="p-1 rounded-md bg-blue-100 text-blue-700 group-hover:bg-blue-600 group-hover:text-white transition shrink-0">
-                <ShoppingBag className="w-3.5 h-3.5" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-bold text-[11px] truncate">Estudiante 🎒</p>
-                <p className="text-[9px] text-gray-400">Pedir Comida</p>
-              </div>
-            </button>
-          </div>
-          {demoLoading && (
-            <p className="text-[11px] font-bold text-center text-amber-800 animate-pulse">
-              Iniciando sesión como {demoLoading}...
-            </p>
-          )}
         </div>
 
         {/* Formulario */}
@@ -173,7 +85,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading || demoLoading !== null}
+              disabled={loading}
               className="w-full py-3 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
             >
               {loading ? (

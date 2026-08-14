@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
-import QuickDemoLogin from './QuickDemoLogin';
 import {
   ShoppingBag,
   Store,
@@ -16,9 +15,7 @@ import {
   X,
   Compass,
   Clock,
-  Sparkles,
   ChevronDown,
-  Tag,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -94,11 +91,8 @@ export default function Navbar() {
               </nav>
             </div>
 
-            {/* Accesos rápidos, Carrito y Perfil */}
+            {/* Carrito y Perfil de Usuario */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Selector Demo Rápido */}
-              <QuickDemoLogin />
-
               {/* Botón Carrito */}
               <button
                 onClick={() => setIsCartOpen(true)}
@@ -285,7 +279,7 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Barra de Navegación Inferior Mobile (UX tipo App Móvil) */}
+      {/* Barra de Navegación Inferior Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-6 flex items-center justify-around shadow-lg">
         <Link
           href="/"
