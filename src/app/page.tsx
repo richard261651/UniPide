@@ -12,7 +12,6 @@ import {
   Tag,
   Store,
   ChevronRight,
-  TrendingUp,
   MapPin,
   Clock,
   ShieldCheck,
@@ -22,8 +21,12 @@ import {
   Palette,
   Shirt,
   ArrowRight,
-  UserCheck,
-  LogIn,
+  Zap,
+  Lock,
+  Mail,
+  Loader2,
+  ShoppingBag,
+  Shield,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -36,17 +39,39 @@ const CATEGORIES = [
 ];
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading, login } = useAuth();
+
+  // Estados del Marketplace
   const [businesses, setBusinesses] = useState<BusinessItem[]>([]);
   const [offers, setOffers] = useState<ProductItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
+
+  // Estados del Formulario de Ingreso Directo
+  const [loginCorreo, setLoginCorreo] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleDirectLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError('');
+
+    const res = await login(loginCorreo, loginPassword);
+    if (!res.success) {
+      setLoginError(res.error || 'Credenciales inválidas');
+      setLoginLoading(false);
+    }
+  };
 
   useEffect(() => {
+    if (!user) return;
+
     async function fetchData() {
       try {
-        setLoading(true);
+        setLoadingData(true);
         // Fetch Negocios
         const bizRes = await fetch(
           `/api/businesses?categoria=${encodeURIComponent(selectedCategory)}&q=${encodeURIComponent(searchQuery)}`
@@ -65,23 +90,152 @@ export default function HomePage() {
       } catch (err) {
         console.error('Error cargando catálogo:', err);
       } finally {
-        setLoading(false);
+        setLoadingData(false);
       }
     }
 
     fetchData();
-  }, [selectedCategory, searchQuery]);
+  }, [user, selectedCategory, searchQuery]);
 
+  // 1. Pantalla de Carga Inicial
+  if (authLoading) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-xl animate-bounce">
+          <Zap className="w-7 h-7 fill-white text-white" />
+        </div>
+        <p className="text-xs font-bold text-gray-500 animate-pulse">Cargando RapiNorte...</p>
+      </div>
+    );
+  }
+
+  // 2. PANTALLA INICIAL DE LOGGEO: Si el usuario NO ha iniciado sesión, es lo primero que ve antes de entrar al portal
+  if (!user) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-red-50/40 via-white to-slate-50">
+        <div className="max-w-md w-full space-y-6">
+          {/* Encabezado RapiNorte */}
+          <div className="text-center space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white mx-auto shadow-lg shadow-red-900/20">
+              <Zap className="w-8 h-8 fill-white text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                Rapi<span className="text-uninorte-red">Norte</span>
+              </h1>
+              <span className="inline-block mt-1 text-[10px] font-black uppercase tracking-wider bg-red-100 text-uninorte-red px-2.5 py-0.5 rounded-full">
+                Marketplace Oficial Campus Uninorte
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 max-w-sm mx-auto">
+              Inicia sesión con tu cuenta institucional para acceder a los pedidos, emprendimientos y entregas en el campus.
+            </p>
+          </div>
+
+          {/* Tarjeta de Formulario de Ingreso */}
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl space-y-5">
+            {loginError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
+                {loginError}
+              </div>
+            )}
+
+            <form onSubmit={handleDirectLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Correo Institucional
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <input
+                    type="email"
+                    required
+                    value={loginCorreo}
+                    onChange={(e) => setLoginCorreo(e.target.value)}
+                    placeholder="usuario@uninorte.edu.co"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <input
+                    type="password"
+                    required
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loginLoading}
+                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-red-900/20 transition flex items-center justify-center gap-2 active:scale-98"
+              >
+                {loginLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Verificando acceso...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Ingresar al Portal</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="pt-4 border-t border-gray-100 text-center space-y-3">
+              <p className="text-xs text-gray-500">¿Aún no tienes cuenta registrada?</p>
+              <Link
+                href="/register"
+                className="block w-full py-2.5 text-center text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-xl transition"
+              >
+                Crear Cuenta de Estudiante o Emprendedor
+              </Link>
+            </div>
+          </div>
+
+          {/* Badges de Confianza del Campus */}
+          <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-gray-500 font-medium pt-2">
+            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
+              <MapPin className="w-4 h-4 text-uninorte-red mx-auto mb-1" />
+              <span>Todos los Bloques</span>
+            </div>
+            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
+              <Clock className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+              <span>Entrega Rápida</span>
+            </div>
+            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
+              <span>100% Uninorte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. PANTALLA PRINCIPAL: Se muestra una vez que el usuario ha iniciado sesión
   return (
     <div className="space-y-10 sm:space-y-12 pb-16 w-full max-w-full overflow-hidden">
-      {/* Hero Banner Uninorte */}
+      {/* Hero Banner Uninorte con Saludo Personal */}
       <section className="relative overflow-hidden bg-gradient-to-br from-uninorte-darkRed via-uninorte-red to-red-900 text-white pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 rounded-b-3xl sm:rounded-b-[40px] shadow-lg shadow-red-950/20">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-5 sm:space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 animate-pulse-subtle">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>RapiNorte — Delivery & Marketplace Campus Uninorte</span>
+            <span>¡Hola, {user.nombre.split(' ')[0]}! — RapiNorte Campus</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
@@ -91,32 +245,6 @@ export default function HomePage() {
           <p className="text-xs sm:text-base text-red-100 max-w-2xl mx-auto font-normal leading-relaxed">
             Hamburguesas smash, brownies, café frío y merch de tus compañeros de Uninorte entregados en tu bloque o punto de encuentro.
           </p>
-
-          {/* Banner de Inicio / Registro para usuarios que no han iniciado sesión */}
-          {!user && (
-            <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md border border-white/25 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
-              <div className="text-left text-xs">
-                <p className="font-bold text-white">¿Eres nuevo en RapiNorte?</p>
-                <p className="text-red-200 text-[11px]">Inicia sesión o crea tu cuenta para pedir</p>
-              </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <Link
-                  href="/login"
-                  className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  <span>Ingresar</span>
-                </Link>
-                <Link
-                  href="/register"
-                  className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white text-uninorte-red hover:bg-amber-100 text-xs font-black transition shadow-sm flex items-center justify-center gap-1"
-                >
-                  <span>Registrarme</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          )}
 
           {/* Buscador Rápido */}
           <div className="max-w-2xl mx-auto pt-1">
@@ -249,7 +377,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {loading ? (
+        {loadingData ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="bg-white rounded-2xl h-64 animate-pulse border border-gray-100" />
