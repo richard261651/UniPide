@@ -30,25 +30,25 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-4">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
             {/* Logo e Identidad RapiNorte */}
-            <div className="flex items-center gap-6">
-              <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-md shadow-red-900/20 group-hover:scale-105 transition">
-                  <Zap className="w-5 h-5 fill-white text-white" />
+            <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+              <Link href="/" className="flex items-center gap-2 group shrink-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-md shadow-red-900/20 group-hover:scale-105 transition">
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-black text-gray-900 tracking-tight text-lg sm:text-xl">
+                  <div className="flex items-center gap-1">
+                    <span className="font-black text-gray-900 tracking-tight text-base sm:text-xl">
                       Rapi<span className="text-uninorte-red">Norte</span>
                     </span>
-                    <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-1.5 py-0.5 rounded">
+                    <span className="hidden xs:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-1.5 py-0.5 rounded">
                       Campus
                     </span>
                   </div>
-                  <p className="text-[10px] text-gray-500 font-medium -mt-1 hidden sm:block">
+                  <p className="text-[9px] sm:text-[10px] text-gray-500 font-medium -mt-1 hidden sm:block">
                     Marketplace Universitario Uninorte
                   </p>
                 </div>
@@ -92,16 +92,16 @@ export default function Navbar() {
             </div>
 
             {/* Carrito y Perfil de Usuario */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               {/* Botón Carrito */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-gray-700 hover:text-uninorte-red hover:bg-red-50 rounded-xl transition"
+                className="relative p-2 text-gray-700 hover:text-uninorte-red hover:bg-red-50 rounded-xl transition shrink-0"
                 title="Ver carrito de compras"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-uninorte-red text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                  <span className="absolute -top-1 -right-1 bg-uninorte-red text-white text-[10px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
                     {totalItems}
                   </span>
                 )}
@@ -112,9 +112,9 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition"
+                    className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition"
                   >
-                    <div className="w-8 h-8 rounded-full bg-red-100 text-uninorte-red font-bold flex items-center justify-center text-xs overflow-hidden border border-red-200">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 text-uninorte-red font-bold flex items-center justify-center text-xs overflow-hidden border border-red-200 shrink-0">
                       {user.foto ? (
                         <img src={user.foto} alt={user.nombre} className="w-full h-full object-cover" />
                       ) : (
@@ -122,10 +122,10 @@ export default function Navbar() {
                       )}
                     </div>
                     <div className="hidden lg:block text-left text-xs">
-                      <div className="font-bold text-gray-800 line-clamp-1 max-w-[120px]">
+                      <div className="font-bold text-gray-800 line-clamp-1 max-w-[100px]">
                         {user.nombre.split(' ')[0]}
                       </div>
-                      <div className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
+                      <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">
                         {user.rol}
                       </div>
                     </div>
@@ -197,16 +197,16 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <Link
                     href="/login"
-                    className="px-3.5 py-1.5 text-xs font-semibold text-gray-700 hover:text-uninorte-red transition"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-gray-700 hover:text-uninorte-red transition whitespace-nowrap"
                   >
                     Ingresar
                   </Link>
                   <Link
                     href="/register"
-                    className="px-3.5 py-1.5 text-xs font-semibold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-sm transition"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-xs transition whitespace-nowrap"
                   >
                     Registrarme
                   </Link>
@@ -216,7 +216,7 @@ export default function Navbar() {
               {/* Botón Menú Mobile */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-gray-700 hover:bg-gray-100 rounded-xl md:hidden transition"
+                className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-xl md:hidden transition shrink-0"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -275,12 +275,31 @@ export default function Navbar() {
                 Panel Administrador
               </Link>
             )}
+
+            {!user && (
+              <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-2.5 text-center text-xs font-bold text-gray-800 bg-gray-100 rounded-xl"
+                >
+                  Iniciar Sesión
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-2.5 text-center text-xs font-bold text-white bg-uninorte-red rounded-xl"
+                >
+                  Crear Cuenta Gratis
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </header>
 
       {/* Barra de Navegación Inferior Mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-6 flex items-center justify-around shadow-lg">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-4 flex items-center justify-around shadow-lg">
         <Link
           href="/"
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold ${
@@ -306,7 +325,7 @@ export default function Navbar() {
           <ShoppingBag className="w-5 h-5" />
           <span>Carrito</span>
           {totalItems > 0 && (
-            <span className="absolute -top-1 right-2 bg-uninorte-red text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="absolute -top-1 right-1 bg-uninorte-red text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
               {totalItems}
             </span>
           )}
@@ -314,11 +333,11 @@ export default function Navbar() {
         <Link
           href={user ? '/pedidos' : '/login'}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold ${
-            pathname.startsWith('/pedidos') ? 'text-uninorte-red' : 'text-gray-500'
+            pathname.startsWith('/pedidos') || pathname.startsWith('/login') ? 'text-uninorte-red' : 'text-gray-500'
           }`}
         >
           <Clock className="w-5 h-5" />
-          <span>Pedidos</span>
+          <span>{user ? 'Pedidos' : 'Ingresar'}</span>
         </Link>
       </div>
     </>
