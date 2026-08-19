@@ -16,6 +16,7 @@ import {
   Clock,
   ChevronDown,
   Zap,
+  FileText,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -187,7 +188,7 @@ export default function Navbar() {
                             onClick={() => setUserDropdownOpen(false)}
                             className="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-xl transition"
                           >
-                            <span className="text-sm">📋</span>
+                            <FileText className="w-4 h-4 text-slate-400" />
                             Radicar PQRS / Ayuda
                           </Link>
                         </div>

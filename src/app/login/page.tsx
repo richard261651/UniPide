@@ -35,65 +35,69 @@ export default function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full space-y-6">
         {/* Encabezado */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-uninorte-red text-white font-black text-xl flex items-center justify-center mx-auto shadow-md shadow-red-900/20">
-            U
+        <div className="text-center space-y-3">
+          <img
+            src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+            alt="UniPide Icon"
+            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
+          />
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Iniciar Sesión en Uni<span className="text-amber-500">Pide</span>
+            </h1>
+            <p className="text-xs text-slate-500 mt-1">
+              Ingresa con tu correo electrónico y contraseña registrados
+            </p>
           </div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Iniciar Sesión
-          </h1>
-          <p className="text-xs text-gray-500">
-            Ingresa con tu correo electrónico y contraseña registrados
-          </p>
         </div>
 
         {/* Formulario */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm space-y-4">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl shadow-slate-900/5 space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 text-xs rounded-xl font-medium">
+            <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-xl font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-800 mb-1">
                 Correo Electrónico
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="email"
                   required
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
                   placeholder="ejemplo@correo.com"
-                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-gray-700">
+                <label className="block text-xs font-semibold text-slate-800">
                   Contraseña
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-[11px] font-semibold text-uninorte-red hover:underline"
+                  className="text-[11px] font-semibold text-amber-600 hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
                 />
               </div>
             </div>
@@ -101,25 +105,25 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer active:scale-98"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Verificando...</span>
                 </>
               ) : (
                 <>
                   <span>Ingresar a la Plataforma</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 text-amber-400" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="pt-4 border-t border-gray-100 text-center text-xs text-gray-500">
+          <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="font-bold text-uninorte-red hover:underline">
+            <Link href="/register" className="font-bold text-amber-600 hover:underline">
               Regístrate aquí
             </Link>
           </div>
