@@ -22,7 +22,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
-import CampusMapSelector from '@/components/CampusMapSelector';
 
 export default function CarritoPage() {
   const router = useRouter();
@@ -215,12 +214,6 @@ export default function CarritoPage() {
               </div>
 
               <div className="space-y-4">
-                <CampusMapSelector
-                  zones={zones}
-                  selectedZone={selectedZone}
-                  onSelectZone={(code) => setSelectedZone(code)}
-                />
-
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                     Bloque o Edificio de Entrega *

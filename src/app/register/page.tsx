@@ -7,16 +7,28 @@ import { isValidEmail } from '@/lib/utils';
 import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin } from 'lucide-react';
 
 const CAMPUS_ZONES = [
-  { codigo: 'ZONA_EMPRENDIMIENTOS', nombre: 'Zona de Emprendimientos (Pasillo Ágora Central)' },
-  { codigo: 'BLOQUE_A', nombre: 'Bloque A (Ingenierías)' },
-  { codigo: 'BLOQUE_B', nombre: 'Bloque B (Ciencias Básicas)' },
-  { codigo: 'BLOQUE_C', nombre: 'Bloque C (Humanidades)' },
-  { codigo: 'BLOQUE_F', nombre: 'Bloque F (Aulas de Clase)' },
-  { codigo: 'BLOQUE_G', nombre: 'Bloque G (Diseño & Arquitectura)' },
-  { codigo: 'BLOQUE_K', nombre: 'Bloque K (Posgrados)' },
-  { codigo: 'CAFETERIA_CENTRAL', nombre: 'Cafetería Central / Du Nord' },
-  { codigo: 'BIBLIOTECA_PARRISH', nombre: 'Biblioteca Karl C. Parrish' },
-  { codigo: 'COLISEO_FUNDADORES', nombre: 'Coliseo Los Fundadores' },
+  { codigo: 'BLOQUE_A', nombre: 'Bloque A' },
+  { codigo: 'BLOQUE_B', nombre: 'Bloque B' },
+  { codigo: 'BLOQUE_C', nombre: 'Bloque C' },
+  { codigo: 'BLOQUE_D', nombre: 'Bloque D' },
+  { codigo: 'BLOQUE_E', nombre: 'Bloque E' },
+  { codigo: 'BLOQUE_F', nombre: 'Bloque F' },
+  { codigo: 'BLOQUE_G', nombre: 'Bloque G' },
+  { codigo: 'BLOQUE_I', nombre: 'Bloque I' },
+  { codigo: 'BLOQUE_J', nombre: 'Bloque J' },
+  { codigo: 'BLOQUE_K', nombre: 'Bloque K' },
+  { codigo: 'BLOQUE_L', nombre: 'Bloque L' },
+  { codigo: 'BLOQUE_M', nombre: 'Bloque M' },
+  { codigo: 'BAMBU_1', nombre: 'Bambú 1' },
+  { codigo: 'BAMBU_2', nombre: 'Bambú 2' },
+  { codigo: 'FUENTE_CENTRAL', nombre: 'Fuente' },
+  { codigo: 'COLISEO_FUNDADORES', nombre: 'Coliseo' },
+  { codigo: 'AUDITORIO_PRINCIPAL', nombre: 'Auditorio' },
+  { codigo: 'BIBLIOTECA_PARRISH', nombre: 'Biblioteca' },
+  { codigo: 'CASA_ESTUDIO', nombre: 'Casa Estudio' },
+  { codigo: 'CENTRO_MEDICO', nombre: 'Centro Médico' },
+  { codigo: 'CENTRO_DEPORTIVO', nombre: 'Centro Deportivo' },
+  { codigo: 'SALON_PROYECCIONES', nombre: 'Salón de Proyecciones' },
 ];
 
 export default function RegisterPage() {
@@ -320,6 +332,30 @@ export default function RegisterPage() {
                     placeholder="Ej. Kiosco 2, Pasillo Bloque F o Bancas de la Fuente"
                     className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center justify-between">
+                    <span>Tiempo Promedio de Espera / Preparación *</span>
+                    <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                      ⏱️ {tiempoBasePrepMin} min aprox.
+                    </span>
+                  </label>
+                  <select
+                    value={tiempoBasePrepMin}
+                    onChange={(e) => setTiempoBasePrepMin(Number(e.target.value))}
+                    className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-uninorte-red outline-none transition font-medium"
+                  >
+                    <option value={5}>5 minutos (Entrega inmediata / Productos listos)</option>
+                    <option value={10}>10 minutos (Entrega rápida)</option>
+                    <option value={15}>15 minutos (Tiempo estándar)</option>
+                    <option value={20}>20 minutos (Preparación al momento)</option>
+                    <option value={25}>25 minutos (Platos elaborados / Horneado)</option>
+                    <option value={30}>30 minutos (Pedidos personalizados)</option>
+                  </select>
+                  <p className="text-[10px] text-gray-400 mt-1">
+                    Este tiempo se calculará automáticamente junto a la distancia entre bloques al hacer pedidos.
+                  </p>
                 </div>
 
                 <div>

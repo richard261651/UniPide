@@ -142,15 +142,5 @@ En la barra de navegación y en la página de inicio de sesión dispones del bot
 
 ## 🏛️ Zonas del Campus Uninorte Incluidas en el Cálculo de Entrega
 
-- `ZONA_EMPRENDIMIENTOS`: Zona de Emprendimientos (Pasillo Ágora Central)
-- `BLOQUE_A`: Bloque A (Ingenierías & Laboratorios)
-- `BLOQUE_B`: Bloque B (Ciencias Básicas & Matemáticas)
-- `BLOQUE_C`: Bloque C (Humanidades & Idiomas)
-- `BLOQUE_F`: Bloque F (Aulas de Clase & Auditorios)
-- `BLOQUE_G`: Bloque G (Arquitectura, Arte y Diseño)
-- `BLOQUE_K`: Bloque K (Edificio de Posgrados & Innovación)
-- `CAFETERIA_CENTRAL`: Cafetería Central / Du Nord
-- `BIBLIOTECA_PARRISH`: Biblioteca Karl C. Parrish Jr.
-- `COLISEO_FUNDADORES`: Coliseo Los Fundadores & Canchas
-- `FUENTE_CENTRAL`: Plaza de la Paz & Fuente Central
-- `BIENESTAR_ESTUDIANTIL`: Edificio de Bienestar & Centro Médico
+- **Edificios**: Bloque A, Bloque B, Bloque C, Bloque D, Bloque E, Bloque F, Bloque G, Bloque I, Bloque J, Bloque K, Bloque L, Bloque M
+- **Espacios Comunes & Servicios**: Bambú 1, Bambú 2, Fuente, Coliseo, Auditorio, Biblioteca, Casa Estudio, Centro Médico, Centro Deportivo, Salón de Proyecciones

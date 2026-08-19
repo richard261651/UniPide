@@ -6,7 +6,6 @@ import { useAuth } from '@/context/AuthContext';
 import { OrderDetail } from '@/types';
 import { formatPrice, formatShortDate } from '@/lib/utils';
 import OrderStatusTracker from '@/components/OrderStatusTracker';
-import CampusDeliveryTracker from '@/components/CampusDeliveryTracker';
 import RatingModal from '@/components/RatingModal';
 import {
   Clock,
@@ -125,14 +124,6 @@ export default function OrderTrackingPage() {
       {/* Tracker Visual de Estados */}
       <OrderStatusTracker
         status={order.estado}
-        tiempoEstimadoMin={order.tiempoEstimadoMin}
-      />
-
-      {/* Rastreador de Ruta en Vivo en Campus (Bloque a Bloque) */}
-      <CampusDeliveryTracker
-        estado={order.estado}
-        origenZonaNombre={order.business?.ubicacionCampus || 'Kiosco / Zona Ágora'}
-        destinoZonaNombre={order.zonaEntregaNombre}
         tiempoEstimadoMin={order.tiempoEstimadoMin}
       />
 
