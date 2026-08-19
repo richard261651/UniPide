@@ -53,7 +53,7 @@ export default function WelcomeSplashScreen() {
         <div className="brand-content flex flex-col items-center sm:items-start text-center sm:text-left overflow-hidden">
           <h1 className="brand-title text-3xl sm:text-4xl font-black tracking-tight leading-none">
             <span className="text-[#1F222E]">uni</span>
-            <span className="text-amber-500">pide</span>
+            <span className="text-[#F56649]">pide</span>
           </h1>
           <p className="brand-tagline text-[10px] sm:text-xs font-bold tracking-wider text-slate-500 uppercase mt-2">
             Lo de tu campus, a un pedido de distancia

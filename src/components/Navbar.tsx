@@ -43,7 +43,7 @@ export default function Navbar() {
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
                 <span className="font-black text-slate-900 tracking-tight text-lg sm:text-2xl">
-                  Uni<span className="text-amber-500">Pide</span>
+                  Uni<span className="text-[#F56649]">Pide</span>
                 </span>
               </Link>
 
@@ -53,7 +53,7 @@ export default function Navbar() {
                   href="/"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/'
-                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
@@ -63,7 +63,7 @@ export default function Navbar() {
                   href="/negocios"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname.startsWith('/negocios')
-                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
@@ -73,7 +73,7 @@ export default function Navbar() {
                   href="/nosotros"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/nosotros'
-                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
@@ -84,7 +84,7 @@ export default function Navbar() {
                     href="/pedidos"
                     className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                       pathname.startsWith('/pedidos')
-                        ? 'text-amber-900 bg-amber-50 border-amber-200'
+                        ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                     }`}
                   >
@@ -156,9 +156,9 @@ export default function Navbar() {
                             <Link
                               href="/emprendedor"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 rounded-xl transition"
+                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#F56649] bg-[#FEEBE7] hover:bg-[#FBC6BB]/40 rounded-xl transition"
                             >
-                              <Store className="w-4 h-4 text-amber-600" />
+                              <Store className="w-4 h-4 text-[#F56649]" />
                               Panel de Emprendedor
                             </Link>
                           )}
@@ -167,9 +167,9 @@ export default function Navbar() {
                             <Link
                               href="/admin"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-900 bg-red-50 hover:bg-red-100 rounded-xl transition"
+                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
                             >
-                              <Shield className="w-4 h-4 text-uninorte-red" />
+                              <Shield className="w-4 h-4 text-slate-800" />
                               Panel de Administrador
                             </Link>
                           )}
@@ -213,13 +213,13 @@ export default function Navbar() {
                 <div className="flex items-center gap-1 sm:gap-2">
                   <Link
                     href="/login"
-                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-amber-600 transition whitespace-nowrap"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#F56649] transition whitespace-nowrap"
                   >
                     Ingresar
                   </Link>
                   <Link
                     href="/register"
-                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl shadow-xs transition whitespace-nowrap"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-[#F56649] hover:bg-[#F77C64] rounded-xl shadow-xs transition whitespace-nowrap"
                   >
                     Registrarme
                   </Link>

@@ -43,7 +43,7 @@ export default function LoginPage() {
           />
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Iniciar Sesión en Uni<span className="text-amber-500">Pide</span>
+              Iniciar Sesión en Uni<span className="text-[#F56649]">Pide</span>
             </h1>
             <p className="text-xs text-slate-500 mt-1">
               Ingresa con tu correo electrónico y contraseña registrados
@@ -54,7 +54,7 @@ export default function LoginPage() {
         {/* Formulario */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl shadow-slate-900/5 space-y-4">
           {error && (
-            <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-xl font-medium">
+            <div className="p-3 bg-[#FEEBE7] border border-[#FBC6BB] text-[#C94026] text-xs rounded-xl font-medium">
               {error}
             </div>
           )}
@@ -72,7 +72,7 @@ export default function LoginPage() {
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
                   placeholder="ejemplo@correo.com"
-                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
+                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
                 />
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-[11px] font-semibold text-amber-600 hover:underline"
+                  className="text-[11px] font-semibold text-[#F56649] hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
@@ -97,7 +97,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
+                  className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
                 />
               </div>
             </div>
@@ -105,7 +105,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+              className="w-full py-3 bg-[#F56649] hover:bg-[#F77C64] text-white text-xs font-bold rounded-xl shadow-md shadow-[#F56649]/20 transition flex items-center justify-center gap-2 cursor-pointer active:scale-98"
             >
               {loading ? (
                 <>
@@ -115,7 +115,7 @@ export default function LoginPage() {
               ) : (
                 <>
                   <span>Ingresar a la Plataforma</span>
-                  <ArrowRight className="w-4 h-4 text-amber-400" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </>
               )}
             </button>
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
           <div className="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="font-bold text-amber-600 hover:underline">
+            <Link href="/register" className="font-bold text-[#F56649] hover:underline">
               Regístrate aquí
             </Link>
           </div>

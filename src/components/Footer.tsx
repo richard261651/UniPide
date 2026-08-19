@@ -85,7 +85,7 @@ export default function Footer() {
 
           {/* Columna 4: Legal & Info */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-widest text-amber-400">Comunidad & Ayuda</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-[#F56649]">Comunidad & Ayuda</h4>
             <ul className="space-y-2 text-xs text-slate-300">
               <li>
                 <Link href="/pqrs" className="hover:text-white transition font-bold text-white">
@@ -99,7 +99,7 @@ export default function Footer() {
               </li>
             </ul>
             <div className="pt-2 text-[11px] text-slate-400">
-              Diseñado con <Heart className="w-3 h-3 text-amber-400 inline mx-0.5 fill-amber-400" /> para Uninorte.
+              Diseñado con <Heart className="w-3 h-3 text-[#F56649] inline mx-0.5 fill-[#F56649]" /> para Uninorte.
             </div>
           </div>
         </div>

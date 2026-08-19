@@ -195,8 +195,8 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
                   : added
                   ? 'bg-emerald-600 text-white'
                   : hasVariants
-                  ? 'bg-slate-900 text-white hover:bg-slate-800 active:scale-95'
-                  : 'bg-amber-50 text-amber-900 hover:bg-amber-500 hover:text-slate-950 border border-amber-200 active:scale-95'
+                  ? 'bg-[#1F222E] text-white hover:bg-slate-800 active:scale-95'
+                  : 'bg-[#FEEBE7] text-[#F56649] hover:bg-[#F56649] hover:text-white border border-[#FBC6BB] active:scale-95'
               }`}
             >
               {added ? (

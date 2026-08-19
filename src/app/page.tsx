@@ -119,7 +119,7 @@ export default function HomePage() {
   // 2. PANTALLA INICIAL DE LOGGEO: Si el usuario NO ha iniciado sesión, es lo primero que ve antes de entrar al portal
   if (!user) {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-amber-50/50 via-slate-50 to-white">
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-[#FEEBE7]/60 via-slate-50 to-white">
         <div className="max-w-md w-full space-y-6">
           {/* Encabezado UniPide con Ícono Favicon */}
           <div className="text-center space-y-3">
@@ -129,10 +129,10 @@ export default function HomePage() {
               className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
             />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Uni<span className="text-amber-500">Pide</span>
+              <h1 className="text-3xl sm:text-4xl font-black text-[#1F222E] tracking-tight">
+                Uni<span className="text-[#F56649]">Pide</span>
               </h1>
-              <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1 rounded-full">
+              <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-[#FEEBE7] text-[#F56649] border border-[#FBC6BB] px-3 py-1 rounded-full">
                 LO DE TU CAMPUS, A UN PEDIDO DE DISTANCIA
               </span>
             </div>
@@ -142,9 +142,9 @@ export default function HomePage() {
           </div>
 
           {/* Tarjeta de Formulario de Ingreso */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xl shadow-slate-900/5 space-y-5">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E2DC] shadow-xl shadow-[#1F222E]/5 space-y-5">
             {loginError && (
-              <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-xl font-medium">
+              <div className="p-3 bg-[#FEEBE7] border border-[#FBC6BB] text-[#C94026] text-xs rounded-xl font-medium">
                 {loginError}
               </div>
             )}
@@ -162,7 +162,7 @@ export default function HomePage() {
                     value={loginCorreo}
                     onChange={(e) => setLoginCorreo(e.target.value)}
                     placeholder="usuario@correo.com"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
                   />
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function HomePage() {
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-[11px] font-semibold text-amber-600 hover:underline"
+                    className="text-[11px] font-semibold text-[#F56649] hover:underline"
                   >
                     ¿Olvidaste tu contraseña?
                   </Link>
@@ -187,7 +187,7 @@ export default function HomePage() {
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
                   />
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-slate-900/20 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+                className="w-full py-3.5 bg-[#F56649] hover:bg-[#F77C64] text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-[#F56649]/25 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
               >
                 {loginLoading ? (
                   <>
@@ -205,7 +205,7 @@ export default function HomePage() {
                 ) : (
                   <>
                     <span className="text-white">Ingresar al Portal</span>
-                    <ArrowRight className="w-4 h-4 text-amber-400" />
+                    <ArrowRight className="w-4 h-4 text-white" />
                   </>
                 )}
               </button>
@@ -215,7 +215,7 @@ export default function HomePage() {
               <p className="text-xs text-slate-500">¿Aún no tienes cuenta registrada?</p>
               <Link
                 href="/register"
-                className="block w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-slate-100 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 rounded-xl transition"
+                className="block w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-[#F8F6F4] hover:bg-[#FEEBE7] hover:text-[#F56649] border border-slate-200 rounded-xl transition"
               >
                 Crear Cuenta de Estudiante o Emprendedor
               </Link>
@@ -225,15 +225,15 @@ export default function HomePage() {
           {/* Badges de Confianza del Campus */}
           <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-slate-600 font-medium pt-2">
             <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <MapPin className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+              <MapPin className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
               <span>Todos los Bloques</span>
             </div>
             <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <Clock className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
+              <Clock className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
               <span>Entrega Rápida</span>
             </div>
             <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-indigo-600 mx-auto mb-1" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
               <span>100% Uninorte</span>
             </div>
           </div>
@@ -250,13 +250,13 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-5 sm:space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-amber-400">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-[#FBC6BB]">
+            <Sparkles className="w-3.5 h-3.5 text-[#F56649]" />
             <span>¡Hola, {user.nombre.split(' ')[0]}! — UniPide Campus</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-            Pide en el campus, apoya el <span className="text-amber-400 underline decoration-amber-400/40">talento universitario</span>
+            Pide en el campus, apoya el <span className="text-[#F56649] underline decoration-[#F56649]/40">talento universitario</span>
           </h1>
 
           <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
@@ -265,7 +265,7 @@ export default function HomePage() {
 
           {/* Buscador Rápido */}
           <div className="max-w-2xl mx-auto pt-1">
-            <div className="relative flex items-center bg-white rounded-2xl p-1.5 shadow-xl border border-slate-200 text-slate-900 focus-within:ring-2 focus-within:ring-amber-500 transition">
+            <div className="relative flex items-center bg-white rounded-2xl p-1.5 shadow-xl border border-slate-200 text-slate-900 focus-within:ring-2 focus-within:ring-[#F56649] transition">
               <div className="pl-3.5 text-slate-400">
                 <Search className="w-5 h-5" />
               </div>
@@ -290,11 +290,11 @@ export default function HomePage() {
           {/* Badges de confianza Uninorte */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-300 pt-1 font-medium">
             <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <MapPin className="w-3.5 h-3.5 text-[#F56649]" />
               Bloques A, B, F, G, K, Parrish...
             </span>
             <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              <Clock className="w-3.5 h-3.5 text-[#F56649]" />
               Entrega en minutos sin salir de clase
             </span>
             <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
@@ -324,11 +324,11 @@ export default function HomePage() {
                 onClick={() => setSelectedCategory(cat.name)}
                 className={`flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap shadow-xs cursor-pointer ${
                   isSelected
-                    ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20'
-                    : 'bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-700 border border-slate-200'
+                    ? 'bg-[#F56649] text-white shadow-md shadow-[#F56649]/20'
+                    : 'bg-white text-slate-700 hover:bg-[#FEEBE7] hover:text-[#F56649] border border-slate-200'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-400' : 'text-amber-600'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#F56649]'}`} />
                 <span>{cat.name}</span>
               </button>
             );
@@ -339,7 +339,7 @@ export default function HomePage() {
       {/* Sección Ofertas Especiales del Día */}
       {offers.length > 0 && selectedCategory === 'Todos' && !searchQuery && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-amber-600 via-amber-700 to-slate-900 rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-amber-600/30 space-y-6">
+          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-slate-700 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md border border-white/20">
@@ -349,12 +349,12 @@ export default function HomePage() {
                   <h2 className="text-xl sm:text-2xl font-black tracking-tight">
                     Ofertas Universitarias del Día
                   </h2>
-                  <p className="text-xs text-amber-100">
+                  <p className="text-xs text-slate-300">
                     Descuentos y combos exclusivos para estudiantes de Uninorte
                   </p>
                 </div>
               </div>
-              <span className="self-start sm:self-auto text-[11px] font-extrabold bg-slate-900 text-amber-400 border border-amber-400/30 px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+              <span className="self-start sm:self-auto text-[11px] font-extrabold bg-[#F56649] text-white px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
                 Tiempo Limitado 🔥
               </span>
             </div>
@@ -375,7 +375,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              <Store className="w-5 h-5 text-amber-600" />
+              <Store className="w-5 h-5 text-[#F56649]" />
               <span>Emprendimientos en Campus</span>
             </h2>
             <p className="text-xs text-slate-500 font-medium">
@@ -387,7 +387,7 @@ export default function HomePage() {
 
           <Link
             href="/negocios"
-            className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-[#F56649] hover:underline flex items-center gap-1"
           >
             <span>Ver Directorio</span>
             <ChevronRight className="w-4 h-4" />
@@ -421,7 +421,7 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
           <div className="space-y-2 text-center md:text-left">
-            <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-[#F56649] uppercase tracking-wider">
               ¿Tienes un negocio en la U?
             </span>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
@@ -434,7 +434,7 @@ export default function HomePage() {
 
           <Link
             href="/register"
-            className="px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-black rounded-2xl shadow-lg shadow-amber-500/25 transition whitespace-nowrap flex items-center gap-2 active:scale-98"
+            className="px-6 py-3.5 bg-[#F56649] hover:bg-[#F77C64] text-white text-xs sm:text-sm font-black rounded-2xl shadow-lg shadow-[#F56649]/25 transition whitespace-nowrap flex items-center gap-2 active:scale-98"
           >
             <span>Registrar mi Emprendimiento</span>
             <ArrowRight className="w-4 h-4" />
