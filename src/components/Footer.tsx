@@ -49,7 +49,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/negocios?cat=Comida%20Rápida" className="hover:text-white hover:underline transition">
+                <Link href="/negocios?cat=Tecnolog%C3%ADa%20%26%20Gadgets" className="hover:text-white hover:underline transition font-bold text-sky-300">
+                  💻 Tecnología & Gadgets
+                </Link>
+              </li>
+              <li>
+                <Link href="/negocios?cat=Comida%20R%C3%A1pida" className="hover:text-white hover:underline transition">
                   Comida Rápida
                 </Link>
               </li>

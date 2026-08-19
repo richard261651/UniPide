@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Zap,
   FileText,
+  Heart,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -80,16 +81,28 @@ export default function Navbar() {
                   Nosotros
                 </Link>
                 {user && (
-                  <Link
-                    href="/pedidos"
-                    className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
-                      pathname.startsWith('/pedidos')
-                        ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
-                    }`}
-                  >
-                    Mis Pedidos
-                  </Link>
+                  <>
+                    <Link
+                      href="/favoritos"
+                      className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
+                        pathname === '/favoritos'
+                          ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
+                      }`}
+                    >
+                      Mis Favoritos
+                    </Link>
+                    <Link
+                      href="/pedidos"
+                      className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
+                        pathname.startsWith('/pedidos')
+                          ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
+                      }`}
+                    >
+                      Mis Pedidos
+                    </Link>
+                  </>
                 )}
               </nav>
             </div>
@@ -173,6 +186,15 @@ export default function Navbar() {
                               Panel de Administrador
                             </Link>
                           )}
+
+                          <Link
+                            href="/favoritos"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-xl transition"
+                          >
+                            <Heart className="w-4 h-4 text-uninorte-red fill-uninorte-red" />
+                            Mis Productos Favoritos
+                          </Link>
 
                           <Link
                             href="/pedidos"

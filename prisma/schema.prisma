@@ -25,6 +25,7 @@ model User {
   ratings       Rating[]
   chatMessages  ChatMessage[]
   pqrs          PQRS[]
+  favorites     Favorite[]
 }
 
 model Business {
@@ -33,13 +34,13 @@ model Business {
   user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   nombre            String
   slug              String       @unique
-  categoria         String       // "Comida Rápida", "Postres & Dulces", "Bebidas & Café", "Accesorios & Merch", "Ropa & Moda", "Papelería & Stickers", "Servicios"
+  categoria         String       // "Comida Rápida", "Postres & Dulces", "Bebidas & Café", "Tecnología & Gadgets", "Accesorios & Merch", "Ropa & Moda", "Papelería & Stickers", "Librería & Libros", "Belleza & Cuidado", "Servicios & Tutorías"
   descripcion       String
   logo              String?
   banner            String?
-  ubicacionCampus   String       // Ej: "Bloque F", "Bambú 1"
-  zonaCampusCodigo  String       @default("BLOQUE_F") // Código de CampusZone
-  tiempoBasePrepMin Int          @default(0) // Obsoleto - ventas directas
+  ubicacionCampus   String       @default("Venta Móvil / Entrega en Campus")
+  zonaCampusCodigo  String       @default("ZONA_EMPRENDIMIENTOS")
+  tiempoBasePrepMin Int          @default(0) // Obsoleto - ventas directas en campus
   estadoAprobacion  String       @default("PENDIENTE") // "PENDIENTE" | "APROBADO" | "RECHAZADO" | "SUSPENDIDO"
   activo            Boolean      @default(true)
   fechaCreacion     DateTime     @default(now())
@@ -80,6 +81,7 @@ model Product {
   fechaCreacion     DateTime     @default(now())
 
   orderItems        OrderItem[]
+  favorites         Favorite[]
 }
 
 model CampusZone {
@@ -178,4 +180,15 @@ model PQRS {
   estado        String    @default("PENDIENTE") // "PENDIENTE" | "EN_REVISION" | "RESUELTO"
   fechaCreacion DateTime  @default(now())
   fechaRespuesta DateTime?
+}
+
+model Favorite {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fechaCreacion DateTime @default(now())
+
+  @@unique([userId, productId])
 }

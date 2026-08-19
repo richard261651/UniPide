@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { ProductItem } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
-import { Plus, Check, Tag, AlertCircle, ShoppingBag, Images, Shirt, Palette, Sliders } from 'lucide-react';
+import { useFavorites } from '@/context/FavoritesContext';
+import { Plus, Check, Tag, AlertCircle, ShoppingBag, Images, Shirt, Palette, Sliders, Heart } from 'lucide-react';
 import ProductModal from './ProductModal';
 
 interface ProductCardProps {
@@ -14,10 +15,18 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, showBusinessInfo = false }: ProductCardProps) {
   const { addItem, clearCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [added, setAdded] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [conflictModalOpen, setConflictModalOpen] = useState(false);
   const [currentBizName, setCurrentBizName] = useState('');
+
+  const fav = isFavorite(product.id);
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleFavorite(product.id);
+  };
 
   const precioFinal = product.esOferta && product.precioOferta ? product.precioOferta : product.precio;
   const tieneDescuento = product.esOferta && product.precioOferta && product.precioOferta < product.precio;
@@ -103,12 +112,25 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
             ) : null}
           </div>
 
+          {/* Botón de Favorito */}
+          <button
+            onClick={handleFavoriteClick}
+            className={`absolute top-2.5 right-2.5 z-20 p-2 rounded-full backdrop-blur-md transition-all shadow-xs active:scale-90 ${
+              fav
+                ? 'bg-white text-uninorte-red shadow-md'
+                : 'bg-black/40 text-white hover:bg-white hover:text-uninorte-red'
+            }`}
+            title={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+          >
+            <Heart className={`w-4 h-4 transition-transform ${fav ? 'fill-uninorte-red scale-110' : ''}`} />
+          </button>
+
           {/* Badge de fotos múltiples / carrusel */}
           {hasMultiplePhotos && (
-            <div className="absolute top-2.5 right-2.5 z-10">
+            <div className="absolute top-2.5 right-11 z-10">
               <span className="inline-flex items-center gap-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                 <Images className="w-3 h-3" />
-                <span>{product.fotos?.length} fotos</span>
+                <span>{product.fotos?.length}</span>
               </span>
             </div>
           )}

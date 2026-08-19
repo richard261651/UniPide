@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Questrial } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
+import { FavoritesProvider } from '@/context/FavoritesContext';
 import { CartProvider } from '@/context/CartContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -90,13 +91,15 @@ export default function RootLayout({
       </head>
       <body className={`${questrial.className} min-h-screen flex flex-col bg-[#FAF8F5] text-slate-900 overflow-x-hidden selection:bg-red-500 selection:text-white tracking-wide`}>
         <AuthProvider>
-          <CartProvider>
-            <WelcomeSplashScreen />
-            <Navbar />
-            <CartDrawer />
-            <main className="flex-1 pb-20 md:pb-8">{children}</main>
-            <Footer />
-          </CartProvider>
+          <FavoritesProvider>
+            <CartProvider>
+              <WelcomeSplashScreen />
+              <Navbar />
+              <CartDrawer />
+              <main className="flex-1 pb-20 md:pb-8">{children}</main>
+              <Footer />
+            </CartProvider>
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>

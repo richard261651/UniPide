@@ -4,15 +4,12 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BusinessItem } from '@/types';
 import BusinessCard from '@/components/BusinessCard';
-import { Search, Store, Sparkles, Utensils, Cake, Coffee, Palette, Shirt } from 'lucide-react';
+import { BUSINESS_CATEGORIES } from '@/lib/categories';
+import { Search, Store, Sparkles } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'Todos', icon: Sparkles },
-  { name: 'Comida Rápida', icon: Utensils },
-  { name: 'Postres & Dulces', icon: Cake },
-  { name: 'Bebidas & Café', icon: Coffee },
-  { name: 'Accesorios & Merch', icon: Palette },
-  { name: 'Ropa & Moda', icon: Shirt },
+  ...BUSINESS_CATEGORIES.map((c) => ({ name: c.name, icon: c.icon })),
 ];
 
 function NegociosContent() {

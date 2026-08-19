@@ -265,9 +265,38 @@ async function main() {
       descripcion: 'Stickers resistentes al agua de Uninorte y cultura pop, pines metálicos, tote bags ilustradas y libretas personalizadas para tus materias.',
       logo: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80',
       banner: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1200&auto=format&fit=crop&q=80',
-      ubicacionCampus: 'Bloque G (Diseño) - Ágora de Talleres',
-      zonaCampusCodigo: 'BLOQUE_G',
-      tiempoBasePrepMin: 5,
+      ubicacionCampus: 'Venta Móvil / Entrega en Campus',
+      zonaCampusCodigo: 'ZONA_EMPRENDIMIENTOS',
+      tiempoBasePrepMin: 0,
+      estadoAprobacion: 'APROBADO',
+      activo: true,
+    },
+  });
+
+  // Emprendedor 5 - Tecnología & Gadgets
+  const userTech = await prisma.user.create({
+    data: {
+      nombre: 'Mateo Morales (Ing. Sistemas)',
+      correo: 'tech@uninorte.edu.co',
+      passwordHash: hashedPasswordEmprendedor,
+      rol: 'EMPRENDEDOR',
+      telefono: '3051112233',
+      foto: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80',
+    },
+  });
+
+  const bizTech = await prisma.business.create({
+    data: {
+      userId: userTech.id,
+      nombre: 'TechStore Uninorte 💻',
+      slug: 'techstore-uninorte',
+      categoria: 'Tecnología & Gadgets',
+      descripcion: 'Cargadores ultrarrápidos, cables tipo C y Lightning de alto rendimiento, powerbanks portátiles y gadgets de soporte urgente en campus.',
+      logo: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&auto=format&fit=crop&q=80',
+      banner: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&auto=format&fit=crop&q=80',
+      ubicacionCampus: 'Venta Móvil / Entrega en Campus',
+      zonaCampusCodigo: 'ZONA_EMPRENDIMIENTOS',
+      tiempoBasePrepMin: 0,
       estadoAprobacion: 'APROBADO',
       activo: true,
     },
@@ -422,6 +451,37 @@ async function main() {
       stock: 12,
       disponible: true,
       categoria: 'Moda & Accesorios',
+      esOferta: false,
+    },
+  });
+
+  // Productos TechStore
+  await prisma.product.create({
+    data: {
+      businessId: bizTech.id,
+      nombre: 'Cargador Carga Rápida 20W USB-C',
+      descripcion: 'Cubo cargador compacto de alta velocidad compatible con iPhone y Android, ideal para recargar en salones de clase.',
+      precio: 28000,
+      foto: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&auto=format&fit=crop&q=80',
+      stock: 15,
+      disponible: true,
+      categoria: 'Cargadores',
+      esOferta: true,
+      precioOferta: 24000,
+      descripcionOferta: '¡Descuento urgente para parciales!',
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      businessId: bizTech.id,
+      nombre: 'Cable Trensado USB-C a USB-C (2 Metros)',
+      descripcion: 'Cable ultra resistente en nylon trenzado anti-enredos con soporte para carga rápida 60W y transferencia de datos.',
+      precio: 15000,
+      foto: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',
+      stock: 20,
+      disponible: true,
+      categoria: 'Cables',
       esOferta: false,
     },
   });

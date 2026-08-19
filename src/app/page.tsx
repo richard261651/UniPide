@@ -7,6 +7,8 @@ import { BusinessItem, ProductItem } from '@/types';
 import BusinessCard from '@/components/BusinessCard';
 import ProductCard from '@/components/ProductCard';
 import { isValidEmail } from '@/lib/utils';
+import { BUSINESS_CATEGORIES } from '@/lib/categories';
+import WhatToOrderModal from '@/components/WhatToOrderModal';
 import {
   Search,
   Sparkles,
@@ -16,27 +18,18 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
-  Utensils,
-  Cake,
-  Coffee,
-  Palette,
-  Shirt,
   ArrowRight,
   Zap,
   Lock,
   Mail,
   Loader2,
-  ShoppingBag,
-  Shield,
+  Dice5,
+  Heart,
 } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'Todos', icon: Sparkles },
-  { name: 'Comida Rápida', icon: Utensils },
-  { name: 'Postres & Dulces', icon: Cake },
-  { name: 'Bebidas & Café', icon: Coffee },
-  { name: 'Accesorios & Merch', icon: Palette },
-  { name: 'Ropa & Moda', icon: Shirt },
+  ...BUSINESS_CATEGORIES.map((c) => ({ name: c.name, icon: c.icon })),
 ];
 
 export default function HomePage() {
@@ -48,6 +41,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingData, setLoadingData] = useState(true);
+  const [whatToOrderOpen, setWhatToOrderOpen] = useState(false);
 
   // Estados del Formulario de Ingreso Directo
   const [loginCorreo, setLoginCorreo] = useState('');
@@ -308,11 +302,26 @@ export default function HomePage() {
 
       {/* Selector de Categorías */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <span>Explorar Categorías</span>
           </h2>
-          <span className="text-xs text-slate-500 font-medium">Filtra tus antojos</span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setWhatToOrderOpen(true)}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-black rounded-xl shadow-md flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
+            >
+              <Dice5 className="w-4 h-4 text-white" />
+              <span>🎲 ¿No sabes qué pedir?</span>
+            </button>
+            <Link
+              href="/favoritos"
+              className="px-3 py-1.5 bg-white hover:bg-red-50 text-uninorte-red border border-red-200 text-xs font-bold rounded-xl transition flex items-center gap-1"
+            >
+              <Heart className="w-3.5 h-3.5 fill-uninorte-red" />
+              <span>Mis Favoritos</span>
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
@@ -442,6 +451,12 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Modal interactivo Recomendador ¿No sabes qué pedir? */}
+      <WhatToOrderModal
+        isOpen={whatToOrderOpen}
+        onClose={() => setWhatToOrderOpen(false)}
+      />
     </div>
   );
 }

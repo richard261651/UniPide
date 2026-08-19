@@ -73,6 +73,8 @@ export interface ProductItem {
     id: string;
     nombre: string;
     slug: string;
+    categoria?: string;
+    logo?: string | null;
     ubicacionCampus: string;
     zonaCampusCodigo: string;
     tiempoBasePrepMin: number;

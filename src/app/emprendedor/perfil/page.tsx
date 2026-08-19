@@ -149,69 +149,34 @@ export default function EmprendedorPerfilPage() {
 
             <div>
               <label className="block font-semibold text-gray-700 mb-1">
-                Categoría *
+                Categoría del Negocio *
               </label>
               <select
                 value={categoria}
                 onChange={(e) => setCategoria(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none bg-white"
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none bg-white font-medium text-gray-800"
               >
                 <option value="Comida Rápida">🍔 Comida Rápida</option>
                 <option value="Postres & Dulces">🍰 Postres & Dulces</option>
                 <option value="Bebidas & Café">☕ Bebidas & Café</option>
+                <option value="Tecnología & Gadgets">💻 Tecnología & Gadgets</option>
                 <option value="Accesorios & Merch">🎨 Accesorios & Merch</option>
                 <option value="Ropa & Moda">👕 Ropa & Moda</option>
-                <option value="Servicios">📋 Servicios Estudiantiles</option>
+                <option value="Papelería & Stickers">✏️ Papelería & Stickers</option>
+                <option value="Librería & Libros">📚 Librería & Libros</option>
+                <option value="Belleza & Cuidado">✨ Belleza & Cuidado</option>
+                <option value="Servicios & Tutorías">📋 Servicios & Tutorías</option>
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                Zona Principal en Campus (Cálculo de Distancia) *
-              </label>
-              <select
-                value={zonaCampusCodigo}
-                onChange={(e) => setZonaCampusCodigo(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none bg-white font-medium"
-              >
-                {zones.map((z) => (
-                  <option key={z.codigo} value={z.codigo}>
-                    {z.nombre}
-                  </option>
-                ))}
-              </select>
+          <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1">
+            <div className="flex items-center gap-1.5 font-bold text-slate-800 text-xs">
+              <span>🚀 Modalidad de Emprendimiento Móvil en Campus</span>
             </div>
-
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                Tiempo Base de Preparación (Minutos) *
-              </label>
-              <input
-                type="number"
-                min="3"
-                max="60"
-                required
-                value={tiempoBasePrepMin}
-                onChange={(e) => setTiempoBasePrepMin(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Ubicación o Punto Exacto de Preparación en Campus *
-            </label>
-            <input
-              type="text"
-              required
-              value={ubicacionCampus}
-              onChange={(e) => setUbicacionCampus(e.target.value)}
-              placeholder="Ej: Zona de Emprendimientos - Kiosco 03 (Frente al Bloque F)"
-              className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
-            />
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Tu negocio no requiere un local físico fijo ni tiempo de preparación programado. Los pedidos se procesan y entregan en tiempo real en los salones y bloques del campus Uninorte.
+            </p>
           </div>
 
           <div>

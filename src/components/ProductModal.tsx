@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { ProductItem } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
+import { useFavorites } from '@/context/FavoritesContext';
 import {
   X,
   ChevronLeft,
@@ -17,6 +18,7 @@ import {
   Palette,
   Sliders,
   AlertCircle,
+  Heart,
 } from 'lucide-react';
 
 interface ProductModalProps {
@@ -27,6 +29,7 @@ interface ProductModalProps {
 
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   const { addItem, clearCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedTalla, setSelectedTalla] = useState<string>('');
@@ -40,6 +43,13 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [currentBizName, setCurrentBizName] = useState('');
 
   if (!isOpen || !product) return null;
+
+  const fav = isFavorite(product.id);
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleFavorite(product.id);
+  };
 
   const photos = product.fotos && product.fotos.length > 0 ? product.fotos : product.foto ? [product.foto] : [];
   const precioFinal = product.esOferta && product.precioOferta ? product.precioOferta : product.precio;
@@ -138,13 +148,27 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in fade-in">
       <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden relative max-h-[92vh] flex flex-col">
-        {/* Botón cerrar */}
-        <button
-          onClick={onClose}
-          className="absolute top-3.5 right-3.5 z-20 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition shadow-md"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        {/* Botones superiores de Favorito y Cerrar */}
+        <div className="absolute top-3.5 right-3.5 z-20 flex items-center gap-2">
+          <button
+            onClick={handleFavoriteClick}
+            className={`p-2 rounded-full backdrop-blur-md transition shadow-md active:scale-90 ${
+              fav
+                ? 'bg-white text-uninorte-red'
+                : 'bg-black/50 hover:bg-black/80 text-white'
+            }`}
+            title={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+          >
+            <Heart className={`w-4 h-4 ${fav ? 'fill-uninorte-red' : ''}`} />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition shadow-md"
+            title="Cerrar modal"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
         {/* Zona Carrusel de Imágenes */}
         <div className="relative aspect-4/3 w-full bg-gray-900 shrink-0 overflow-hidden group">

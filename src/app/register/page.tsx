@@ -333,76 +333,68 @@ export default function RegisterPage() {
 
               {rol === 'EMPRENDEDOR' && (
                 <div className="pt-3 border-t border-gray-100 space-y-3">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 uppercase tracking-wider">
-                    <Store className="w-4 h-4 text-amber-600" />
-                    <span>2. Datos de tu Emprendimiento</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 uppercase tracking-wider">
+                      <Store className="w-4 h-4 text-amber-600" />
+                      <span>2. Datos de tu Emprendimiento</span>
+                    </div>
+                    <span className="text-[10px] font-extrabold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                      🚀 Venta Móvil / Campus
+                    </span>
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Nombre del Negocio
+                      Nombre del Negocio *
                     </label>
                     <input
                       type="text"
                       required
                       value={nombreNegocio}
                       onChange={(e) => setNombreNegocio(e.target.value)}
-                      placeholder="Ej. Sweet Brownies Uninorte"
+                      placeholder="Ej. Sweet Brownies Uninorte / TechStore U"
                       className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
                     />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Categoría
-                      </label>
-                      <select
-                        value={categoriaNegocio}
-                        onChange={(e) => setCategoriaNegocio(e.target.value)}
-                        className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
-                      >
-                        <option value="Comida Rápida">Comida Rápida</option>
-                        <option value="Postres & Dulces">Postres & Dulces</option>
-                        <option value="Bebidas & Café">Bebidas & Café</option>
-                        <option value="Accesorios & Merch">Accesorios & Merch</option>
-                        <option value="Ropa & Moda">Ropa & Moda</option>
-                        <option value="Papelería & Stickers">Papelería & Stickers</option>
-                        <option value="Servicios">Servicios</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1">
-                        Bloque / Zona Base
-                      </label>
-                      <select
-                        value={zonaCampusCodigo}
-                        onChange={(e) => setZonaCampusCodigo(e.target.value)}
-                        className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
-                      >
-                        {CAMPUS_ZONES.map((z) => (
-                          <option key={z.codigo} value={z.codigo}>
-                            {z.nombre}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Ubicación Específica en Campus
+                      Categoría Principal del Negocio *
                     </label>
-                    <input
-                      type="text"
-                      required
-                      value={ubicacionCampus}
-                      onChange={(e) => setUbicacionCampus(e.target.value)}
-                      placeholder="Ej. Bloque F pasillo principal"
-                      className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                    <select
+                      value={categoriaNegocio}
+                      onChange={(e) => setCategoriaNegocio(e.target.value)}
+                      className="w-full text-xs px-3 py-2.5 rounded-xl border border-gray-200 bg-white font-medium text-gray-800"
+                    >
+                      <option value="Comida Rápida">🍔 Comida Rápida</option>
+                      <option value="Postres & Dulces">🍰 Postres & Dulces</option>
+                      <option value="Bebidas & Café">☕ Bebidas & Café</option>
+                      <option value="Tecnología & Gadgets">💻 Tecnología & Gadgets</option>
+                      <option value="Accesorios & Merch">🎨 Accesorios & Merch</option>
+                      <option value="Ropa & Moda">👕 Ropa & Moda</option>
+                      <option value="Papelería & Stickers">✏️ Papelería & Stickers</option>
+                      <option value="Librería & Libros">📚 Librería & Libros</option>
+                      <option value="Belleza & Cuidado">✨ Belleza & Cuidado</option>
+                      <option value="Servicios & Tutorías">📋 Servicios & Tutorías</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      Descripción Corta
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={descripcionNegocio}
+                      onChange={(e) => setDescripcionNegocio(e.target.value)}
+                      placeholder="Ej. Venta de accesorios para celular, brownies caseros y snacks con entregas en campus."
+                      className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
                     />
                   </div>
+
+                  <p className="text-[11px] text-gray-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
+                    💡 <strong className="text-slate-800">Sin punto físico ni demoras:</strong> Tu negocio operará como emprendimiento móvil dentro del campus. Las entregas se acuerdan directamente en el bloque o salón donde se encuentre el cliente.
+                  </p>
                 </div>
               )}
 
