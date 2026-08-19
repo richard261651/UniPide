@@ -38,8 +38,12 @@ export function generateOrderCode(): string {
   return `ORD-${randomNum}`;
 }
 
-export function isUninorteEmail(email: string): boolean {
+export function isValidEmail(email: string): boolean {
   if (!email) return false;
   const cleanEmail = email.trim().toLowerCase();
-  return cleanEmail.endsWith('@uninorte.edu.co') || cleanEmail.endsWith('@uninorte.co');
+  return cleanEmail.includes('@') && cleanEmail.split('@')[1]?.includes('.');
+}
+
+export function isUninorteEmail(email: string): boolean {
+  return isValidEmail(email);
 }

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { isValidEmail } from '@/lib/utils';
 import { Loader2, ArrowRight, Lock, Mail } from 'lucide-react';
 
 export default function LoginPage() {
@@ -14,8 +15,14 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    if (!isValidEmail(correo)) {
+      setError('Por favor ingresa un correo electrónico válido');
+      return;
+    }
+
+    setLoading(true);
 
     const res = await login(correo, password);
     if (!res.success) {
@@ -36,7 +43,7 @@ export default function LoginPage() {
             Iniciar Sesión
           </h1>
           <p className="text-xs text-gray-500">
-            Ingresa con tu correo institucional de la Universidad del Norte
+            Ingresa con tu correo electrónico y contraseña registrados
           </p>
         </div>
 
@@ -51,7 +58,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Correo Institucional
+                Correo Electrónico
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -60,16 +67,24 @@ export default function LoginPage() {
                   required
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
-                  placeholder="ejemplo@uninorte.edu.co"
+                  placeholder="ejemplo@correo.com"
                   className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Contraseña
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-gray-700">
+                  Contraseña
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-[11px] font-semibold text-uninorte-red hover:underline"
+                >
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                 <input

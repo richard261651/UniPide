@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { BusinessItem, ProductItem } from '@/types';
 import BusinessCard from '@/components/BusinessCard';
 import ProductCard from '@/components/ProductCard';
+import { isValidEmail } from '@/lib/utils';
 import {
   Search,
   Sparkles,
@@ -56,8 +57,14 @@ export default function HomePage() {
 
   const handleDirectLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginLoading(true);
     setLoginError('');
+
+    if (!isValidEmail(loginCorreo)) {
+      setLoginError('Por favor ingresa un correo electrónico válido');
+      return;
+    }
+
+    setLoginLoading(true);
 
     const res = await login(loginCorreo, loginPassword);
     if (!res.success) {
@@ -128,7 +135,7 @@ export default function HomePage() {
               </span>
             </div>
             <p className="text-xs text-gray-500 max-w-sm mx-auto">
-              Inicia sesión con tu cuenta institucional para acceder a los pedidos, emprendimientos y entregas en el campus.
+              Inicia sesión con tu correo electrónico para acceder a los pedidos, emprendimientos y entregas en el campus.
             </p>
           </div>
 
@@ -143,7 +150,7 @@ export default function HomePage() {
             <form onSubmit={handleDirectLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Correo Institucional
+                  Correo Electrónico
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -152,16 +159,24 @@ export default function HomePage() {
                     required
                     value={loginCorreo}
                     onChange={(e) => setLoginCorreo(e.target.value)}
-                    placeholder="usuario@uninorte.edu.co"
+                    placeholder="usuario@correo.com"
                     className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Contraseña
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Contraseña
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-[11px] font-semibold text-uninorte-red hover:underline"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                   <input

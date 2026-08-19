@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verifyPassword, signJwtToken, TOKEN_COOKIE_NAME } from '@/lib/auth';
+import { isValidEmail } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,13 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanEmail = correo.trim().toLowerCase();
+
+    if (!isValidEmail(cleanEmail)) {
+      return NextResponse.json(
+        { error: 'Por favor ingresa un correo electrónico válido' },
+        { status: 400 }
+      );
+    }
     const user = await prisma.user.findUnique({
       where: { correo: cleanEmail },
       include: {

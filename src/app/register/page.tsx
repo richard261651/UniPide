@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { isValidEmail } from '@/lib/utils';
 import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin } from 'lucide-react';
 
 const CAMPUS_ZONES = [
@@ -44,8 +45,14 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    if (!isValidEmail(correo)) {
+      setError('Por favor ingresa un correo electrónico válido');
+      return;
+    }
+
+    setLoading(true);
 
     const res = await register({
       nombre,
@@ -165,7 +172,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Correo Institucional
+                    Correo Electrónico
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -174,7 +181,7 @@ export default function RegisterPage() {
                       required
                       value={correo}
                       onChange={(e) => setCorreo(e.target.value)}
-                      placeholder="usuario@uninorte.edu.co"
+                      placeholder="ejemplo@correo.com"
                       className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
                     />
                   </div>
