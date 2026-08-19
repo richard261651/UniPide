@@ -250,13 +250,14 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-5 sm:space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-[#FBC6BB]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-[#F56649]" />
-            <span>¡Hola, {user.nombre.split(' ')[0]}! — UniPide Campus</span>
+            <span className="text-white">¡Hola, {user.nombre.split(' ')[0]}! — UniPide Campus</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-            Pide en el campus, apoya el <span className="text-[#F56649] underline decoration-[#F56649]/40">talento universitario</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white">
+            <span className="text-white">Pide en el campus, apoya el </span>
+            <span className="text-[#F56649] underline decoration-[#F56649]/40">talento universitario</span>
           </h1>
 
           <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
@@ -288,18 +289,18 @@ export default function HomePage() {
           </div>
 
           {/* Badges de confianza Uninorte */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-300 pt-1 font-medium">
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs text-white pt-1 font-semibold">
+            <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-xs border border-white/15 text-white shadow-xs">
               <MapPin className="w-3.5 h-3.5 text-[#F56649]" />
-              Bloques A, B, F, G, K, Parrish...
+              <span>Bloques A, B, F, G, K, Parrish...</span>
             </span>
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+            <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-xs border border-white/15 text-white shadow-xs">
               <Clock className="w-3.5 h-3.5 text-[#F56649]" />
-              Entrega en minutos sin salir de clase
+              <span>Entrega en minutos sin salir de clase</span>
             </span>
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+            <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-xs border border-white/15 text-white shadow-xs">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Emprendedores Uninorte
+              <span>Emprendedores Uninorte</span>
             </span>
           </div>
         </div>
@@ -339,22 +340,22 @@ export default function HomePage() {
       {/* Sección Ofertas Especiales del Día */}
       {offers.length > 0 && selectedCategory === 'Todos' && !searchQuery && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-slate-700 space-y-6">
+          <div className="bg-[#1F222E] rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-slate-800 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md border border-white/20">
+                <div className="p-2 bg-[#F56649] rounded-xl shadow-md">
                   <Tag className="w-5 h-5 text-white fill-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
                     Ofertas Universitarias del Día
                   </h2>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-slate-300 font-medium">
                     Descuentos y combos exclusivos para estudiantes de Uninorte
                   </p>
                 </div>
               </div>
-              <span className="self-start sm:self-auto text-[11px] font-extrabold bg-[#F56649] text-white px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+              <span className="self-start sm:self-auto text-[11px] font-extrabold bg-[#F56649] text-white px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
                 Tiempo Limitado 🔥
               </span>
             </div>
@@ -424,7 +425,7 @@ export default function HomePage() {
             <span className="text-[11px] font-bold text-[#F56649] uppercase tracking-wider">
               ¿Tienes un negocio en la U?
             </span>
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               Vende en UniPide y llega a todo el campus
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-xl leading-relaxed">
