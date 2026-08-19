@@ -2,25 +2,26 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, KeyRound, ArrowRight, Loader2, CheckCircle2, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, KeyRound, ArrowRight, Loader2, CheckCircle2, ArrowLeft, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [correo, setCorreo] = useState('');
   const [code, setCode] = useState('');
-  const [generatedCode, setGeneratedCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [error, setError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [infoMsg, setInfoMsg] = useState('');
 
   // Paso 1: Solicitar Código
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setInfoMsg('');
 
     try {
       const res = await fetch('/api/auth/forgot-password', {
@@ -37,13 +38,9 @@ export default function ForgotPasswordPage() {
         return;
       }
 
-      if (data.resetCode) {
-        setGeneratedCode(data.resetCode);
-        setCode(data.resetCode);
-      }
-
+      setCode('');
       setStep(2);
-      setSuccessMsg('Te hemos generado un código de recuperación seguro para restablecer tu cuenta.');
+      setInfoMsg(`Hemos enviado un código de verificación de 6 dígitos a ${cleanCorreoMask(correo)}.`);
     } catch (err: any) {
       setError('Error de conexión con el servidor. Intenta de nuevo.');
     } finally {
@@ -51,10 +48,50 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Paso 2: Restablecer Contraseña
+  // Reenviar código
+  const handleResendCode = async () => {
+    setResendLoading(true);
+    setError('');
+    setInfoMsg('');
+
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Error al reenviar el código');
+      } else {
+        setInfoMsg('¡Se ha enviado un nuevo código de verificación!');
+      }
+    } catch (err) {
+      setError('Error de conexión al reenviar código');
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  // Enmascarar correo para privacidad visual
+  function cleanCorreoMask(email: string) {
+    if (!email.includes('@')) return email;
+    const [user, domain] = email.split('@');
+    if (user.length <= 2) return `${user}***@${domain}`;
+    return `${user.substring(0, 2)}***@${domain}`;
+  }
+
+  // Paso 2: Restablecer Contraseña con Código
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!code || code.trim().length !== 6) {
+      setError('Por favor ingresa el código de verificación de 6 dígitos enviado a tu correo');
+      return;
+    }
 
     if (newPassword.length < 6) {
       setError('La nueva contraseña debe tener al menos 6 caracteres');
@@ -74,7 +111,7 @@ export default function ForgotPasswordPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           correo,
-          code,
+          code: code.trim(),
           newPassword,
         }),
       });
@@ -107,8 +144,8 @@ export default function ForgotPasswordPage() {
             Recuperar Contraseña
           </h1>
           <p className="text-xs text-gray-500">
-            {step === 1 && 'Ingresa tu correo electrónico registrado para restablecer tu clave'}
-            {step === 2 && 'Ingresa el código enviado y define tu nueva contraseña'}
+            {step === 1 && 'Ingresa tu correo electrónico registrado para solicitar tu código de seguridad'}
+            {step === 2 && 'Ingresa el código de 6 dígitos que enviamos a tu correo e introduce tu nueva clave'}
             {step === 3 && '¡Tu cuenta ha sido actualizada con éxito!'}
           </p>
         </div>
@@ -121,12 +158,27 @@ export default function ForgotPasswordPage() {
             </div>
           )}
 
+          {infoMsg && step === 2 && (
+            <div className="p-3.5 bg-blue-50 border border-blue-200 text-blue-800 rounded-2xl text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <span>Código Enviado por Correo</span>
+              </div>
+              <p className="text-xs text-blue-900">
+                {infoMsg}
+              </p>
+              <p className="text-[10px] text-blue-600 pt-0.5">
+                Revisa tu bandeja de entrada o carpeta de SPAM.
+              </p>
+            </div>
+          )}
+
           {/* PASO 1: Solicitar código */}
           {step === 1 && (
             <form onSubmit={handleRequestCode} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Correo Electrónico
+                  Correo Electrónico Registrado
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -135,7 +187,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
-                    placeholder="ejemplo@correo.com"
+                    placeholder="usuario@correo.com"
                     className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
                   />
                 </div>
@@ -149,11 +201,11 @@ export default function ForgotPasswordPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Buscando cuenta...</span>
+                    <span>Verificando cuenta...</span>
                   </>
                 ) : (
                   <>
-                    <span>Continuar</span>
+                    <span>Enviar Código de Seguridad</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -164,25 +216,25 @@ export default function ForgotPasswordPage() {
           {/* PASO 2: Ingresar Código y Nueva Contraseña */}
           {step === 2 && (
             <form onSubmit={handleResetPassword} className="space-y-4">
-              {generatedCode && (
-                <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs space-y-1">
-                  <div className="flex items-center gap-1.5 font-bold">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Código de Recuperación Generado:</span>
-                  </div>
-                  <p className="text-base font-black text-emerald-900 tracking-wider">
-                    {generatedCode}
-                  </p>
-                  <p className="text-[10px] text-emerald-600">
-                    Ingresado automáticamente a continuación para facilitar tu prueba.
-                  </p>
-                </div>
-              )}
-
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Código de Verificación (6 dígitos)
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Código de Verificación (6 dígitos)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleResendCode}
+                    disabled={resendLoading}
+                    className="text-[11px] font-bold text-uninorte-red hover:underline flex items-center gap-1"
+                  >
+                    {resendLoading ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-3 h-3" />
+                    )}
+                    <span>Reenviar código</span>
+                  </button>
+                </div>
                 <div className="relative">
                   <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                   <input
@@ -190,9 +242,9 @@ export default function ForgotPasswordPage() {
                     required
                     maxLength={6}
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="123456"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 font-mono text-sm tracking-widest focus:ring-2 focus:ring-uninorte-red outline-none transition"
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="Escribe los 6 dígitos"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 font-mono text-sm tracking-widest focus:ring-2 focus:ring-uninorte-red outline-none transition text-center font-bold"
                   />
                 </div>
               </div>
@@ -241,7 +293,7 @@ export default function ForgotPasswordPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Guardando contraseña...</span>
+                    <span>Guardando nueva clave...</span>
                   </>
                 ) : (
                   <>
@@ -253,7 +305,10 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setStep(1);
+                  setError('');
+                }}
                 className="w-full py-2 text-center text-xs text-gray-500 hover:text-gray-800 flex items-center justify-center gap-1"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

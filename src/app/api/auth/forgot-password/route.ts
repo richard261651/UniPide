@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isValidEmail } from '@/lib/utils';
 import { recoveryTokens } from '@/lib/recoveryStore';
+import { sendRecoveryEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,13 +46,16 @@ export async function POST(request: NextRequest) {
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 15 * 60 * 1000; // Expira en 15 minutos
 
-    // Guardar en mapa
+    // Guardar en almacenamiento seguro del servidor
     recoveryTokens.set(cleanEmail, { code: resetCode, expiresAt });
 
+    // Enviar código vía servicio seguro de correo
+    await sendRecoveryEmail(cleanEmail, resetCode);
+
+    // Retorno seguro (SIN exponer el resetCode en la respuesta HTTP pública)
     return NextResponse.json({
       success: true,
-      message: 'Código de recuperación generado correctamente.',
-      resetCode, // Retornado para facilitar pruebas rápidas en interfaz demo
+      message: 'Hemos enviado un código de verificación de 6 dígitos a tu correo electrónico.',
       email: cleanEmail,
     });
   } catch (error: any) {

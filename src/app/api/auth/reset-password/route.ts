@@ -8,14 +8,15 @@ export async function POST(request: NextRequest) {
   try {
     const { correo, code, newPassword } = await request.json();
 
-    if (!correo || !newPassword) {
+    if (!correo || !code || !newPassword) {
       return NextResponse.json(
-        { error: 'Correo y nueva contraseña son obligatorios' },
+        { error: 'Correo, código de verificación y nueva contraseña son obligatorios' },
         { status: 400 }
       );
     }
 
     const cleanEmail = correo.trim().toLowerCase();
+    const cleanCode = code.toString().trim();
 
     if (!isValidEmail(cleanEmail)) {
       return NextResponse.json(
@@ -37,45 +38,51 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'No existe un usuario con este correo electrónico' },
+        { error: 'No existe un usuario registrado con este correo electrónico' },
         { status: 404 }
       );
     }
 
-    // Verificar código si está registrado en el mapa en memoria
+    // Verificar token en servidor
     const tokenData = recoveryTokens.get(cleanEmail);
-    if (tokenData) {
-      if (Date.now() > tokenData.expiresAt) {
-        recoveryTokens.delete(cleanEmail);
-        return NextResponse.json(
-          { error: 'El código de recuperación ha expirado. Por favor solicita uno nuevo.' },
-          { status: 400 }
-        );
-      }
 
-      if (code && tokenData.code !== code.trim()) {
-        return NextResponse.json(
-          { error: 'El código de recuperación ingresado es incorrecto' },
-          { status: 400 }
-        );
-      }
+    if (!tokenData) {
+      return NextResponse.json(
+        { error: 'No existe una solicitud de recuperación activa para este correo. Solicita un código nuevo.' },
+        { status: 400 }
+      );
     }
 
-    // Encriptar nueva contraseña
+    if (Date.now() > tokenData.expiresAt) {
+      recoveryTokens.delete(cleanEmail);
+      return NextResponse.json(
+        { error: 'El código de verificación ha expirado (límite 15 min). Solicita uno nuevo.' },
+        { status: 400 }
+      );
+    }
+
+    if (tokenData.code !== cleanCode) {
+      return NextResponse.json(
+        { error: 'El código de verificación de 6 dígitos ingresado es incorrecto' },
+        { status: 400 }
+      );
+    }
+
+    // Encriptar nueva contraseña con bcrypt
     const passwordHash = await hashPassword(newPassword);
 
-    // Actualizar usuario en base de datos
+    // Actualizar contraseña en base de datos
     await prisma.user.update({
       where: { id: user.id },
       data: { passwordHash },
     });
 
-    // Limpiar token usado
+    // Invalidad token inmediatamente después del primer uso exitoso
     recoveryTokens.delete(cleanEmail);
 
     return NextResponse.json({
       success: true,
-      message: '¡Tu contraseña ha sido actualizada con éxito! Ya puedes iniciar sesión.',
+      message: '¡Tu contraseña ha sido actualizada con éxito! Ya puedes iniciar sesión con tu nueva contraseña.',
     });
   } catch (error: any) {
     console.error('Error en reset-password:', error);
