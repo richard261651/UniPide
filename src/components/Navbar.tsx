@@ -41,8 +41,8 @@ export default function Navbar() {
                   alt="UniPide Icon"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
-                <span className="font-black text-[#1E2022] tracking-tight text-lg sm:text-2xl">
-                  Uni<span className="text-[#D9534F]">Pide</span>
+                <span className="font-black text-[#1F222E] tracking-tight text-lg sm:text-2xl">
+                  Uni<span className="text-[#B43E1B]">Pide</span>
                 </span>
               </Link>
 
@@ -52,8 +52,8 @@ export default function Navbar() {
                   href="/"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname === '/'
-                      ? 'text-[#D9534F] bg-[#FDF2F2]'
-                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
+                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
                   }`}
                 >
                   Inicio
@@ -62,8 +62,8 @@ export default function Navbar() {
                   href="/negocios"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname.startsWith('/negocios')
-                      ? 'text-[#D9534F] bg-[#FDF2F2]'
-                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
+                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
                   }`}
                 >
                   Emprendimientos
@@ -72,8 +72,8 @@ export default function Navbar() {
                   href="/nosotros"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname === '/nosotros'
-                      ? 'text-[#D9534F] bg-[#FDF2F2]'
-                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
+                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
                   }`}
                 >
                   Nosotros
@@ -83,8 +83,8 @@ export default function Navbar() {
                     href="/pedidos"
                     className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                       pathname.startsWith('/pedidos')
-                        ? 'text-[#D9534F] bg-[#FDF2F2]'
-                        : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
+                        ? 'text-[#B43E1B] bg-[#FEF6F4]'
+                        : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
                     }`}
                   >
                     Mis Pedidos

@@ -4,11 +4,11 @@
 
 @layer base {
   :root {
-    --background: #FAFAFA;     /* Blanco Limpio y Luminoso */
-    --foreground: #0F172A;     /* Títulos en Slate Profundo (100% Legible) */
-    --body-text: #334155;      /* Texto de Lectura Nítido */
-    --primary-red: #C8102E;    /* Rojo Uninorte Oficial */
-    --border-light: #E2E8F0;   /* Borde Suave */
+    --background: #F8F6F4;     /* Blanco Lino Cálido */
+    --foreground: #1F222E;     /* Gris Asfalto Profundo */
+    --body-text: #4A4E5A;      /* Gris Grafito */
+    --primary-red: #B43E1B;    /* Color Oficial del Logo (#B43E1B Terracota Oscuro) */
+    --border-light: #E5E2DC;   /* Gris Niebla */
     --card-white: #FFFFFF;     /* Tarjeta Blanco Puro */
   }
 
@@ -26,17 +26,17 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: #0F172A; /* Títulos Oscuros Nítidos de Alto Contraste */
+    color: #1F222E; /* Títulos en Gris Asfalto Profundo */
     font-weight: 700;
   }
 
   p, label, input, textarea {
-    color: #334155; /* Texto de Lectura Nítido y Limpio */
+    color: #4A4E5A; /* Texto de Lectura en Gris Grafito */
   }
 }
 
-/* Forzar que spans en botones e íconos hereden el color de texto del contenedor */
-button *, a.btn-primary *, [class*="bg-"] * {
+/* Forzar que los elementos dentro de botones y badges hereden el color de texto adecuado */
+button *, a.btn-primary *, [class*="bg-[#B43E1B]"] *, [class*="bg-uninorte-red"] * {
   color: inherit;
 }
 
@@ -66,25 +66,25 @@ button, a {
 /* Estilo Tarjeta */
 .card-aesthetic {
   background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #E5E2DC;
   border-radius: 1.25rem;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 4px 16px -2px rgba(31, 34, 46, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-aesthetic:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px -4px rgba(200, 16, 46, 0.12);
-  border-color: rgba(200, 16, 46, 0.3);
+  box-shadow: 0 12px 28px -4px rgba(180, 62, 27, 0.12);
+  border-color: rgba(180, 62, 27, 0.3);
 }
 
-/* Botón Primario de Acción Rojo Uninorte (#C8102E) con Texto Blanco Nítido (#FFFFFF) */
+/* Botón Primario de Acción Terracota (#B43E1B) con Texto Blanco Nítido (#FFFFFF) */
 .btn-primary {
-  background-color: #C8102E;
+  background-color: #B43E1B;
   color: #FFFFFF !important;
   font-weight: 700;
   border-radius: 0.875rem;
-  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.25);
+  box-shadow: 0 4px 12px rgba(180, 62, 27, 0.25);
   transition: all 0.2s ease;
 }
 
@@ -93,7 +93,7 @@ button, a {
 }
 
 .btn-primary:hover {
-  background-color: #A01A1E;
-  box-shadow: 0 6px 16px rgba(200, 16, 46, 0.35);
+  background-color: #933012;
+  box-shadow: 0 6px 16px rgba(180, 62, 27, 0.35);
   transform: translateY(-1px);
 }

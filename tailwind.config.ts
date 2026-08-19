@@ -10,26 +10,26 @@ const config: Config = {
     extend: {
       colors: {
         uninorte: {
-          50: '#fff1f1',
-          100: '#ffe1e1',
-          200: '#ffc7c7',
-          300: '#ffa0a0',
-          400: '#f86b6b',
-          500: '#ee3838',
-          600: '#dc2222',
-          700: '#C8102E', // Rojo Uninorte Oficial
-          800: '#A01A1E',
-          900: '#7A1316',
-          950: '#450808',
-          red: '#C8102E',      // Rojo Uninorte Oficial
-          darkRed: '#A01A1E',  // Rojo Intenso
-          gold: '#E5A93C',     // Dorado Cálido
-          amber: '#F59E0B',
-          dark: '#0F172A',
-          asphalt: '#0F172A',
-          graphite: '#334155',
-          fog: '#E2E8F0',
-          linen: '#FAFAFA',
+          50: '#fef6f4',
+          100: '#fdebe6',
+          200: '#f9d5cb',
+          300: '#f4b4a3',
+          400: '#ea8167',
+          500: '#dd5636',
+          600: '#c73f21',
+          700: '#B43E1B', // Color Oficial del Logo (Terracota Oscuro)
+          800: '#933012',
+          900: '#782b14',
+          950: '#401307',
+          red: '#B43E1B',      // Color Oficial del Logo (#B43E1B)
+          darkRed: '#933012',  // Terracota Intenso
+          gold: '#EAA228',     // Ámbar Cálido
+          amber: '#EAA228',
+          dark: '#1F222E',
+          asphalt: '#1F222E',
+          graphite: '#4A4E5A',
+          fog: '#E5E2DC',
+          linen: '#F8F6F4',
         },
       },
       fontFamily: {
