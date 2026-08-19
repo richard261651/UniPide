@@ -10,20 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         uninorte: {
-          50: '#fef6f4',
-          100: '#fdebe6',
-          200: '#f9d5cb',
-          300: '#f4b4a3',
-          400: '#ea8167',
-          500: '#dd5636',
-          600: '#c73f21',
-          700: '#B43E1B', // Color Oficial del Logo (Terracota Oscuro)
-          800: '#933012',
-          900: '#782b14',
-          950: '#401307',
-          red: '#B43E1B',      // Color Oficial del Logo (#B43E1B)
-          darkRed: '#933012',  // Terracota Intenso
-          gold: '#EAA228',     // Ámbar Cálido
+          50: '#FEEBE7',   // Nivel 1: Fondo suave de selección / Badges
+          100: '#FBC6BB',  // Nivel 2: Bordes y detalles sutiles
+          200: '#F9A190',  // Nivel 3: Acentuación intermedia / Hover de links
+          300: '#F77C64',  // Nivel 4: Coral vibrante / Hover de botones
+          400: '#F56649',  // Nivel 5: Color Primario de Acción Oficial
+          500: '#F56649',
+          600: '#E05337',
+          700: '#C94026',
+          800: '#A3301B',
+          900: '#802514',
+          red: '#F56649',       // Color Oficial de Marca
+          redLight: '#FEEBE7',  // Fondo Pastel de Selección
+          redBorder: '#FBC6BB', // Borde Pastel Relevante
+          redHover: '#F77C64',  // Hover de Botón Primario
+          gold: '#EAA228',      // Ámbar Cálido
           amber: '#EAA228',
           dark: '#1F222E',
           asphalt: '#1F222E',

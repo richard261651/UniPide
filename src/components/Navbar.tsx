@@ -42,7 +42,7 @@ export default function Navbar() {
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
                 <span className="font-black text-[#1F222E] tracking-tight text-lg sm:text-2xl">
-                  Uni<span className="text-[#B43E1B]">Pide</span>
+                  Uni<span className="text-[#F56649]">Pide</span>
                 </span>
               </Link>
 
@@ -50,30 +50,30 @@ export default function Navbar() {
               <nav className="hidden md:flex items-center gap-1">
                 <Link
                   href="/"
-                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/'
-                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
                   }`}
                 >
                   Inicio
                 </Link>
                 <Link
                   href="/negocios"
-                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname.startsWith('/negocios')
-                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
                   }`}
                 >
                   Emprendimientos
                 </Link>
                 <Link
                   href="/nosotros"
-                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/nosotros'
-                      ? 'text-[#B43E1B] bg-[#FEF6F4]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
                   }`}
                 >
                   Nosotros
@@ -81,10 +81,10 @@ export default function Navbar() {
                 {user && (
                   <Link
                     href="/pedidos"
-                    className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
+                    className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                       pathname.startsWith('/pedidos')
-                        ? 'text-[#B43E1B] bg-[#FEF6F4]'
-                        : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4]'
+                        ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                        : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
                     }`}
                   >
                     Mis Pedidos
