@@ -1,8 +1,14 @@
-export async function sendRecoveryEmail(toEmail: string, code: string): Promise<boolean> {
+export async function sendRecoveryEmail(
+  toEmail: string,
+  code: string
+): Promise<{ sent: boolean; provider: string; error?: string }> {
   const resendApiKey = process.env.RESEND_API_KEY;
 
   if (resendApiKey) {
     try {
+      // Usar onboarding@resend.dev como remitente por defecto para evitar rechazos de dominio no verificado en Resend
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide <onboarding@resend.dev>';
+
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -10,7 +16,7 @@ export async function sendRecoveryEmail(toEmail: string, code: string): Promise<
           Authorization: `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: 'UniPide Security <seguridad@unipide.com>',
+          from: fromEmail,
           to: [toEmail],
           subject: '🔒 Código de verificación de contraseña - UniPide',
           html: `
@@ -22,7 +28,7 @@ export async function sendRecoveryEmail(toEmail: string, code: string): Promise<
 
               <h3 style="font-size: 16px; font-weight: 700; color: #111; margin-bottom: 8px; text-align: center;">Recuperación de Contraseña</h3>
               <p style="font-size: 13px; color: #555; line-height: 1.5; text-align: center;">
-                Has solicitado restablecer tu contraseña. Utiliza el siguiente código de verificación de 6 dígitos:
+                Has solicitado restablecer tu contraseña en <strong>UniPide</strong>. Utiliza el siguiente código de verificación de 6 dígitos:
               </p>
 
               <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; text-align: center; padding: 18px; margin: 20px 0;">
@@ -43,23 +49,26 @@ export async function sendRecoveryEmail(toEmail: string, code: string): Promise<
       });
 
       if (res.ok) {
-        console.log(`[EMAIL SENT] Código enviado a ${toEmail} vía Resend API`);
-        return true;
+        console.log(`[EMAIL SENT] Código enviado exitosamente a ${toEmail} vía Resend API`);
+        return { sent: true, provider: 'Resend' };
       } else {
         const errorData = await res.json();
         console.error('[EMAIL ERROR] Error enviando con Resend:', errorData);
+        return { sent: false, provider: 'Resend', error: errorData.message || 'Dominio no verificado en Resend' };
       }
-    } catch (err) {
-      console.error('[EMAIL ERROR] Excepción en servicio de correo:', err);
+    } catch (err: any) {
+      console.error('[EMAIL ERROR] Excepción en servicio de correo Resend:', err);
+      return { sent: false, provider: 'Resend', error: err.message };
     }
   }
 
-  // Fallback seguro en consola de servidor para entornos local / desarrollo
+  // Fallback seguro en consola de servidor para entornos local o sin API Key de correo configurada
   console.log(`\n======================================================`);
   console.log(`🔒 [UNIPIDE SEGURIDAD] CÓDIGO DE RECUPERACIÓN GENERADO`);
   console.log(`Destinatario: ${toEmail}`);
   console.log(`Código de Verificación: ${code}`);
   console.log(`Válido durante: 15 Minutos`);
   console.log(`======================================================\n`);
-  return true;
+
+  return { sent: false, provider: 'Console' };
 }

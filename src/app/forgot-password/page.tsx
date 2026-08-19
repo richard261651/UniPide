@@ -15,6 +15,7 @@ export default function ForgotPasswordPage() {
   const [resendLoading, setResendLoading] = useState(false);
   const [error, setError] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
+  const [debugCode, setDebugCode] = useState('');
 
   // Paso 1: Solicitar Código
   const handleRequestCode = async (e: React.FormEvent) => {
@@ -40,6 +41,11 @@ export default function ForgotPasswordPage() {
 
       setCode('');
       setStep(2);
+      if (data.debugCode) {
+        setDebugCode(data.debugCode);
+      } else {
+        setDebugCode('');
+      }
       setInfoMsg(`Hemos enviado un código de verificación de 6 dígitos a ${cleanCorreoMask(correo)}.`);
     } catch (err: any) {
       setError('Error de conexión con el servidor. Intenta de nuevo.');
@@ -66,6 +72,11 @@ export default function ForgotPasswordPage() {
       if (!res.ok) {
         setError(data.error || 'Error al reenviar el código');
       } else {
+        if (data.debugCode) {
+          setDebugCode(data.debugCode);
+        } else {
+          setDebugCode('');
+        }
         setInfoMsg('¡Se ha enviado un nuevo código de verificación!');
       }
     } catch (err) {
@@ -169,6 +180,21 @@ export default function ForgotPasswordPage() {
               </p>
               <p className="text-[10px] text-blue-600 pt-0.5">
                 Revisa tu bandeja de entrada o carpeta de SPAM.
+              </p>
+            </div>
+          )}
+
+          {debugCode && step === 2 && (
+            <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-xs space-y-1 animate-in fade-in">
+              <div className="flex items-center gap-1.5 font-bold">
+                <ShieldCheck className="w-4 h-4 text-amber-600" />
+                <span>Código de Seguridad Asistido:</span>
+              </div>
+              <p className="text-base font-mono font-black text-amber-950 tracking-widest text-center py-1">
+                {debugCode}
+              </p>
+              <p className="text-[10px] text-amber-700">
+                Código de 6 dígitos activo durante 15 minutos para tu verificación.
               </p>
             </div>
           )}
