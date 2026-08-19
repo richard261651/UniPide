@@ -135,27 +135,26 @@ export async function DELETE(
 
     const { id } = params;
 
-    // 1. Intentar borrado físico en base de datos
+    // 1. Desvincular de OrderItem para preservar el historial de estadísticas (nombreProducto, precioUnitario, cantidad permanecen intactos)
     try {
-      await prisma.product.delete({
-        where: { id },
+      await prisma.orderItem.updateMany({
+        where: { productId: id },
+        data: { productId: null },
       });
-      return NextResponse.json({ success: true, message: 'Producto eliminado exitosamente' });
-    } catch (deleteErr: any) {
-      // 2. Si falla por restricción de clave foránea (p. ej. producto con historial de pedidos)
-      // se desactiva y se oculta sin romper la integridad de la base de datos
-      await prisma.product.update({
-        where: { id },
-        data: { disponible: false, stock: 0 },
-      });
-      return NextResponse.json({
-        success: true,
-        message: 'Producto deshabilitado (conservado por historial de ventas)',
-      });
+    } catch (unlinkErr) {
+      console.warn('Advertencia al desvincular orderItems:', unlinkErr);
     }
+
+    // 2. Borrar permanentemente el producto de la tabla Product
+    await prisma.product.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true, message: 'Producto eliminado definitivamente' });
   } catch (error: any) {
+    console.error('Error al eliminar producto:', error);
     return NextResponse.json(
-      { error: error.message || 'Error al eliminar producto' },
+      { error: error.message || 'Error al eliminar el producto' },
       { status: 500 }
     );
   }

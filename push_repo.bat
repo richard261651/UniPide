@@ -1,5 +1,5 @@
 @echo off
-set REPO_URL=https://github.com/richard261651/marketplace-uninorte.git
+set REPO_URL=https://github.com/richard261651/UniPide.git
 
 echo Iniciando subida a GitHub...
 git init

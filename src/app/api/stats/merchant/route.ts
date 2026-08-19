@@ -69,15 +69,16 @@ export async function GET(request: NextRequest) {
     const productSalesMap: Record<string, { nombre: string; cantidad: number; total: number }> = {};
     for (const order of deliveredOrders) {
       for (const item of order.items) {
-        if (!productSalesMap[item.productId]) {
-          productSalesMap[item.productId] = {
+        const key = item.productId || item.nombreProducto;
+        if (!productSalesMap[key]) {
+          productSalesMap[key] = {
             nombre: item.nombreProducto,
             cantidad: 0,
             total: 0,
           };
         }
-        productSalesMap[item.productId].cantidad += item.cantidad;
-        productSalesMap[item.productId].total += item.cantidad * item.precioUnitario;
+        productSalesMap[key].cantidad += item.cantidad;
+        productSalesMap[key].total += item.cantidad * item.precioUnitario;
       }
     }
 
