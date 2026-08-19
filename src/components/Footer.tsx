@@ -39,6 +39,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/nosotros" className="hover:text-uninorte-red transition font-semibold text-gray-700">
+                  ✨ Sobre UniPide / Nosotros
+                </Link>
+              </li>
+              <li>
                 <Link href="/negocios" className="hover:text-uninorte-red transition">
                   Todos los Emprendimientos
                 </Link>

@@ -68,6 +68,16 @@ export default function Navbar() {
                 >
                   Emprendimientos
                 </Link>
+                <Link
+                  href="/nosotros"
+                  className={`px-3 py-2 rounded-xl text-sm font-medium transition ${
+                    pathname === '/nosotros'
+                      ? 'text-uninorte-red bg-red-50/80 font-semibold'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  Nosotros
+                </Link>
                 {user && (
                   <Link
                     href="/pedidos"

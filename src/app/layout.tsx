@@ -48,8 +48,45 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://unipide.vercel.app/#organization',
+        name: 'UniPide',
+        alternateName: 'UniPide Uninorte',
+        url: 'https://unipide.vercel.app',
+        logo: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+        description: 'Marketplace oficial de emprendimientos estudiantiles en el campus de la Universidad del Norte en Barranquilla.',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Barranquilla',
+          addressRegion: 'Atlántico',
+          addressCountry: 'CO',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://unipide.vercel.app/#website',
+        url: 'https://unipide.vercel.app',
+        name: 'UniPide',
+        description: 'Pide comida, postres, bebidas y productos en el campus Uninorte',
+        publisher: {
+          '@id': 'https://unipide.vercel.app/#organization',
+        },
+      },
+    ],
+  };
+
   return (
     <html lang="es" className="scroll-smooth antialiased">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${questrial.className} min-h-screen flex flex-col bg-[#FAF8F5] text-slate-900 overflow-x-hidden selection:bg-red-500 selection:text-white tracking-wide`}>
         <AuthProvider>
           <CartProvider>
