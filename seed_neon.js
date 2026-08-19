@@ -8,7 +8,7 @@ async function hashPassword(password) {
 }
 
 async function main() {
-  console.log('--- Iniciando Sembrado de Base de Datos Uninorte (RapiNorte) ---');
+  console.log('--- Iniciando Sembrado de Base de Datos Uninorte (UniPide) ---');
 
   // 1. Zonas del Campus
   const zonesData = [

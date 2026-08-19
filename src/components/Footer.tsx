@@ -14,7 +14,7 @@ export default function Footer() {
                 <Zap className="w-4 h-4 fill-white text-white" />
               </div>
               <span className="font-black text-gray-900 text-lg tracking-tight">
-                Rapi<span className="text-uninorte-red">Norte</span>
+                Uni<span className="text-uninorte-red">Pide</span>
               </span>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed">
@@ -89,7 +89,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-100 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
-          <p>© {new Date().getFullYear()} RapiNorte — Universidad del Norte.</p>
+          <p>© {new Date().getFullYear()} UniPide — Universidad del Norte.</p>
           <p>Entregas en campus • Pagos contra entrega / Nequi</p>
         </div>
       </div>

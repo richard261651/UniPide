@@ -177,7 +177,7 @@ export default function AdminUsuariosPage() {
             <span>Gestión y Eliminación de Cuentas de Usuario</span>
           </h2>
           <p className="text-xs text-gray-500">
-            Administra los roles, acceso, suspensión y eliminación definitiva de usuarios en RapiNorte
+            Administra los roles, acceso, suspensión y eliminación definitiva de usuarios en UniPide
           </p>
         </div>
 
@@ -395,7 +395,7 @@ export default function AdminUsuariosPage() {
 
             <div className="p-3 bg-red-50 rounded-2xl border border-red-200 text-[11px] text-red-800 font-medium space-y-1">
               <p>⚠️ <strong>Atención:</strong></p>
-              <p>• Se eliminará su acceso y credenciales de RapiNorte.</p>
+              <p>• Se eliminará su acceso y credenciales de UniPide.</p>
               {deletingUser.businesses && deletingUser.businesses.length > 0 && (
                 <p>• Su emprendimiento <strong>"{deletingUser.businesses[0].nombre}"</strong> y productos también serán eliminados.</p>
               )}

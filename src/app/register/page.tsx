@@ -88,7 +88,7 @@ export default function RegisterPage() {
             U
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-            Crear Cuenta en <span className="text-uninorte-red">RapiNorte</span>
+            Crear Cuenta en <span className="text-uninorte-red">UniPide</span>
           </h1>
           <p className="text-xs text-gray-500">
             Únete a la comunidad de estudiantes y emprendimientos del campus Uninorte
@@ -230,7 +230,7 @@ export default function RegisterPage() {
                   <span>2. Autorización de Administrador</span>
                 </div>
                 <div className="p-3 bg-red-50 rounded-xl text-xs text-red-800">
-                  El rol de Administrador gestiona aprobaciones y métricas globales de RapiNorte. Requiere la clave maestra de autorización.
+                  El rol de Administrador gestiona aprobaciones y métricas globales de UniPide. Requiere la clave maestra de autorización.
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">

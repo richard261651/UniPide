@@ -33,7 +33,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full overflow-hidden">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
-            {/* Logo e Identidad RapiNorte */}
+            {/* Logo e Identidad UniPide */}
             <div className="flex items-center gap-3 sm:gap-6 min-w-0">
               <Link href="/" className="flex items-center gap-2 group shrink-0">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-md shadow-red-900/20 group-hover:scale-105 transition">
@@ -42,7 +42,7 @@ export default function Navbar() {
                 <div>
                   <div className="flex items-center gap-1">
                     <span className="font-black text-gray-900 tracking-tight text-base sm:text-xl">
-                      Rapi<span className="text-uninorte-red">Norte</span>
+                      Uni<span className="text-uninorte-red">Pide</span>
                     </span>
                     <span className="hidden xs:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-1.5 py-0.5 rounded">
                       Campus

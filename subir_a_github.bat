@@ -1,7 +1,7 @@
 @echo off
-title Subir Marketplace Uninorte a GitHub
+title Subir UniPide a GitHub
 echo ================================================================
-echo   SUBIENDO PROYECTO A GITHUB: richard261651/marketplace-uninorte
+echo   SUBIENDO PROYECTO A GITHUB: richard261651/unipide
 echo ================================================================
 echo.
 echo Presiona cualquier tecla para enviar el codigo a tu repositorio...

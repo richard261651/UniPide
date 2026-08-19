@@ -273,7 +273,7 @@ export default function ForgotPasswordPage() {
                   ¡Contraseña Restablecida!
                 </h3>
                 <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                  Tu clave ha sido actualizada en RapiNorte. Ya puedes ingresar con tu nueva contraseña.
+                  Tu clave ha sido actualizada en UniPide. Ya puedes ingresar con tu nueva contraseña.
                 </p>
               </div>
 

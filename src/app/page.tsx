@@ -111,7 +111,7 @@ export default function HomePage() {
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-xl animate-bounce">
           <Zap className="w-7 h-7 fill-white text-white" />
         </div>
-        <p className="text-xs font-bold text-gray-500 animate-pulse">Cargando RapiNorte...</p>
+        <p className="text-xs font-bold text-gray-500 animate-pulse">Cargando UniPide...</p>
       </div>
     );
   }
@@ -121,14 +121,14 @@ export default function HomePage() {
     return (
       <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-red-50/40 via-white to-slate-50">
         <div className="max-w-md w-full space-y-6">
-          {/* Encabezado RapiNorte */}
+          {/* Encabezado UniPide */}
           <div className="text-center space-y-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white mx-auto shadow-lg shadow-red-900/20">
               <Zap className="w-8 h-8 fill-white text-white" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                Rapi<span className="text-uninorte-red">Norte</span>
+                Uni<span className="text-uninorte-red">Pide</span>
               </h1>
               <span className="inline-block mt-1 text-[10px] font-black uppercase tracking-wider bg-red-100 text-uninorte-red px-2.5 py-0.5 rounded-full">
                 Marketplace Oficial Campus Uninorte
@@ -250,7 +250,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-5 sm:space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 animate-pulse-subtle">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>¡Hola, {user.nombre.split(' ')[0]}! — RapiNorte Campus</span>
+            <span>¡Hola, {user.nombre.split(' ')[0]}! — UniPide Campus</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
@@ -423,7 +423,7 @@ export default function HomePage() {
               ¿Tienes un negocio en la U?
             </span>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Vende en RapiNorte y llega a todo el campus
+              Vende en UniPide y llega a todo el campus
             </h3>
             <p className="text-xs sm:text-sm text-gray-400 max-w-xl">
               Crea tu menú digital, recibe pedidos organizados por salón y administra tus ofertas con cálculo automático de distancias entre bloques.

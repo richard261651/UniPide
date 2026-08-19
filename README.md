@@ -1,6 +1,6 @@
-# 🎓 Marketplace de Emprendimientos Uninorte
+# 🎓 UniPide — Marketplace de Emprendimientos Uninorte
 
-Plataforma web full-stack estilo Rappi diseñada exclusivamente para conectar a **estudiantes y personal de la Universidad del Norte (Uninorte)** en Barranquilla con los **emprendimientos de estudiantes** dentro del campus.
+Plataforma web full-stack llamada **UniPide**, diseñada exclusivamente para conectar a **estudiantes y personal de la Universidad del Norte (Uninorte)** en Barranquilla con los **emprendimientos de estudiantes** dentro del campus.
 
 ---
 

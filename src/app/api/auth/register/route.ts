@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Ya existe una cuenta de Administrador registrada en RapiNorte. Solo se permite un Administrador principal.',
+              'Ya existe una cuenta de Administrador registrada en UniPide. Solo se permite un Administrador principal.',
           },
           { status: 403 }
         );

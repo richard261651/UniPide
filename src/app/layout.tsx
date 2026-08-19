@@ -17,11 +17,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'RapiNorte | Marketplace de Emprendimientos Uninorte',
+  title: 'UniPide | Marketplace de Emprendimientos Uninorte',
   description:
-    'Pide comida, postres, bebidas y accesorios con RapiNorte, el marketplace de emprendimientos estudiantiles dentro del campus de la Universidad del Norte en Barranquilla.',
+    'Pide comida, postres, bebidas y accesorios con UniPide, el marketplace de emprendimientos estudiantiles dentro del campus de la Universidad del Norte en Barranquilla.',
   keywords: [
-    'RapiNorte',
+    'UniPide',
     'Uninorte',
     'Marketplace',
     'Emprendimientos',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'RapiNorte',
+    title: 'UniPide',
   },
 };
 
