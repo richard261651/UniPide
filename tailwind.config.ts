@@ -9,37 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        unipide: {
-          primary: '#B43E1B',     // Terracota Oscuro (Color Primario Acción)
-          primaryDark: '#933012', // Terracota Intenso
-          asphalt: '#1F222E',     // Gris Asfalto Profundo (Navbar/Footer/Títulos)
-          amber: '#EAA228',       // Ámbar Cálido (Acento/Estados)
-          linen: '#F8F6F4',       // Blanco Lino / Hueso (Fondo General)
-          card: '#FFFFFF',        // Blanco Puro (Tarjetas/Modales)
-          graphite: '#4A4E5A',    // Gris Grafito (Texto de Lectura)
-          fog: '#E5E2DC',         // Gris Niebla (Bordes y Divisores)
+        pastel: {
+          red: '#D9534F',         // Rojo Coral Pastel
+          redDark: '#C8433F',     // Rojo Coral Intenso
+          cream: '#FAF7F2',       // Fondo Lino Pastel
+          card: '#FFFFFF',        // Tarjeta Blanco Puro
+          text: '#1E2022',        // Titulos Oscuros de Alta Legibilidad
+          body: '#2D3136',        // Texto de Lectura Nítido
+          border: '#E8E4DD',      // Borde Suave Pastel
+          amber: '#FDE68A',       // Ámbar Pastel
+          pink: '#FEE2E2',        // Rosado Pastel
+          green: '#D1FAE5',       // Verde Menta Pastel
         },
         uninorte: {
-          50: '#fef6f4',
-          100: '#fdebe6',
-          200: '#f9d5cb',
-          300: '#f4b4a3',
-          400: '#ea8167',
-          500: '#dd5636',
-          600: '#c73f21',
-          700: '#B43E1B', // Terracota Oscuro
-          800: '#933012',
-          900: '#782b14',
-          950: '#401307',
-          red: '#B43E1B',      // Terracota Oscuro
-          darkRed: '#933012',  // Terracota Intenso
-          gold: '#EAA228',     // Ámbar Cálido
-          amber: '#EAA228',    // Ámbar Cálido
-          dark: '#1F222E',     // Gris Asfalto Profundo
-          asphalt: '#1F222E',
-          graphite: '#4A4E5A',
-          fog: '#E5E2DC',
-          linen: '#F8F6F4',
+          50: '#fdf2f2',
+          100: '#fde8e8',
+          200: '#fbd5d5',
+          300: '#f8b4b4',
+          400: '#f38080',
+          500: '#E05A47',
+          600: '#D9534F', // Rojo Coral Pastel
+          700: '#C8433F',
+          800: '#a83230',
+          900: '#8c2d2b',
+          950: '#4d1413',
+          red: '#D9534F',      // Rojo Coral Pastel
+          darkRed: '#C8433F',  // Rojo Coral Oscuro
+          gold: '#F59E0B',     // Ámbar Suave
+          amber: '#F59E0B',
+          dark: '#1E2022',
+          asphalt: '#1E2022',
+          graphite: '#2D3136',
+          fog: '#E8E4DD',
+          linen: '#FAF7F2',
         },
       },
       fontFamily: {

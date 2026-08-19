@@ -4,13 +4,12 @@
 
 @layer base {
   :root {
-    --background: #F8F6F4;     /* Blanco Lino / Hueso (Fondo General 60%) */
-    --foreground: #1F222E;     /* Gris Asfalto Profundo (Estructura/Títulos 30%) */
-    --reading: #4A4E5A;        /* Gris Grafito (Texto Lectura) */
-    --primary: #B43E1B;        /* Terracota Oscuro (Puntos de Acción 10%) */
-    --amber-warm: #EAA228;     /* Ámbar Cálido (Acento/Estados) */
-    --border-fog: #E5E2DC;     /* Gris Niebla (Bordes/Divisores) */
-    --card-white: #FFFFFF;     /* Blanco Puro (Tarjetas 60%) */
+    --background: #FAF7F2;     /* Fondo Lino Suave Pastel */
+    --foreground: #1E2022;     /* Títulos y Jerarquía (Contraste 100% Nítido) */
+    --body-text: #2D3136;      /* Texto de Lectura Nítido */
+    --primary-red: #D9534F;    /* Rojo Coral Pastel */
+    --border-pastel: #E8E4DD;  /* Borde Suave Pastel */
+    --card-white: #FFFFFF;     /* Tarjeta Blanco Puro */
   }
 
   html,
@@ -27,11 +26,12 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: #1F222E; /* Gris Asfalto Profundo */
+    color: #1E2022; /* Títulos Oscuros Nítidos */
+    font-weight: 700;
   }
 
   p, span, label, input, textarea {
-    color: #4A4E5A; /* Gris Grafito para lectura descansada */
+    color: #2D3136; /* Texto de Lectura Nítido sin cansancio visual */
   }
 }
 
@@ -58,33 +58,33 @@ button, a {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Estilo Tarjeta con Regla 60-30-10 */
+/* Estilo Tarjeta Pastel */
 .card-aesthetic {
   background-color: #FFFFFF;
-  border: 1px solid #E5E2DC;
+  border: 1px solid #E8E4DD;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 16px -2px rgba(31, 34, 46, 0.04);
+  box-shadow: 0 4px 16px -2px rgba(30, 32, 34, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-aesthetic:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px -4px rgba(180, 62, 27, 0.12);
-  border-color: rgba(180, 62, 27, 0.3);
+  box-shadow: 0 12px 28px -4px rgba(217, 83, 79, 0.12);
+  border-color: rgba(217, 83, 79, 0.3);
 }
 
-/* Botón Primario de Acción Terracota (#B43E1B) */
+/* Botón Primario de Acción Coral Pastel (#D9534F) */
 .btn-primary {
-  background-color: #B43E1B;
+  background-color: #D9534F;
   color: #FFFFFF;
   font-weight: 700;
   border-radius: 0.875rem;
-  box-shadow: 0 4px 12px rgba(180, 62, 27, 0.25);
+  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.2);
   transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background-color: #933012;
-  box-shadow: 0 6px 16px rgba(180, 62, 27, 0.35);
+  background-color: #C8433F;
+  box-shadow: 0 6px 16px rgba(217, 83, 79, 0.3);
   transform: translateY(-1px);
 }

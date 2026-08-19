@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8E4DD] shadow-xs w-full max-w-full">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
             {/* Logo e Identidad UniPide */}
@@ -41,8 +41,8 @@ export default function Navbar() {
                   alt="UniPide Icon"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
-                <span className="font-black text-gray-900 tracking-tight text-lg sm:text-2xl">
-                  Uni<span className="text-uninorte-red">Pide</span>
+                <span className="font-black text-[#1E2022] tracking-tight text-lg sm:text-2xl">
+                  Uni<span className="text-[#D9534F]">Pide</span>
                 </span>
               </Link>
 
@@ -50,30 +50,30 @@ export default function Navbar() {
               <nav className="hidden md:flex items-center gap-1">
                 <Link
                   href="/"
-                  className={`px-3 py-2 rounded-xl text-sm font-medium transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname === '/'
-                      ? 'text-uninorte-red bg-red-50/80 font-semibold'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      ? 'text-[#D9534F] bg-[#FDF2F2]'
+                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
                   }`}
                 >
                   Inicio
                 </Link>
                 <Link
                   href="/negocios"
-                  className={`px-3 py-2 rounded-xl text-sm font-medium transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname.startsWith('/negocios')
-                      ? 'text-uninorte-red bg-red-50/80 font-semibold'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      ? 'text-[#D9534F] bg-[#FDF2F2]'
+                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
                   }`}
                 >
                   Emprendimientos
                 </Link>
                 <Link
                   href="/nosotros"
-                  className={`px-3 py-2 rounded-xl text-sm font-medium transition ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                     pathname === '/nosotros'
-                      ? 'text-uninorte-red bg-red-50/80 font-semibold'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      ? 'text-[#D9534F] bg-[#FDF2F2]'
+                      : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
                   }`}
                 >
                   Nosotros
@@ -81,10 +81,10 @@ export default function Navbar() {
                 {user && (
                   <Link
                     href="/pedidos"
-                    className={`px-3 py-2 rounded-xl text-sm font-medium transition ${
+                    className={`px-3.5 py-2 rounded-xl text-sm font-bold transition ${
                       pathname.startsWith('/pedidos')
-                        ? 'text-uninorte-red bg-red-50/80 font-semibold'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        ? 'text-[#D9534F] bg-[#FDF2F2]'
+                        : 'text-[#2D3136] hover:text-[#1E2022] hover:bg-[#FAF7F2]'
                     }`}
                   >
                     Mis Pedidos
@@ -98,12 +98,12 @@ export default function Navbar() {
               {/* Botón Carrito */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-gray-700 hover:text-uninorte-red hover:bg-red-50 rounded-xl transition shrink-0"
+                className="relative p-2 text-[#2D3136] hover:text-[#D9534F] hover:bg-[#FDF2F2] rounded-xl transition shrink-0"
                 title="Ver carrito de compras"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-uninorte-red text-white text-[10px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                  <span className="absolute -top-1 -right-1 bg-[#D9534F] text-white text-[10px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
                     {totalItems}
                   </span>
                 )}
