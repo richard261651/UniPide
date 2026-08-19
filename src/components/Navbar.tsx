@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full overflow-hidden">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
             {/* Logo e Identidad UniPide */}
@@ -112,7 +112,8 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition"
+                    className="flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition active:scale-95 border border-transparent hover:border-gray-200"
+                    title="Opciones de usuario"
                   >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 text-uninorte-red font-bold flex items-center justify-center text-xs overflow-hidden border border-red-200 shrink-0">
                       {user.foto ? (
@@ -121,38 +122,38 @@ export default function Navbar() {
                         user.nombre.charAt(0)
                       )}
                     </div>
-                    <div className="hidden lg:block text-left text-xs">
-                      <div className="font-bold text-gray-800 line-clamp-1 max-w-[100px]">
+                    <div className="text-left text-xs">
+                      <div className="font-bold text-gray-800 line-clamp-1 max-w-[90px] sm:max-w-[120px]">
                         {user.nombre.split(' ')[0]}
                       </div>
-                      <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider">
+                      <div className="text-[9px] text-gray-400 font-medium uppercase tracking-wider hidden sm:block">
                         {user.rol}
                       </div>
                     </div>
-                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 hidden sm:block" />
+                    <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {userDropdownOpen && (
                     <>
                       <div
-                        className="fixed inset-0 z-40"
+                        className="fixed inset-0 z-40 bg-black/5"
                         onClick={() => setUserDropdownOpen(false)}
                       />
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-2 z-50 animate-in fade-in zoom-in-95 duration-100">
-                        <div className="px-3 py-2 border-b border-gray-100">
+                      <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-2xl ring-1 ring-black/10 p-2.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                        <div className="px-3 py-2 bg-gray-50 rounded-xl mb-1 border border-gray-100">
                           <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.nombre}</p>
                           <p className="text-[11px] text-gray-500 line-clamp-1">{user.correo}</p>
-                          <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-uninorte-red">
+                          <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-uninorte-red">
                             Rol: {user.rol}
                           </span>
                         </div>
 
-                        <div className="py-1">
+                        <div className="py-1 space-y-0.5">
                           {isEmprendedor && (
                             <Link
                               href="/emprendedor"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 rounded-xl my-1 transition"
+                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 rounded-xl transition"
                             >
                               <Store className="w-4 h-4 text-amber-600" />
                               Panel de Emprendedor
@@ -163,7 +164,7 @@ export default function Navbar() {
                             <Link
                               href="/admin"
                               onClick={() => setUserDropdownOpen(false)}
-                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-900 bg-red-50 hover:bg-red-100 rounded-xl my-1 transition"
+                              className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-900 bg-red-50 hover:bg-red-100 rounded-xl transition"
                             >
                               <Shield className="w-4 h-4 text-uninorte-red" />
                               Panel de Administrador
@@ -173,22 +174,22 @@ export default function Navbar() {
                           <Link
                             href="/pedidos"
                             onClick={() => setUserDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 rounded-xl transition"
+                            className="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-xl transition"
                           >
                             <Clock className="w-4 h-4 text-gray-400" />
                             Mis Pedidos y Compras
                           </Link>
                         </div>
 
-                        <div className="pt-1 border-t border-gray-100">
+                        <div className="pt-1.5 mt-1 border-t border-gray-100">
                           <button
-                            onClick={() => {
+                            onClick={async () => {
                               setUserDropdownOpen(false);
-                              logout();
+                              await logout();
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-xl transition"
+                            className="w-full flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer"
                           >
-                            <LogOut className="w-4 h-4" />
+                            <LogOut className="w-4 h-4 text-red-600" />
                             Cerrar Sesión
                           </button>
                         </div>
@@ -276,7 +277,20 @@ export default function Navbar() {
               </Link>
             )}
 
-            {!user && (
+            {user ? (
+              <div className="pt-2 border-t border-gray-100 space-y-2">
+                <button
+                  onClick={async () => {
+                    setMobileMenuOpen(false);
+                    await logout();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            ) : (
               <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
                 <Link
                   href="/login"
