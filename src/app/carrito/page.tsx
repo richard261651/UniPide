@@ -124,6 +124,7 @@ export default function CarritoPage() {
         items: items.map((item) => ({
           productId: item.product.id,
           cantidad: item.cantidad,
+          opcionesSeleccionadas: item.opcionesSeleccionadas || null,
           notas: item.notas,
         })),
         zonaEntregaCodigo: selectedZone,
@@ -364,34 +365,39 @@ export default function CarritoPage() {
             </div>
 
             <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-              {items.map(({ product, cantidad, notas }) => {
+              {items.map(({ product, cantidad, opcionesSeleccionadas }, idx) => {
                 const precio = product.esOferta && product.precioOferta ? product.precioOferta : product.precio;
                 return (
-                  <div key={product.id} className="flex items-center justify-between text-xs py-1">
+                  <div key={`${product.id}-${idx}`} className="flex items-center justify-between text-xs py-1">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="flex items-center gap-1 bg-gray-100 px-1.5 py-0.5 rounded-md text-gray-700 font-bold">
                         <button
-                          onClick={() => updateQuantity(product.id, cantidad - 1)}
+                          onClick={() => updateQuantity(idx, cantidad - 1)}
                           className="hover:text-red-600"
                         >
                           -
                         </button>
                         <span>{cantidad}</span>
                         <button
-                          onClick={() => updateQuantity(product.id, cantidad + 1)}
+                          onClick={() => updateQuantity(idx, cantidad + 1)}
                           className="hover:text-green-600"
                         >
                           +
                         </button>
                       </div>
-                      <span className="font-medium text-gray-800 truncate">{product.nombre}</span>
+                      <div className="min-w-0">
+                        <span className="font-medium text-gray-800 truncate block">{product.nombre}</span>
+                        {opcionesSeleccionadas && (
+                          <span className="text-[10px] text-uninorte-red font-bold block">{opcionesSeleccionadas}</span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="font-extrabold text-gray-900">
                         {formatPrice(precio * cantidad)}
                       </span>
                       <button
-                        onClick={() => removeItem(product.id)}
+                        onClick={() => removeItem(idx)}
                         className="text-gray-300 hover:text-red-500"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

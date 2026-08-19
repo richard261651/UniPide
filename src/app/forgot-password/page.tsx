@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, KeyRound, ArrowRight, Loader2, CheckCircle2, ArrowLeft, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Mail, Lock, KeyRound, ArrowRight, Loader2, CheckCircle2, ArrowLeft, ShieldCheck, QrCode, Smartphone } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -12,17 +12,14 @@ export default function ForgotPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [resendLoading, setResendLoading] = useState(false);
   const [error, setError] = useState('');
-  const [infoMsg, setInfoMsg] = useState('');
-  const [debugCode, setDebugCode] = useState('');
+  const [nombreUsuario, setNombreUsuario] = useState('');
 
-  // Paso 1: Solicitar Código
+  // Paso 1: Buscar cuenta
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setInfoMsg('');
 
     try {
       const res = await fetch('/api/auth/forgot-password', {
@@ -34,19 +31,13 @@ export default function ForgotPasswordPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Ocurrió un error al procesar tu solicitud');
+        setError(data.error || 'Ocurrió un error al verificar la cuenta');
         setLoading(false);
         return;
       }
 
-      setCode('');
+      setNombreUsuario(data.nombreUsuario || '');
       setStep(2);
-      if (data.debugCode) {
-        setDebugCode(data.debugCode);
-      } else {
-        setDebugCode('');
-      }
-      setInfoMsg(`Hemos enviado un código de verificación de 6 dígitos a ${cleanCorreoMask(correo)}.`);
     } catch (err: any) {
       setError('Error de conexión con el servidor. Intenta de nuevo.');
     } finally {
@@ -54,53 +45,13 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Reenviar código
-  const handleResendCode = async () => {
-    setResendLoading(true);
-    setError('');
-    setInfoMsg('');
-
-    try {
-      const res = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Error al reenviar el código');
-      } else {
-        if (data.debugCode) {
-          setDebugCode(data.debugCode);
-        } else {
-          setDebugCode('');
-        }
-        setInfoMsg('¡Se ha enviado un nuevo código de verificación!');
-      }
-    } catch (err) {
-      setError('Error de conexión al reenviar código');
-    } finally {
-      setResendLoading(false);
-    }
-  };
-
-  // Enmascarar correo para privacidad visual
-  function cleanCorreoMask(email: string) {
-    if (!email.includes('@')) return email;
-    const [user, domain] = email.split('@');
-    if (user.length <= 2) return `${user}***@${domain}`;
-    return `${user.substring(0, 2)}***@${domain}`;
-  }
-
-  // Paso 2: Restablecer Contraseña con Código
+  // Paso 2: Restablecer Contraseña verificando con Google Authenticator
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!code || code.trim().length !== 6) {
-      setError('Por favor ingresa el código de verificación de 6 dígitos enviado a tu correo');
+      setError('Por favor ingresa el código de 6 dígitos generado por tu aplicación Google Authenticator');
       return;
     }
 
@@ -149,57 +100,40 @@ export default function ForgotPasswordPage() {
         {/* Encabezado */}
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 text-white font-black text-xl flex items-center justify-center mx-auto shadow-md shadow-red-900/20">
-            <KeyRound className="w-6 h-6" />
+            <Smartphone className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
-            Recuperar Contraseña
+            Recuperar Contraseña con 2FA
           </h1>
           <p className="text-xs text-gray-500">
-            {step === 1 && 'Ingresa tu correo electrónico registrado para solicitar tu código de seguridad'}
-            {step === 2 && 'Ingresa el código de 6 dígitos que enviamos a tu correo e introduce tu nueva clave'}
-            {step === 3 && '¡Tu cuenta ha sido actualizada con éxito!'}
+            {step === 1 && 'Ingresa tu correo electrónico registrado para verificar tu cuenta'}
+            {step === 2 && `Abre tu app Google Authenticator e ingresa el código activo para la cuenta de ${nombreUsuario || 'UniPide'}`}
+            {step === 3 && '¡Tu clave ha sido actualizada con éxito mediante Google Authenticator!'}
           </p>
         </div>
 
         {/* Contenedor del Formulario */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl space-y-5">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
+            <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
               {error}
             </div>
           )}
 
-          {infoMsg && step === 2 && (
-            <div className="p-3.5 bg-blue-50 border border-blue-200 text-blue-800 rounded-2xl text-xs space-y-1">
-              <div className="flex items-center gap-1.5 font-bold">
-                <ShieldCheck className="w-4 h-4 text-blue-600" />
-                <span>Código Enviado por Correo</span>
+          {/* Banner Guía Google Authenticator en Paso 2 */}
+          {step === 2 && (
+            <div className="p-4 bg-slate-900 text-white rounded-2xl text-xs space-y-2 animate-in fade-in">
+              <div className="flex items-center gap-2 text-amber-400 font-bold">
+                <Smartphone className="w-4 h-4 shrink-0" />
+                <span>Google Authenticator</span>
               </div>
-              <p className="text-xs text-blue-900">
-                {infoMsg}
-              </p>
-              <p className="text-[10px] text-blue-600 pt-0.5">
-                Revisa tu bandeja de entrada o carpeta de SPAM.
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Busca la entrada <strong className="text-white">UniPide Uninorte</strong> en tu celular y copia los 6 dígitos que cambian cada 30 segundos.
               </p>
             </div>
           )}
 
-          {debugCode && step === 2 && (
-            <div className="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-xs space-y-1 animate-in fade-in">
-              <div className="flex items-center gap-1.5 font-bold">
-                <ShieldCheck className="w-4 h-4 text-amber-600" />
-                <span>Código de Seguridad Asistido:</span>
-              </div>
-              <p className="text-base font-mono font-black text-amber-950 tracking-widest text-center py-1">
-                {debugCode}
-              </p>
-              <p className="text-[10px] text-amber-700">
-                Código de 6 dígitos activo durante 15 minutos para tu verificación.
-              </p>
-            </div>
-          )}
-
-          {/* PASO 1: Solicitar código */}
+          {/* PASO 1: Ingresar correo registrado */}
           {step === 1 && (
             <form onSubmit={handleRequestCode} className="space-y-4">
               <div>
@@ -213,8 +147,8 @@ export default function ForgotPasswordPage() {
                     required
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
-                    placeholder="usuario@correo.com"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                    placeholder="usuario@uninorte.edu.co"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
                   />
                 </div>
               </div>
@@ -231,7 +165,7 @@ export default function ForgotPasswordPage() {
                   </>
                 ) : (
                   <>
-                    <span>Enviar Código de Seguridad</span>
+                    <span>Continuar a Verificación 2FA</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -239,38 +173,23 @@ export default function ForgotPasswordPage() {
             </form>
           )}
 
-          {/* PASO 2: Ingresar Código y Nueva Contraseña */}
+          {/* PASO 2: Ingresar Código de Google Authenticator y Nueva Contraseña */}
           {step === 2 && (
             <form onSubmit={handleResetPassword} className="space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold text-gray-700">
-                    Código de Verificación (6 dígitos)
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleResendCode}
-                    disabled={resendLoading}
-                    className="text-[11px] font-bold text-uninorte-red hover:underline flex items-center gap-1"
-                  >
-                    {resendLoading ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <RefreshCw className="w-3 h-3" />
-                    )}
-                    <span>Reenviar código</span>
-                  </button>
-                </div>
+                <label className="block text-xs font-bold text-gray-800 mb-1.5">
+                  Código de 6 dígitos de Google Authenticator *
+                </label>
                 <div className="relative">
-                  <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
                   <input
                     type="text"
                     required
                     maxLength={6}
                     value={code}
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Escribe los 6 dígitos"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 font-mono text-sm tracking-widest focus:ring-2 focus:ring-uninorte-red outline-none transition text-center font-bold"
+                    placeholder="000 000"
+                    className="w-full text-base font-mono font-black tracking-widest text-center py-3 pl-10 pr-3 rounded-xl border-2 border-uninorte-red focus:ring-4 focus:ring-red-100 outline-none text-gray-900"
                   />
                 </div>
               </div>
@@ -313,18 +232,18 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
+                disabled={loading || code.trim().length !== 6}
+                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed disabled:opacity-50 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Guardando nueva clave...</span>
+                    <span>Validando con Google Authenticator...</span>
                   </>
                 ) : (
                   <>
-                    <span>Restablecer Contraseña</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>Validar 2FA y Restablecer Clave</span>
+                    <CheckCircle2 className="w-4 h-4" />
                   </>
                 )}
               </button>
@@ -354,7 +273,7 @@ export default function ForgotPasswordPage() {
                   ¡Contraseña Restablecida!
                 </h3>
                 <p className="text-xs text-gray-500 max-w-xs mx-auto">
-                  Tu clave ha sido actualizada en UniPide. Ya puedes ingresar con tu nueva contraseña.
+                  Tu clave ha sido actualizada con éxito verificando con Google Authenticator.
                 </p>
               </div>
 

@@ -13,6 +13,8 @@ import {
   ArrowLeft,
   ShoppingBag,
   Star,
+  MessageSquare,
+  FileText,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +41,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/solicitudes', label: 'Solicitudes Pendientes', icon: CheckSquare },
     { href: '/admin/negocios', label: 'Gestión de Emprendimientos', icon: Building2 },
     { href: '/admin/productos', label: 'Productos del Menú', icon: ShoppingBag },
+    { href: '/admin/pedidos', label: 'Auditoría de Pedidos & Chat', icon: MessageSquare },
+    { href: '/admin/pqrs', label: 'Gestión de PQRS', icon: FileText },
     { href: '/admin/reseñas', label: 'Moderación de Reseñas', icon: Star },
     { href: '/admin/usuarios', label: 'Usuarios & Cuentas', icon: Users },
   ];

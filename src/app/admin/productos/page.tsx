@@ -50,6 +50,10 @@ export default function AdminProductosPage() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  // Modal Confirmación Eliminar
+  const [deletingProduct, setDeletingProduct] = useState<AdminProductItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -157,18 +161,25 @@ export default function AdminProductosPage() {
     }
   };
 
-  const handleDeleteProduct = async (id: string) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar permanentemente este producto del sistema?')) return;
+  const confirmDeleteProduct = async () => {
+    if (!deletingProduct) return;
+    setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/products/${deletingProduct.id}`, { method: 'DELETE' });
       if (res.ok) {
-        setSuccessMsg('Producto eliminado correctamente.');
+        setDeletingProduct(null);
+        if (modalOpen && editingProduct?.id === deletingProduct.id) {
+          setModalOpen(false);
+        }
+        setSuccessMsg('Producto eliminado correctamente del sistema.');
         setTimeout(() => setSuccessMsg(''), 3000);
         fetchData();
       }
     } catch (err) {
-      alert('Error de conexión al eliminar');
+      console.error('Error al eliminar producto:', err);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -318,7 +329,7 @@ export default function AdminProductosPage() {
                   </button>
 
                   <button
-                    onClick={() => handleDeleteProduct(p.id)}
+                    onClick={() => setDeletingProduct(p)}
                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition"
                     title="Eliminar producto"
                   >
@@ -423,24 +434,85 @@ export default function AdminProductosPage() {
                 />
               </div>
 
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 py-2.5 font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-md flex items-center justify-center gap-1.5"
-                >
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                  <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
-                </button>
+              <div className="flex items-center justify-between gap-2 pt-2">
+                {editingProduct && (
+                  <button
+                    type="button"
+                    onClick={() => setDeletingProduct(editingProduct)}
+                    className="px-3 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl flex items-center gap-1 transition text-xs"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Eliminar</span>
+                  </button>
+                )}
+
+                <div className="flex gap-2 flex-1 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setModalOpen(false)}
+                    className="px-4 py-2.5 font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="px-5 py-2.5 font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-md flex items-center justify-center gap-1.5"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
+                  </button>
+                </div>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación de Eliminación Explicita (Admin) */}
+      {deletingProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-red-100 text-uninorte-red flex items-center justify-center mx-auto shadow-xs">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-base font-black text-gray-900">
+                ¿Eliminar este producto?
+              </h3>
+              <p className="text-xs text-gray-600 font-semibold">
+                "{deletingProduct.nombre}"
+              </p>
+              <p className="text-[11px] text-gray-400 pt-1 leading-relaxed">
+                ¿Estás seguro de eliminar este producto? No podrás deshacer los cambios y el producto se eliminará permanentemente de la plataforma.
+              </p>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeletingProduct(null)}
+                className="flex-1 py-2.5 font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition text-xs"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteProduct}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 text-xs"
+              >
+                {isDeleting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Sí, Eliminar</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

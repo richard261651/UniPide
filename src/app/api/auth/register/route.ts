@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Encriptar contraseña
     const passwordHash = await hashPassword(password);
 
-    // Crear Usuario
+    // Crear Usuario con 2FA habilitado
     const newUser = await prisma.user.create({
       data: {
         nombre: nombre.trim(),
@@ -94,6 +94,8 @@ export async function POST(request: NextRequest) {
         passwordHash,
         rol: userRole,
         telefono: telefono?.trim() || null,
+        twoFactorSecret: body.twoFactorSecret || null,
+        twoFactorEnabled: Boolean(body.twoFactorSecret),
       },
     });
 

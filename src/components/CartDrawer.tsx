@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/utils';
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Store } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, Store, Sliders } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -81,16 +81,18 @@ export default function CartDrawer() {
               </Link>
             </div>
           ) : (
-            items.map(({ product, cantidad, notas }) => {
+            items.map(({ product, cantidad, opcionesSeleccionadas, notas }, idx) => {
               const precio = product.esOferta && product.precioOferta ? product.precioOferta : product.precio;
+              const photoUrl = product.foto || (product.fotos && product.fotos[0]);
+
               return (
                 <div
-                  key={product.id}
+                  key={`${product.id}-${idx}`}
                   className="flex gap-3.5 p-3 bg-gray-50/90 hover:bg-gray-100/60 rounded-2xl border border-gray-100 transition relative group"
                 >
-                  {product.foto && (
+                  {photoUrl && (
                     <img
-                      src={product.foto}
+                      src={photoUrl}
                       alt={product.nombre}
                       className="w-16 h-16 rounded-xl object-cover bg-white shrink-0 border border-gray-200/60 shadow-xs"
                     />
@@ -102,7 +104,7 @@ export default function CartDrawer() {
                         {product.nombre}
                       </h4>
                       <button
-                        onClick={() => removeItem(product.id)}
+                        onClick={() => removeItem(idx)}
                         className="text-gray-400 hover:text-red-600 transition p-1 -mt-1 -mr-1 rounded-lg"
                         title="Eliminar producto"
                       >
@@ -110,7 +112,14 @@ export default function CartDrawer() {
                       </button>
                     </div>
 
-                    <p className="text-xs font-black text-uninorte-red mt-0.5">
+                    {/* Especificaciones / Variantes elegidas */}
+                    {opcionesSeleccionadas && (
+                      <p className="text-[10px] font-bold text-uninorte-red bg-red-50 px-2 py-0.5 rounded-md mt-1 inline-block">
+                        ✨ {opcionesSeleccionadas}
+                      </p>
+                    )}
+
+                    <p className="text-xs font-black text-gray-900 mt-1">
                       {formatPrice(precio * cantidad)}
                     </p>
 
@@ -123,7 +132,7 @@ export default function CartDrawer() {
                     {/* Controles de Cantidad */}
                     <div className="flex items-center gap-2 mt-2">
                       <button
-                        onClick={() => updateQuantity(product.id, cantidad - 1)}
+                        onClick={() => updateQuantity(idx, cantidad - 1)}
                         className="w-6 h-6 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 active:scale-95 transition shadow-2xs font-bold"
                       >
                         <Minus className="w-3 h-3" />
@@ -132,7 +141,7 @@ export default function CartDrawer() {
                         {cantidad}
                       </span>
                       <button
-                        onClick={() => updateQuantity(product.id, cantidad + 1)}
+                        onClick={() => updateQuantity(idx, cantidad + 1)}
                         className="w-6 h-6 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 active:scale-95 transition shadow-2xs font-bold"
                       >
                         <Plus className="w-3 h-3" />

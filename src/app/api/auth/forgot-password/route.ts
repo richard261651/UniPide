@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isValidEmail } from '@/lib/utils';
-import { recoveryTokens } from '@/lib/recoveryStore';
-import { sendRecoveryEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     if (!correo) {
       return NextResponse.json(
-        { error: 'Por favor ingresa tu correo electrónico' },
+        { error: 'Por favor ingresa tu correo electrónico registrado' },
         { status: 400 }
       );
     }
@@ -26,6 +24,7 @@ export async function POST(request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { correo: cleanEmail },
+      select: { id: true, nombre: true, correo: true, activo: true, twoFactorSecret: true, twoFactorEnabled: true },
     });
 
     if (!user) {
@@ -42,24 +41,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generar un código aleatorio de 6 dígitos
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = Date.now() + 15 * 60 * 1000; // Expira en 15 minutos
-
-    // Guardar en almacenamiento seguro del servidor
-    recoveryTokens.set(cleanEmail, { code: resetCode, expiresAt });
-
-    // Enviar código vía servicio de correo
-    const emailResult = await sendRecoveryEmail(cleanEmail, resetCode);
-
     return NextResponse.json({
       success: true,
-      message: emailResult.sent
-        ? 'Hemos enviado un código de verificación de 6 dígitos a tu correo electrónico.'
-        : 'Código de verificación generado con éxito.',
       email: cleanEmail,
-      // Si el proveedor externo no está configurado o falló, entregamos el código de asistencia para no bloquear la prueba
-      debugCode: !emailResult.sent ? resetCode : undefined,
+      nombreUsuario: user.nombre,
+      requires2FA: true,
+      has2FA: Boolean(user.twoFactorSecret),
     });
   } catch (error: any) {
     console.error('Error en forgot-password:', error);

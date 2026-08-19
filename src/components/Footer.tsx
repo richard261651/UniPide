@@ -9,14 +9,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Columna 1: Marca */}
           <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-sm">
-                <Zap className="w-4 h-4 fill-white text-white" />
-              </div>
-              <span className="font-black text-gray-900 text-lg tracking-tight">
-                Uni<span className="text-uninorte-red">Pide</span>
-              </span>
-            </div>
+            <Link href="/">
+              <img
+                src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/logo_horizontal_kip1ul.svg"
+                alt="UniPide Logo"
+                className="h-10 w-auto object-contain"
+              />
+            </Link>
             <p className="text-xs text-gray-500 leading-relaxed">
               La plataforma oficial de pedidos para los emprendimientos de estudiantes de la
               Universidad del Norte en Barranquilla, Colombia.
@@ -78,10 +77,19 @@ export default function Footer() {
 
           {/* Columna 4: Legal & Info */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-900">Comunidad</h4>
-            <p className="text-xs text-gray-500">
-              Iniciativa para impulsar el comercio estudiantil y facilitar entregas rápidas entre bloques.
-            </p>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-900">Comunidad & Ayuda</h4>
+            <ul className="space-y-2 text-xs text-gray-500">
+              <li>
+                <Link href="/pqrs" className="hover:text-uninorte-red transition font-semibold text-gray-700">
+                  📋 Radicar PQRS (Quejas & Sugerencias)
+                </Link>
+              </li>
+              <li>
+                <Link href="/pedidos" className="hover:text-uninorte-red transition">
+                  Mis Pedidos
+                </Link>
+              </li>
+            </ul>
             <div className="pt-2 text-[11px] text-gray-400">
               Diseñado con <Heart className="w-3 h-3 text-uninorte-red inline mx-0.5 fill-uninorte-red" /> para Uninorte.
             </div>

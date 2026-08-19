@@ -36,22 +36,11 @@ export default function Navbar() {
             {/* Logo e Identidad UniPide */}
             <div className="flex items-center gap-3 sm:gap-6 min-w-0">
               <Link href="/" className="flex items-center gap-2 group shrink-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-md shadow-red-900/20 group-hover:scale-105 transition">
-                  <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    <span className="font-black text-gray-900 tracking-tight text-base sm:text-xl">
-                      Uni<span className="text-uninorte-red">Pide</span>
-                    </span>
-                    <span className="hidden xs:inline-block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-1.5 py-0.5 rounded">
-                      Campus
-                    </span>
-                  </div>
-                  <p className="text-[9px] sm:text-[10px] text-gray-500 font-medium -mt-1 hidden sm:block">
-                    Marketplace Universitario Uninorte
-                  </p>
-                </div>
+                <img
+                  src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/logo_horizontal_kip1ul.svg"
+                  alt="UniPide Logo"
+                  className="h-9 sm:h-11 w-auto object-contain group-hover:scale-102 transition"
+                />
               </Link>
 
               {/* Enlaces Principales Desktop */}
@@ -178,6 +167,15 @@ export default function Navbar() {
                           >
                             <Clock className="w-4 h-4 text-gray-400" />
                             Mis Pedidos y Compras
+                          </Link>
+
+                          <Link
+                            href="/pqrs"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="flex items-center gap-2 px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 rounded-xl transition"
+                          >
+                            <span className="text-sm">📋</span>
+                            Radicar PQRS / Ayuda
                           </Link>
                         </div>
 
@@ -312,46 +310,64 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Barra de Navegación Inferior Mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-4 flex items-center justify-around shadow-lg">
+      {/* Barra de Navegación Nativa Estilo App Móvil */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200/80 pt-2 pb-safe px-2 flex items-center justify-around shadow-2xl">
         <Link
           href="/"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold ${
-            pathname === '/' ? 'text-uninorte-red' : 'text-gray-500'
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
+            pathname === '/' ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Compass className="w-5 h-5" />
+          <Compass className={`w-5 h-5 ${pathname === '/' ? 'stroke-[2.5]' : 'stroke-2'}`} />
           <span>Inicio</span>
         </Link>
+
         <Link
           href="/negocios"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold ${
-            pathname.startsWith('/negocios') ? 'text-uninorte-red' : 'text-gray-500'
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
+            pathname.startsWith('/negocios') ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Store className="w-5 h-5" />
+          <Store className={`w-5 h-5 ${pathname.startsWith('/negocios') ? 'stroke-[2.5]' : 'stroke-2'}`} />
           <span>Negocios</span>
         </Link>
+
+        {/* Botón Carrito Destacado */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="relative flex flex-col items-center gap-0.5 text-[10px] font-semibold text-gray-500"
+          className="relative flex flex-col items-center gap-0.5 text-[10px] font-bold text-slate-600 active:scale-90 transition"
         >
-          <ShoppingBag className="w-5 h-5" />
+          <div className="relative">
+            <ShoppingBag className="w-5 h-5 text-slate-700" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-uninorte-red text-white text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                {totalItems}
+              </span>
+            )}
+          </div>
           <span>Carrito</span>
-          {totalItems > 0 && (
-            <span className="absolute -top-1 right-1 bg-uninorte-red text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
-              {totalItems}
-            </span>
-          )}
         </button>
+
         <Link
           href={user ? '/pedidos' : '/login'}
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-semibold ${
-            pathname.startsWith('/pedidos') || pathname.startsWith('/login') ? 'text-uninorte-red' : 'text-gray-500'
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
+            pathname.startsWith('/pedidos') ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Clock className="w-5 h-5" />
-          <span>{user ? 'Pedidos' : 'Ingresar'}</span>
+          <Clock className={`w-5 h-5 ${pathname.startsWith('/pedidos') ? 'stroke-[2.5]' : 'stroke-2'}`} />
+          <span>Pedidos</span>
+        </Link>
+
+        <Link
+          href={isEmprendedor ? '/emprendedor' : isAdmin ? '/admin' : user ? '/pqrs' : '/login'}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
+            pathname.startsWith('/emprendedor') || pathname.startsWith('/admin') || pathname.startsWith('/pqrs')
+              ? 'text-uninorte-red'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Shield className="w-5 h-5" />
+          <span>{isEmprendedor ? 'Mi Negocio' : isAdmin ? 'Admin' : user ? 'Ayuda/PQRS' : 'Ingresar'}</span>
         </Link>
       </div>
     </>

@@ -121,19 +121,13 @@ export default function HomePage() {
     return (
       <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-red-50/40 via-white to-slate-50">
         <div className="max-w-md w-full space-y-6">
-          {/* Encabezado UniPide */}
+          {/* Encabezado UniPide con Lockup Oficial */}
           <div className="text-center space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white mx-auto shadow-lg shadow-red-900/20">
-              <Zap className="w-8 h-8 fill-white text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                Uni<span className="text-uninorte-red">Pide</span>
-              </h1>
-              <span className="inline-block mt-1 text-[10px] font-black uppercase tracking-wider bg-red-100 text-uninorte-red px-2.5 py-0.5 rounded-full">
-                Marketplace Oficial Campus Uninorte
-              </span>
-            </div>
+            <img
+              src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/lockup_oficila_tsalrq.svg"
+              alt="UniPide Lockup Oficial"
+              className="w-48 sm:w-56 h-auto mx-auto object-contain hover:scale-102 transition"
+            />
             <p className="text-xs text-gray-500 max-w-sm mx-auto">
               Inicia sesión con tu correo electrónico para acceder a los pedidos, emprendimientos y entregas en el campus.
             </p>

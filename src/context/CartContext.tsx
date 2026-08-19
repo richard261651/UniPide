@@ -5,9 +5,17 @@ import { CartItem, ProductItem } from '@/types';
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: ProductItem, cantidad?: number, notas?: string) => { success: boolean; requiresReset?: boolean; currentBusinessName?: string };
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, cantidad: number) => void;
+  addItem: (
+    product: ProductItem,
+    cantidad?: number,
+    notas?: string,
+    tallaSeleccionada?: string,
+    colorSeleccionado?: string,
+    variacionSeleccionada?: string,
+    opcionesSeleccionadas?: string
+  ) => { success: boolean; requiresReset?: boolean; currentBusinessName?: string };
+  removeItem: (itemIndex: number) => void;
+  updateQuantity: (itemIndex: number, cantidad: number) => void;
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
@@ -18,7 +26,7 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-const CART_STORAGE_KEY = 'uninorte_marketplace_cart_v1';
+const CART_STORAGE_KEY = 'uninorte_marketplace_cart_v2';
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -53,7 +61,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const businessId = items.length > 0 ? items[0].product.businessId : null;
   const businessName = items.length > 0 ? items[0].product.business?.nombre || 'Emprendimiento' : null;
 
-  const addItem = (product: ProductItem, cantidad: number = 1, notas?: string) => {
+  const addItem = (
+    product: ProductItem,
+    cantidad: number = 1,
+    notas?: string,
+    tallaSeleccionada?: string,
+    colorSeleccionado?: string,
+    variacionSeleccionada?: string,
+    opcionesSeleccionadas?: string
+  ) => {
     // Verificar si el carrito tiene productos de otro negocio
     if (items.length > 0 && items[0].product.businessId !== product.businessId) {
       return {
@@ -64,33 +80,51 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     setItems((prevItems) => {
-      const existingIndex = prevItems.findIndex((item) => item.product.id === product.id);
+      // Buscar ítem con mismo producto y MISMAS opciones seleccionadas
+      const existingIndex = prevItems.findIndex(
+        (item) =>
+          item.product.id === product.id &&
+          item.opcionesSeleccionadas === opcionesSeleccionadas &&
+          item.tallaSeleccionada === tallaSeleccionada &&
+          item.colorSeleccionado === colorSeleccionado &&
+          item.variacionSeleccionada === variacionSeleccionada
+      );
+
       if (existingIndex > -1) {
         const updated = [...prevItems];
         updated[existingIndex].cantidad += cantidad;
         if (notas) updated[existingIndex].notas = notas;
         return updated;
       } else {
-        return [...prevItems, { product, cantidad, notas }];
+        return [
+          ...prevItems,
+          {
+            product,
+            cantidad,
+            notas,
+            tallaSeleccionada,
+            colorSeleccionado,
+            variacionSeleccionada,
+            opcionesSeleccionadas,
+          },
+        ];
       }
     });
 
     return { success: true };
   };
 
-  const removeItem = (productId: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.product.id !== productId));
+  const removeItem = (itemIndex: number) => {
+    setItems((prevItems) => prevItems.filter((_, idx) => idx !== itemIndex));
   };
 
-  const updateQuantity = (productId: string, cantidad: number) => {
+  const updateQuantity = (itemIndex: number, cantidad: number) => {
     if (cantidad <= 0) {
-      removeItem(productId);
+      removeItem(itemIndex);
       return;
     }
     setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.product.id === productId ? { ...item, cantidad } : item
-      )
+      prevItems.map((item, idx) => (idx === itemIndex ? { ...item, cantidad } : item))
     );
   };
 

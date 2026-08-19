@@ -7,6 +7,7 @@ import { OrderDetail } from '@/types';
 import { formatPrice, formatShortDate } from '@/lib/utils';
 import OrderStatusTracker from '@/components/OrderStatusTracker';
 import RatingModal from '@/components/RatingModal';
+import OrderChatModal from '@/components/OrderChatModal';
 import {
   Clock,
   Store,
@@ -17,6 +18,7 @@ import {
   Phone,
   RefreshCw,
   Sparkles,
+  MessageSquare,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,6 +32,7 @@ export default function OrderTrackingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [ratingModalOpen, setRatingModalOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchOrder = async (showLoading = true) => {
@@ -111,14 +114,24 @@ export default function OrderTrackingPage() {
           </div>
         </div>
 
-        <button
-          onClick={() => fetchOrder(true)}
-          disabled={refreshing}
-          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl transition shadow-2xs"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-uninorte-red' : ''}`} />
-          <span>{refreshing ? 'Actualizando...' : 'Actualizar Estado'}</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setChatOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl transition shadow-xs"
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Chat con Vendedor</span>
+          </button>
+
+          <button
+            onClick={() => fetchOrder(true)}
+            disabled={refreshing}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl transition shadow-2xs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-uninorte-red' : ''}`} />
+            <span>{refreshing ? 'Actualizando...' : 'Actualizar'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Tracker Visual de Estados */}
@@ -242,6 +255,11 @@ export default function OrderTrackingPage() {
                   <p className="font-bold text-gray-900">
                     {item.cantidad}x {item.nombreProducto}
                   </p>
+                  {item.opcionesSeleccionadas && (
+                    <p className="text-[10px] font-bold text-uninorte-red bg-red-50 px-2 py-0.5 rounded-md mt-0.5 inline-block">
+                      ✨ {item.opcionesSeleccionadas}
+                    </p>
+                  )}
                   {item.notas && (
                     <p className="text-[11px] text-gray-400 italic">Nota: {item.notas}</p>
                   )}
@@ -278,6 +296,15 @@ export default function OrderTrackingPage() {
           fetchOrder(true);
           setRatingModalOpen(false);
         }}
+      />
+
+      {/* Modal de Chat en Vivo */}
+      <OrderChatModal
+        orderId={order.id}
+        codigoPedido={order.codigoPedido}
+        businessNombre={order.business?.nombre}
+        isOpen={chatOpen}
+        onClose={() => setChatOpen(false)}
       />
     </div>
   );

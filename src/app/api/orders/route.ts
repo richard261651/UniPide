@@ -137,6 +137,7 @@ export async function POST(request: NextRequest) {
         nombreProducto: product.nombre,
         cantidad,
         precioUnitario,
+        opcionesSeleccionadas: item.opcionesSeleccionadas || null,
         notas: item.notas?.trim() || null,
       });
     }

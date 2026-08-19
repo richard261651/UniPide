@@ -150,7 +150,7 @@ export default function BusinessDetailPage() {
                 </div>
                 <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Tiempo base de preparación: {business.tiempoBasePrepMin} min</span>
+                  <span>Productos listos para entrega inmediata en campus</span>
                 </div>
               </div>
             </div>

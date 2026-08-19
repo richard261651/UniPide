@@ -14,6 +14,7 @@ interface AuthContextType {
     password: string;
     rol: 'CLIENTE' | 'EMPRENDEDOR' | 'ADMIN';
     telefono?: string;
+    twoFactorSecret?: string;
     nombreNegocio?: string;
     categoriaNegocio?: string;
     ubicacionCampus?: string;

@@ -42,28 +42,51 @@ export async function PUT(
       descripcion,
       precio,
       foto,
+      fotos,
       stock,
       disponible,
       categoria,
       esOferta,
       precioOferta,
       descripcionOferta,
+      tieneTallas,
+      tallasDisponibles,
+      tieneColores,
+      coloresDisponibles,
+      tieneVariaciones,
+      nombreVariaciones,
+      opcionesVariaciones,
     } = body;
+
+    const updateData: any = {
+      ...(nombre && { nombre: nombre.trim() }),
+      ...(descripcion !== undefined && { descripcion: descripcion.trim() }),
+      ...(precio !== undefined && { precio: Number(precio) }),
+      ...(foto !== undefined && { foto }),
+      ...(fotos !== undefined && { fotos: Array.isArray(fotos) ? fotos : [] }),
+      ...(stock !== undefined && { stock: Number(stock) }),
+      ...(disponible !== undefined && { disponible: Boolean(disponible) }),
+      ...(categoria !== undefined && { categoria: categoria?.trim() || null }),
+      ...(esOferta !== undefined && { esOferta: Boolean(esOferta) }),
+      ...(precioOferta !== undefined && { precioOferta: precioOferta ? Number(precioOferta) : null }),
+      ...(descripcionOferta !== undefined && { descripcionOferta: descripcionOferta?.trim() || null }),
+      ...(tieneTallas !== undefined && { tieneTallas: Boolean(tieneTallas) }),
+      ...(tallasDisponibles !== undefined && { tallasDisponibles: Array.isArray(tallasDisponibles) ? tallasDisponibles : [] }),
+      ...(tieneColores !== undefined && { tieneColores: Boolean(tieneColores) }),
+      ...(coloresDisponibles !== undefined && { coloresDisponibles: Array.isArray(coloresDisponibles) ? coloresDisponibles : [] }),
+      ...(tieneVariaciones !== undefined && { tieneVariaciones: Boolean(tieneVariaciones) }),
+      ...(nombreVariaciones !== undefined && { nombreVariaciones: nombreVariaciones?.trim() || null }),
+      ...(opcionesVariaciones !== undefined && { opcionesVariaciones: Array.isArray(opcionesVariaciones) ? opcionesVariaciones : [] }),
+    };
+
+    // Si se enviaron fotos en el array pero no foto principal, asignar la primera
+    if (fotos && Array.isArray(fotos) && fotos.length > 0 && !updateData.foto) {
+      updateData.foto = fotos[0];
+    }
 
     const updated = await prisma.product.update({
       where: { id },
-      data: {
-        ...(nombre && { nombre: nombre.trim() }),
-        ...(descripcion !== undefined && { descripcion: descripcion.trim() }),
-        ...(precio !== undefined && { precio: Number(precio) }),
-        ...(foto !== undefined && { foto }),
-        ...(stock !== undefined && { stock: Number(stock) }),
-        ...(disponible !== undefined && { disponible: Boolean(disponible) }),
-        ...(categoria !== undefined && { categoria: categoria?.trim() || null }),
-        ...(esOferta !== undefined && { esOferta: Boolean(esOferta) }),
-        ...(precioOferta !== undefined && { precioOferta: precioOferta ? Number(precioOferta) : null }),
-        ...(descripcionOferta !== undefined && { descripcionOferta: descripcionOferta?.trim() || null }),
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true, product: updated });

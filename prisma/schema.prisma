@@ -8,19 +8,23 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  nombre        String
-  correo        String      @unique
-  passwordHash  String
-  rol           String      @default("CLIENTE") // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
-  telefono      String?
-  foto          String?
-  activo        Boolean     @default(true)
-  fechaRegistro DateTime    @default(now())
+  id               String      @id @default(cuid())
+  nombre           String
+  correo           String      @unique
+  passwordHash     String
+  rol              String      @default("CLIENTE") // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
+  telefono         String?
+  foto             String?
+  twoFactorSecret  String?     // Secreto TOTP para Google Authenticator
+  twoFactorEnabled Boolean     @default(false)
+  activo           Boolean     @default(true)
+  fechaRegistro    DateTime    @default(now())
 
   businesses    Business[]
   orders        Order[]
   ratings       Rating[]
+  chatMessages  ChatMessage[]
+  pqrs          PQRS[]
 }
 
 model Business {
@@ -33,9 +37,9 @@ model Business {
   descripcion       String
   logo              String?
   banner            String?
-  ubicacionCampus   String       // Ej: "Zona de Emprendimientos - Pasillo Ágora", "Bloque F", "Plaza de la Paz"
-  zonaCampusCodigo  String       @default("ZONA_EMPRENDIMIENTOS") // Código de CampusZone para cálculo de distancia
-  tiempoBasePrepMin Int          @default(15) // Minutos base de preparación
+  ubicacionCampus   String       // Ej: "Bloque F", "Bambú 1"
+  zonaCampusCodigo  String       @default("BLOQUE_F") // Código de CampusZone
+  tiempoBasePrepMin Int          @default(0) // Obsoleto - ventas directas
   estadoAprobacion  String       @default("PENDIENTE") // "PENDIENTE" | "APROBADO" | "RECHAZADO" | "SUSPENDIDO"
   activo            Boolean      @default(true)
   fechaCreacion     DateTime     @default(now())
@@ -43,6 +47,7 @@ model Business {
   products          Product[]
   orders            Order[]
   ratings           Rating[]
+  pqrs              PQRS[]
 }
 
 model Product {
@@ -53,6 +58,7 @@ model Product {
   descripcion       String
   precio            Float
   foto              String?
+  fotos             String[]     @default([])
   stock             Int          @default(20)
   disponible        Boolean      @default(true) // Switch "Agotado hoy"
   categoria         String?      // Subcategoría interna del negocio (ej. "Combos", "Bebidas", "Postres", "Stickers")
@@ -61,6 +67,16 @@ model Product {
   descripcionOferta String?      // Ej: "2x1 los Miércoles", "Combo Almuerzo"
   fechaInicioOferta DateTime?
   fechaFinOferta    DateTime?
+  
+  // Módulo opcional de personalización / variantes
+  tieneTallas         Boolean    @default(false)
+  tallasDisponibles   String[]   @default([])
+  tieneColores        Boolean    @default(false)
+  coloresDisponibles  String[]   @default([])
+  tieneVariaciones    Boolean    @default(false)
+  nombreVariaciones   String?    // Ej: "Presentación", "Sabor", "Estilo", "Término"
+  opcionesVariaciones String[]   @default([])
+
   fechaCreacion     DateTime     @default(now())
 
   orderItems        OrderItem[]
@@ -68,8 +84,8 @@ model Product {
 
 model CampusZone {
   id             String    @id @default(cuid())
-  codigo         String    @unique // Ej: "BLOQUE_A", "BLOQUE_F", "CAFETERIA_CENTRAL", "ZONA_EMPRENDIMIENTOS"
-  nombre         String    // "Bloque A (Ingenierías)", "Cafetería Central / Du Nord"
+  codigo         String    @unique // Ej: "BLOQUE_A", "BLOQUE_F", "BAMBU_1", "BIBLIOTECA"
+  nombre         String    // "Bloque A", "B1: Bambú 1"
   descripcion    String?
   coordenadaRefX Float?    // Posición porcentual X en el mapa Uninorte (0-100)
   coordenadaRefY Float?    // Posición porcentual Y en el mapa Uninorte (0-100)
@@ -95,32 +111,34 @@ model Order {
   subtotal                   Float
   total                      Float
   zonaEntregaCodigo          String       // Código de CampusZone del cliente
-  zonaEntregaNombre          String       // Nombre legible de la zona (ej. "Bloque F - Salón 302")
-  detalleUbicacion           String?      // Ej: "Piso 3 junto a las escaleras"
-  tiempoEstimadoMin          Int          // Minutos calculados: Base + Traslado
+  zonaEntregaNombre          String       // Nombre legible de la zona (ej. "Bloque F")
+  detalleUbicacion           String?      // Ej: "Piso 3 salón 302"
+  tiempoEstimadoMin          Int          // Minutos calculados de caminata
   instrucciones              String?
-  metodoPago                 String       @default("Efectivo / Transferencia Nequi/Daviplata al entregar")
-  repartidorLat              Float?       // Latitud GPS en vivo del repartidor
-  repartidorLng              Float?       // Longitud GPS en vivo del repartidor
-  ubicacionRepartidorNombre  String?      // Descripción en vivo de ubicación (ej. "Pasando por Bloque B")
-  ultimaUbicacionActualizada DateTime?    // Timestamp de última coordenada GPS
+  metodoPago                 String       @default("Efectivo / Nequi / Daviplata al recibir")
+  repartidorLat              Float?       // Latitud GPS
+  repartidorLng              Float?       // Longitud GPS
+  ubicacionRepartidorNombre  String?      // Ubicación actual reportada por el emprendedor (ej. "Bloque F")
+  ultimaUbicacionActualizada DateTime?    // Timestamp
   fechaCreacion              DateTime     @default(now())
   fechaActualizacion         DateTime     @updatedAt
 
   items                      OrderItem[]
   rating                     Rating?
+  chatMessages               ChatMessage[]
 }
 
 model OrderItem {
-  id             String    @id @default(cuid())
-  orderId        String
-  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId      String
-  product        Product   @relation(fields: [productId], references: [id])
-  nombreProducto String
-  cantidad       Int
-  precioUnitario Float
-  notas          String?
+  id                   String    @id @default(cuid())
+  orderId              String
+  order                Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId            String
+  product              Product   @relation(fields: [productId], references: [id])
+  nombreProducto       String
+  cantidad             Int
+  precioUnitario       Float
+  opcionesSeleccionadas String?   // Ej: "Talla: M | Color: Negro | Presentación: 250g"
+  notas                String?
 }
 
 model Rating {
@@ -134,4 +152,30 @@ model Rating {
   puntuacion    Int       // 1 a 5 estrellas
   comentario    String?
   fechaCreacion DateTime  @default(now())
+}
+
+model ChatMessage {
+  id            String    @id @default(cuid())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  remitenteId   String
+  remitente     User      @relation(fields: [remitenteId], references: [id])
+  rolRemitente  String    // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
+  mensaje       String
+  fechaCreacion DateTime  @default(now())
+}
+
+model PQRS {
+  id            String    @id @default(cuid())
+  usuarioId     String
+  usuario       User      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  businessId    String?
+  business      Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  tipo          String    // "QUEJA" | "RECLAMO" | "PETICION" | "SUGERENCIA"
+  asunto        String
+  mensaje       String
+  respuesta     String?
+  estado        String    @default("PENDIENTE") // "PENDIENTE" | "EN_REVISION" | "RESUELTO"
+  fechaCreacion DateTime  @default(now())
+  fechaRespuesta DateTime?
 }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Questrial } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 
-const inter = Inter({ subsets: ['latin'] });
+const questrial = Questrial({ weight: '400', subsets: ['latin'] });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,8 +32,14 @@ export const metadata: Metadata = {
   ],
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'UniPide',
+  },
+  manifest: '/manifest.json',
+  icons: {
+    icon: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+    shortcut: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+    apple: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
   },
 };
 
@@ -44,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="scroll-smooth antialiased">
-      <body className={`${inter.className} min-h-screen flex flex-col bg-slate-50 text-slate-900 overflow-x-hidden selection:bg-red-500 selection:text-white`}>
+      <body className={`${questrial.className} min-h-screen flex flex-col bg-[#FAF8F5] text-slate-900 overflow-x-hidden selection:bg-red-500 selection:text-white tracking-wide`}>
         <AuthProvider>
           <CartProvider>
             <Navbar />

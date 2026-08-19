@@ -4,8 +4,10 @@
 
 @layer base {
   :root {
-    --background: #fafafa;
-    --foreground: #18181b;
+    --background: #FAF8F5;
+    --foreground: #0F172A;
+    --uninorte-red: #C8102E;
+    --uninorte-gold: #FFC72C;
   }
 
   html,
@@ -14,6 +16,7 @@
     color: var(--foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
     touch-action: manipulation;
     overflow-x: hidden;
     width: 100%;
@@ -21,42 +24,41 @@
   }
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+/* Ocultar barra de desplazamiento en navegación móvil preservando el scroll táctil */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+/* Soporte para Inset de Área Segura en iPhone y Android Notch */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+/* Animaciones táctiles de App Nativa */
+button, a {
+  -webkit-tap-highlight-color: transparent;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Smooth transitions */
+/* Transiciones suaves */
 .transition-smooth {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Badge pulse animation */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.02);
-  }
+/* Tarjetas con respiración estética */
+.card-aesthetic {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 2.5s ease-in-out infinite;
+.card-aesthetic:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -4px rgba(200, 16, 46, 0.12);
+  border-color: rgba(200, 16, 46, 0.2);
 }

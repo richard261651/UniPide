@@ -53,6 +53,7 @@ export interface ProductItem {
   descripcion: string;
   precio: number;
   foto: string | null;
+  fotos?: string[];
   stock: number;
   disponible: boolean;
   categoria?: string | null;
@@ -61,6 +62,13 @@ export interface ProductItem {
   descripcionOferta?: string | null;
   fechaInicioOferta?: string | Date | null;
   fechaFinOferta?: string | Date | null;
+  tieneTallas?: boolean;
+  tallasDisponibles?: string[];
+  tieneColores?: boolean;
+  coloresDisponibles?: string[];
+  tieneVariaciones?: boolean;
+  nombreVariaciones?: string | null;
+  opcionesVariaciones?: string[];
   business?: {
     id: string;
     nombre: string;
@@ -74,6 +82,10 @@ export interface ProductItem {
 export interface CartItem {
   product: ProductItem;
   cantidad: number;
+  tallaSeleccionada?: string;
+  colorSeleccionado?: string;
+  variacionSeleccionada?: string;
+  opcionesSeleccionadas?: string;
   notas?: string;
 }
 
@@ -93,6 +105,7 @@ export interface OrderItemDetail {
   nombreProducto: string;
   cantidad: number;
   precioUnitario: number;
+  opcionesSeleccionadas?: string | null;
   notas?: string | null;
   product?: ProductItem;
 }

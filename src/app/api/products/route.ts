@@ -75,12 +75,20 @@ export async function POST(request: NextRequest) {
       descripcion,
       precio,
       foto,
+      fotos = [],
       stock = 20,
       disponible = true,
       categoria,
       esOferta = false,
       precioOferta,
       descripcionOferta,
+      tieneTallas = false,
+      tallasDisponibles = [],
+      tieneColores = false,
+      coloresDisponibles = [],
+      tieneVariaciones = false,
+      nombreVariaciones,
+      opcionesVariaciones = [],
     } = body;
 
     if (!nombre || !precio) {
@@ -105,19 +113,30 @@ export async function POST(request: NextRequest) {
       targetBizId = userBiz.id;
     }
 
+    const fotosArray = Array.isArray(fotos) && fotos.length > 0 ? fotos : (foto ? [foto] : []);
+    const fotoPrincipal = foto || (fotosArray.length > 0 ? fotosArray[0] : null);
+
     const product = await prisma.product.create({
       data: {
         businessId: targetBizId,
         nombre: nombre.trim(),
         descripcion: descripcion?.trim() || '',
         precio: Number(precio),
-        foto: foto || null,
+        foto: fotoPrincipal,
+        fotos: fotosArray,
         stock: Number(stock),
         disponible: Boolean(disponible),
         categoria: categoria?.trim() || null,
         esOferta: Boolean(esOferta),
         precioOferta: precioOferta ? Number(precioOferta) : null,
         descripcionOferta: descripcionOferta?.trim() || null,
+        tieneTallas: Boolean(tieneTallas),
+        tallasDisponibles: Array.isArray(tallasDisponibles) ? tallasDisponibles : [],
+        tieneColores: Boolean(tieneColores),
+        coloresDisponibles: Array.isArray(coloresDisponibles) ? coloresDisponibles : [],
+        tieneVariaciones: Boolean(tieneVariaciones),
+        nombreVariaciones: nombreVariaciones?.trim() || null,
+        opcionesVariaciones: Array.isArray(opcionesVariaciones) ? opcionesVariaciones : [],
       },
     });
 

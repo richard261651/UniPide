@@ -10,7 +10,7 @@ async function hashPassword(password) {
 async function main() {
   console.log('--- Iniciando Sembrado de Base de Datos Uninorte (UniPide) ---');
 
-  // 1. Zonas del Campus
+  // 1. Zonas del Campus Oficiales
   const zonesData = [
     { codigo: 'BLOQUE_A', nombre: 'Bloque A' },
     { codigo: 'BLOQUE_B', nombre: 'Bloque B' },
@@ -24,16 +24,15 @@ async function main() {
     { codigo: 'BLOQUE_K', nombre: 'Bloque K' },
     { codigo: 'BLOQUE_L', nombre: 'Bloque L' },
     { codigo: 'BLOQUE_M', nombre: 'Bloque M' },
-    { codigo: 'BAMBU_1', nombre: 'Bambú 1' },
-    { codigo: 'BAMBU_2', nombre: 'Bambú 2' },
-    { codigo: 'FUENTE_CENTRAL', nombre: 'Fuente' },
-    { codigo: 'COLISEO_FUNDADORES', nombre: 'Coliseo' },
-    { codigo: 'AUDITORIO_PRINCIPAL', nombre: 'Auditorio' },
-    { codigo: 'BIBLIOTECA_PARRISH', nombre: 'Biblioteca' },
-    { codigo: 'CASA_ESTUDIO', nombre: 'Casa Estudio' },
-    { codigo: 'CENTRO_MEDICO', nombre: 'Centro Médico' },
-    { codigo: 'CENTRO_DEPORTIVO', nombre: 'Centro Deportivo' },
-    { codigo: 'SALON_PROYECCIONES', nombre: 'Salón de Proyecciones' },
+    { codigo: 'BAMBU_1', nombre: 'B1: Bambú 1' },
+    { codigo: 'BAMBU_2', nombre: 'B2: Bambú 2' },
+    { codigo: 'FUENTE', nombre: 'F: Fuente' },
+    { codigo: 'COLISEO', nombre: 'C: Coliseo' },
+    { codigo: 'AUDITORIO', nombre: 'A: Auditorio' },
+    { codigo: 'BIBLIOTECA', nombre: 'BKC: Biblioteca' },
+    { codigo: 'CASA_ESTUDIO', nombre: 'CE: Casa Estudio' },
+    { codigo: 'CENTRO_MEDICO', nombre: 'CM: Centro Médico' },
+    { codigo: 'CENTRO_DEPORTIVO', nombre: 'CD: Centro Deportivo' },
   ];
 
   for (const z of zonesData) {
@@ -49,7 +48,7 @@ async function main() {
   const codes = zonesData.map((z) => z.codigo);
   for (const orig of codes) {
     for (const dest of codes) {
-      const mins = orig === dest ? 3 : 6;
+      const mins = orig === dest ? 3 : 5;
       await prisma.zoneDistance.upsert({
         where: { origenCodigo_destinoCodigo: { origenCodigo: orig, destinoCodigo: dest } },
         update: { minutosTraslado: mins },
@@ -98,12 +97,12 @@ async function main() {
       nombre: 'Burger Lab Uninorte 🍔',
       slug: 'burger-lab-uninorte',
       categoria: 'Comida Rápida',
-      descripcion: 'Hamburguesas artesanales smash, sándwiches gourmet y papas rústicas preparados al instante.',
+      descripcion: 'Hamburguesas artesanales smash, sándwiches gourmet y papas rústicas.',
       logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop&q=80',
       banner: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80',
-      ubicacionCampus: 'Zona de Emprendimientos - Kiosco 03 (Frente a Bloque F)',
-      zonaCampusCodigo: 'ZONA_EMPRENDIMIENTOS',
-      tiempoBasePrepMin: 12,
+      ubicacionCampus: 'Bloque F',
+      zonaCampusCodigo: 'BLOQUE_F',
+      tiempoBasePrepMin: 0,
       estadoAprobacion: 'APROBADO',
       activo: true,
     },
@@ -113,7 +112,7 @@ async function main() {
     {
       businessId: bizBurgers.id,
       nombre: 'Smash Burger Doble Queso',
-      descripcion: 'Dos carnes de 90g smash, doble cheddar americano, tocineta crujiente y salsa especial de la casa en pan brioche artesanal.',
+      descripcion: 'Dos carnes de 90g smash, doble cheddar americano y tocineta crujiente en pan brioche.',
       precio: 18000,
       foto: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80',
       stock: 25,
@@ -126,152 +125,16 @@ async function main() {
     {
       businessId: bizBurgers.id,
       nombre: 'Sándwich Crispy Chicken',
-      descripcion: 'Pechuga de pollo apanada ultra crujiente, pepinillos dulces y coleslaw en pan brioche tostado.',
+      descripcion: 'Pechuga de pollo apanada ultra crujiente, pepinillos dulces y coleslaw.',
       precio: 16000,
       foto: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=600&auto=format&fit=crop&q=80',
       stock: 18,
       disponible: true,
       categoria: 'Sándwiches',
     },
-    {
-      businessId: bizBurgers.id,
-      nombre: 'Papas Rústicas Cheddar & Bacon',
-      descripcion: 'Papas naturales fritas bañadas en queso cheddar fundido y tocineta crujiente.',
-      precio: 8500,
-      foto: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80',
-      stock: 30,
-      disponible: true,
-      categoria: 'Acompañamientos',
-    },
   ];
 
   for (const p of burgerProds) {
-    const existing = await prisma.product.findFirst({ where: { businessId: p.businessId, nombre: p.nombre } });
-    if (!existing) await prisma.product.create({ data: p });
-  }
-
-  // Sweet Bites
-  const userSweet = await prisma.user.upsert({
-    where: { correo: 'sweet@uninorte.edu.co' },
-    update: {},
-    create: {
-      nombre: 'Valentina Restrepo (Adm. Empresas)',
-      correo: 'sweet@uninorte.edu.co',
-      passwordHash: passEmp,
-      rol: 'EMPRENDEDOR',
-      telefono: '3024449876',
-    },
-  });
-
-  const bizSweet = await prisma.business.upsert({
-    where: { slug: 'sweet-bites-bakery' },
-    update: { estadoAprobacion: 'APROBADO', activo: true },
-    create: {
-      userId: userSweet.id,
-      nombre: 'Sweet Bites Bakery 🍰',
-      slug: 'sweet-bites-bakery',
-      categoria: 'Postres & Dulces',
-      descripcion: 'Brownies melcochudos, galletas rellenas estilo NYC, postres de tres leches y cheesecakes caseros.',
-      logo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&auto=format&fit=crop&q=80',
-      banner: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&auto=format&fit=crop&q=80',
-      ubicacionCampus: 'Bloque F - Pasillo Central Piso 1',
-      zonaCampusCodigo: 'BLOQUE_F',
-      tiempoBasePrepMin: 8,
-      estadoAprobacion: 'APROBADO',
-      activo: true,
-    },
-  });
-
-  const sweetProds = [
-    {
-      businessId: bizSweet.id,
-      nombre: 'Cookie NYC Red Velvet & Nutella',
-      descripcion: 'Galleta gigante recién horneada crujiente por fuera y rellena de abundante Nutella por dentro.',
-      precio: 6500,
-      foto: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
-      stock: 20,
-      disponible: true,
-      categoria: 'Galletas',
-      esOferta: true,
-      precioOferta: 5000,
-      descripcionOferta: 'Promo 2x1 en la segunda unidad',
-    },
-    {
-      businessId: bizSweet.id,
-      nombre: 'Brownie Melcochudo con Arequipe',
-      descripcion: 'Brownie de chocolate semi-amargo 70% cacao con centro suave y vetas de arequipe.',
-      precio: 5500,
-      foto: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop&q=80',
-      stock: 15,
-      disponible: true,
-      categoria: 'Brownies',
-    },
-  ];
-
-  for (const p of sweetProds) {
-    const existing = await prisma.product.findFirst({ where: { businessId: p.businessId, nombre: p.nombre } });
-    if (!existing) await prisma.product.create({ data: p });
-  }
-
-  // Campus Merch
-  const userMerch = await prisma.user.upsert({
-    where: { correo: 'merch@uninorte.edu.co' },
-    update: {},
-    create: {
-      nombre: 'Andrés Camargo (Diseño Gráfico)',
-      correo: 'merch@uninorte.edu.co',
-      passwordHash: passEmp,
-      rol: 'EMPRENDEDOR',
-      telefono: '3048883456',
-    },
-  });
-
-  const bizMerch = await prisma.business.upsert({
-    where: { slug: 'campus-craft-stickers' },
-    update: { estadoAprobacion: 'APROBADO', activo: true },
-    create: {
-      userId: userMerch.id,
-      nombre: 'Campus Craft & Stickers 🎨',
-      slug: 'campus-craft-stickers',
-      categoria: 'Accesorios & Merch',
-      descripcion: 'Stickers resistentes al agua de Uninorte y cultura pop, pines metálicos y libretas personalizadas.',
-      logo: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80',
-      banner: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1200&auto=format&fit=crop&q=80',
-      ubicacionCampus: 'Bloque G (Diseño) - Ágora de Talleres',
-      zonaCampusCodigo: 'BLOQUE_G',
-      tiempoBasePrepMin: 5,
-      estadoAprobacion: 'APROBADO',
-      activo: true,
-    },
-  });
-
-  const merchProds = [
-    {
-      businessId: bizMerch.id,
-      nombre: 'Pack 5 Stickers Uninorte & Barranquilla',
-      descripcion: 'Stickers de vinilo laminado resistentes al agua, termos y portátiles con temática Uninorte.',
-      precio: 7500,
-      foto: 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?w=600&auto=format&fit=crop&q=80',
-      stock: 50,
-      disponible: true,
-      categoria: 'Stickers',
-      esOferta: true,
-      precioOferta: 6000,
-      descripcionOferta: 'Pack universitario exclusivo',
-    },
-    {
-      businessId: bizMerch.id,
-      nombre: 'Tote Bag Universitaria en Dril',
-      descripcion: 'Bolsa ecológica gruesa con bolsillo interno para carnet y celular, estampada en serigrafía.',
-      precio: 25000,
-      foto: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&auto=format&fit=crop&q=80',
-      stock: 12,
-      disponible: true,
-      categoria: 'Moda & Accesorios',
-    },
-  ];
-
-  for (const p of merchProds) {
     const existing = await prisma.product.findFirst({ where: { businessId: p.businessId, nombre: p.nombre } });
     if (!existing) await prisma.product.create({ data: p });
   }

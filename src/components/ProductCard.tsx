@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { ProductItem } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
-import { Plus, Check, Tag, AlertCircle, ShoppingBag, X } from 'lucide-react';
+import { Plus, Check, Tag, AlertCircle, ShoppingBag, Images, Shirt, Palette, Sliders } from 'lucide-react';
+import ProductModal from './ProductModal';
 
 interface ProductCardProps {
   product: ProductItem;
@@ -14,6 +15,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, showBusinessInfo = false }: ProductCardProps) {
   const { addItem, clearCart } = useCart();
   const [added, setAdded] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [conflictModalOpen, setConflictModalOpen] = useState(false);
   const [currentBizName, setCurrentBizName] = useState('');
 
@@ -23,9 +25,30 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
     ? Math.round(((product.precio - product.precioOferta!) / product.precio) * 100)
     : 0;
 
-  const handleAddToCart = () => {
+  const hasMultiplePhotos = product.fotos && product.fotos.length > 1;
+  const hasVariants = Boolean(
+    (product.tieneTallas && product.tallasDisponibles && product.tallasDisponibles.length > 0) ||
+    (product.tieneColores && product.coloresDisponibles && product.coloresDisponibles.length > 0) ||
+    (product.tieneVariaciones && product.opcionesVariaciones && product.opcionesVariaciones.length > 0)
+  );
+
+  const mainPhoto = product.foto || (product.fotos && product.fotos[0]);
+
+  const handleCardClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!product.disponible || product.stock <= 0) return;
 
+    // Si tiene variantes obligatorias o fotos múltiples, abrir modal de detalle
+    if (hasVariants || hasMultiplePhotos) {
+      setModalOpen(true);
+      return;
+    }
+
+    // Si es un producto simple sin variantes, agregar directamente
     const result = addItem(product, 1);
     if (result.requiresReset) {
       setCurrentBizName(result.currentBusinessName || 'otro negocio');
@@ -46,12 +69,15 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
 
   return (
     <>
-      <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative">
+      <div
+        onClick={handleCardClick}
+        className="group bg-white rounded-2xl border border-gray-100 shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden relative cursor-pointer"
+      >
         {/* Imagen y Badges */}
         <div className="relative aspect-4/3 w-full bg-gray-100 overflow-hidden">
-          {product.foto ? (
+          {mainPhoto ? (
             <img
-              src={product.foto}
+              src={mainPhoto}
               alt={product.nombre}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
@@ -65,7 +91,7 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
           {/* Badges de Oferta o Agotado */}
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
             {tieneDescuento && (
-              <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-600 to-amber-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow-sm">
+              <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-600 to-amber-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow-xs">
                 <Tag className="w-3 h-3" />
                 {porcentajeDescuento}% OFF
               </span>
@@ -76,6 +102,16 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
               </span>
             ) : null}
           </div>
+
+          {/* Badge de fotos múltiples / carrusel */}
+          {hasMultiplePhotos && (
+            <div className="absolute top-2.5 right-2.5 z-10">
+              <span className="inline-flex items-center gap-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                <Images className="w-3 h-3" />
+                <span>{product.fotos?.length} fotos</span>
+              </span>
+            </div>
+          )}
 
           {/* Subcategoría badge */}
           {product.categoria && (
@@ -104,8 +140,32 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
               {product.descripcion}
             </p>
 
+            {/* Badges de Opciones disponibles (Tallas, Colores, Variantes) */}
+            {hasVariants && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {product.tieneTallas && (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-md">
+                    <Shirt className="w-2.5 h-2.5" />
+                    <span>Tallas</span>
+                  </span>
+                )}
+                {product.tieneColores && (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded-md">
+                    <Palette className="w-2.5 h-2.5" />
+                    <span>Colores</span>
+                  </span>
+                )}
+                {product.tieneVariaciones && (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-md">
+                    <Sliders className="w-2.5 h-2.5" />
+                    <span>{product.nombreVariaciones || 'Opciones'}</span>
+                  </span>
+                )}
+              </div>
+            )}
+
             {product.descripcionOferta && product.esOferta && (
-              <p className="mt-1 text-[11px] font-medium text-amber-700 bg-amber-50 rounded-lg px-2 py-0.5 inline-block">
+              <p className="mt-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 rounded-lg px-2 py-0.5 inline-block">
                 ✨ {product.descripcionOferta}
               </p>
             )}
@@ -127,13 +187,15 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
             </div>
 
             <button
-              onClick={handleAddToCart}
+              onClick={handleButtonClick}
               disabled={!product.disponible || product.stock <= 0}
-              className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
+              className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
                 !product.disponible || product.stock <= 0
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : added
                   ? 'bg-emerald-600 text-white'
+                  : hasVariants
+                  ? 'bg-uninorte-red text-white hover:bg-uninorte-darkRed active:scale-95'
                   : 'bg-red-50 text-uninorte-red hover:bg-uninorte-red hover:text-white active:scale-95'
               }`}
             >
@@ -141,6 +203,11 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
                 <>
                   <Check className="w-3.5 h-3.5" />
                   <span>¡Agregado!</span>
+                </>
+              ) : hasVariants ? (
+                <>
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span>Elegir</span>
                 </>
               ) : (
                 <>
@@ -152,6 +219,13 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
           </div>
         </div>
       </div>
+
+      {/* Modal Detallado con Carrusel y Selector de Variantes */}
+      <ProductModal
+        product={product}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
 
       {/* Modal de Advertencia de Carrito Multi-Negocio */}
       {conflictModalOpen && (
