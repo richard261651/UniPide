@@ -110,19 +110,19 @@ button, a {
 .splash-logo {
   transform: scale(0);
   opacity: 0;
-  animation: splashPopLogo 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+  animation: splashPopLogo 0.9s cubic-bezier(0.34, 1.35, 0.64, 1) 0.15s forwards;
 }
 
 .brand-title {
   transform: translateX(-20px);
   opacity: 0;
-  animation: slideInText 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+  animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
 }
 
 .brand-tagline {
   transform: translateX(-15px);
   opacity: 0;
-  animation: slideInText 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+  animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards;
 }
 
 @keyframes splashPopLogo {

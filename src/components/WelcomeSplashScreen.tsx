@@ -14,16 +14,16 @@ export default function WelcomeSplashScreen() {
       return;
     }
 
-    // Iniciar fade-out rápido a 1.0s (1000ms)
+    // Iniciar fade-out suave a los 2.2s (2200ms)
     const timerFade = setTimeout(() => {
       setFadeOut(true);
-    }, 1000);
+    }, 2200);
 
-    // Ocultar por completo a 1.3s (1300ms)
+    // Ocultar por completo a los 2.8s (2800ms)
     const timerHide = setTimeout(() => {
       setVisible(false);
       sessionStorage.setItem('unipide_splash_seen', 'true');
-    }, 1300);
+    }, 2800);
 
     return () => {
       clearTimeout(timerFade);
@@ -35,7 +35,7 @@ export default function WelcomeSplashScreen() {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#F8F6F4] transition-opacity duration-300 overflow-hidden ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#F8F6F4] transition-opacity duration-600 overflow-hidden ${
         fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
