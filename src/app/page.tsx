@@ -107,11 +107,11 @@ export default function HomePage() {
   // 1. Pantalla de Carga Inicial
   if (authLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 flex items-center justify-center text-white shadow-xl animate-bounce">
-          <Zap className="w-7 h-7 fill-white text-white" />
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4 bg-slate-50">
+        <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-400 shadow-xl animate-bounce border border-slate-800">
+          <Zap className="w-7 h-7 fill-amber-400 text-amber-400" />
         </div>
-        <p className="text-xs font-bold text-gray-500 animate-pulse">Cargando UniPide...</p>
+        <p className="text-xs font-bold text-slate-500 animate-pulse">Cargando UniPide...</p>
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default function HomePage() {
   // 2. PANTALLA INICIAL DE LOGGEO: Si el usuario NO ha iniciado sesión, es lo primero que ve antes de entrar al portal
   if (!user) {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-red-50/40 via-white to-slate-50">
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-amber-50/50 via-slate-50 to-white">
         <div className="max-w-md w-full space-y-6">
           {/* Encabezado UniPide con Ícono Favicon */}
           <div className="text-center space-y-3">
@@ -129,65 +129,65 @@ export default function HomePage() {
               className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
             />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
-                Uni<span className="text-uninorte-red">Pide</span>
+              <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                Uni<span className="text-amber-500">Pide</span>
               </h1>
-              <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-3 py-1 rounded-full">
+              <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1 rounded-full">
                 LO DE TU CAMPUS, A UN PEDIDO DE DISTANCIA
               </span>
             </div>
-            <p className="text-xs text-gray-500 max-w-sm mx-auto">
+            <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium leading-relaxed">
               Inicia sesión con tu correo electrónico para acceder a los pedidos, emprendimientos y entregas en el campus.
             </p>
           </div>
 
           {/* Tarjeta de Formulario de Ingreso */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl space-y-5">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xl shadow-slate-900/5 space-y-5">
             {loginError && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
+              <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-xl font-medium">
                 {loginError}
               </div>
             )}
 
             <form onSubmit={handleDirectLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Correo Electrónico
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                   <input
                     type="email"
                     required
                     value={loginCorreo}
                     onChange={(e) => setLoginCorreo(e.target.value)}
                     placeholder="usuario@correo.com"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold text-gray-700">
+                  <label className="block text-xs font-semibold text-slate-800">
                     Contraseña
                   </label>
                   <Link
                     href="/forgot-password"
-                    className="text-[11px] font-semibold text-uninorte-red hover:underline"
+                    className="text-[11px] font-semibold text-amber-600 hover:underline"
                   >
                     ¿Olvidaste tu contraseña?
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                   <input
                     type="password"
                     required
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red focus:border-transparent outline-none transition"
+                    className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition font-medium text-slate-900"
                   />
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white [&_*]:text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-red-900/20 transition flex items-center justify-center gap-2 active:scale-98"
+                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-slate-900/20 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
               >
                 {loginLoading ? (
                   <>
@@ -205,17 +205,17 @@ export default function HomePage() {
                 ) : (
                   <>
                     <span className="text-white">Ingresar al Portal</span>
-                    <ArrowRight className="w-4 h-4 text-white" />
+                    <ArrowRight className="w-4 h-4 text-amber-400" />
                   </>
                 )}
               </button>
             </form>
 
-            <div className="pt-4 border-t border-gray-100 text-center space-y-3">
-              <p className="text-xs text-gray-500">¿Aún no tienes cuenta registrada?</p>
+            <div className="pt-4 border-t border-slate-100 text-center space-y-3">
+              <p className="text-xs text-slate-500">¿Aún no tienes cuenta registrada?</p>
               <Link
                 href="/register"
-                className="block w-full py-2.5 text-center text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-xl transition"
+                className="block w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-slate-100 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 rounded-xl transition"
               >
                 Crear Cuenta de Estudiante o Emprendedor
               </Link>
@@ -223,17 +223,17 @@ export default function HomePage() {
           </div>
 
           {/* Badges de Confianza del Campus */}
-          <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-gray-500 font-medium pt-2">
-            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
-              <MapPin className="w-4 h-4 text-uninorte-red mx-auto mb-1" />
+          <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-slate-600 font-medium pt-2">
+            <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <MapPin className="w-4 h-4 text-amber-500 mx-auto mb-1" />
               <span>Todos los Bloques</span>
             </div>
-            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
-              <Clock className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+            <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <Clock className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
               <span>Entrega Rápida</span>
             </div>
-            <div className="bg-white p-2.5 rounded-2xl border border-gray-100 shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
+            <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <ShieldCheck className="w-4 h-4 text-indigo-600 mx-auto mb-1" />
               <span>100% Uninorte</span>
             </div>
           </div>
@@ -246,11 +246,11 @@ export default function HomePage() {
   return (
     <div className="space-y-10 sm:space-y-12 pb-16 w-full max-w-full overflow-hidden">
       {/* Hero Banner Uninorte con Saludo Personal */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-uninorte-darkRed via-uninorte-red to-red-900 text-white pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 rounded-b-3xl sm:rounded-b-[40px] shadow-lg shadow-red-950/20">
+      <section className="relative overflow-hidden bg-slate-900 text-white pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 rounded-b-3xl sm:rounded-b-[40px] shadow-xl border-b border-slate-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="max-w-5xl mx-auto relative z-10 text-center space-y-5 sm:space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 animate-pulse-subtle">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-amber-400">
             <Sparkles className="w-3.5 h-3.5" />
             <span>¡Hola, {user.nombre.split(' ')[0]}! — UniPide Campus</span>
           </div>
@@ -259,14 +259,14 @@ export default function HomePage() {
             Pide en el campus, apoya el <span className="text-amber-400 underline decoration-amber-400/40">talento universitario</span>
           </h1>
 
-          <p className="text-xs sm:text-base text-red-100 max-w-2xl mx-auto font-normal leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
             Hamburguesas smash, brownies, café frío y merch de tus compañeros de Uninorte entregados en tu bloque o punto de encuentro.
           </p>
 
           {/* Buscador Rápido */}
           <div className="max-w-2xl mx-auto pt-1">
-            <div className="relative flex items-center bg-white rounded-2xl p-1.5 shadow-xl ring-1 ring-black/5 text-gray-900">
-              <div className="pl-3.5 text-gray-400">
+            <div className="relative flex items-center bg-white rounded-2xl p-1.5 shadow-xl border border-slate-200 text-slate-900 focus-within:ring-2 focus-within:ring-amber-500 transition">
+              <div className="pl-3.5 text-slate-400">
                 <Search className="w-5 h-5" />
               </div>
               <input
@@ -274,12 +274,12 @@ export default function HomePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Busca por hamburguesa, brownie, stickers, bloque..."
-                className="w-full px-3 py-2.5 text-xs sm:text-sm bg-transparent outline-none placeholder-gray-400 font-medium"
+                className="w-full px-3 py-2.5 text-xs sm:text-sm bg-transparent outline-none placeholder:text-slate-400 font-medium text-slate-900"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="px-2 text-xs text-gray-400 hover:text-gray-600 font-bold"
+                  className="px-2 text-xs text-slate-400 hover:text-slate-700 font-bold"
                 >
                   ✕
                 </button>
@@ -288,17 +288,17 @@ export default function HomePage() {
           </div>
 
           {/* Badges de confianza Uninorte */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-red-200 pt-1 font-medium">
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs">
-              <MapPin className="w-3.5 h-3.5 text-amber-300" />
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-300 pt-1 font-medium">
+            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+              <MapPin className="w-3.5 h-3.5 text-amber-400" />
               Bloques A, B, F, G, K, Parrish...
             </span>
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs">
-              <Clock className="w-3.5 h-3.5 text-amber-300" />
+            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
               Entrega en minutos sin salir de clase
             </span>
-            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+            <span className="flex items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-full backdrop-blur-xs border border-white/10">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               Emprendedores Uninorte
             </span>
           </div>
@@ -308,10 +308,10 @@ export default function HomePage() {
       {/* Selector de Categorías */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-black text-gray-900 flex items-center gap-2">
+          <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <span>Explorar Categorías</span>
           </h2>
-          <span className="text-xs text-gray-500 font-medium">Filtra tus antojos</span>
+          <span className="text-xs text-slate-500 font-medium">Filtra tus antojos</span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
@@ -322,13 +322,13 @@ export default function HomePage() {
               <button
                 key={cat.name}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap shadow-xs ${
+                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap shadow-xs cursor-pointer ${
                   isSelected
-                    ? 'bg-uninorte-red text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20'
+                    : 'bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-700 border border-slate-200'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-uninorte-red'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-400' : 'text-amber-600'}`} />
                 <span>{cat.name}</span>
               </button>
             );
@@ -339,11 +339,11 @@ export default function HomePage() {
       {/* Sección Ofertas Especiales del Día */}
       {offers.length > 0 && selectedCategory === 'Todos' && !searchQuery && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-red-600 rounded-3xl p-5 sm:p-8 text-white shadow-lg space-y-6">
+          <div className="bg-gradient-to-r from-amber-600 via-amber-700 to-slate-900 rounded-3xl p-5 sm:p-8 text-white shadow-xl border border-amber-600/30 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md">
-                  <Tag className="w-5 h-5 fill-white text-white" />
+                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md border border-white/20">
+                  <Tag className="w-5 h-5 text-white fill-white" />
                 </div>
                 <div>
                   <h2 className="text-xl sm:text-2xl font-black tracking-tight">
@@ -354,14 +354,14 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-              <span className="self-start sm:self-auto text-[11px] font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-wider">
+              <span className="self-start sm:self-auto text-[11px] font-extrabold bg-slate-900 text-amber-400 border border-amber-400/30 px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
                 Tiempo Limitado 🔥
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {offers.slice(0, 3).map((prod) => (
-                <div key={prod.id} className="bg-white rounded-2xl p-1 shadow-sm text-gray-900">
+                <div key={prod.id} className="bg-white rounded-2xl p-1 shadow-sm text-slate-900">
                   <ProductCard product={prod} showBusinessInfo />
                 </div>
               ))}
@@ -374,11 +374,11 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-              <Store className="w-5 h-5 text-uninorte-red" />
+            <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <Store className="w-5 h-5 text-amber-600" />
               <span>Emprendimientos en Campus</span>
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500 font-medium">
               {selectedCategory === 'Todos'
                 ? 'Todos los negocios activos hoy en Uninorte'
                 : `Mostrando negocios de ${selectedCategory}`}
@@ -387,7 +387,7 @@ export default function HomePage() {
 
           <Link
             href="/negocios"
-            className="text-xs font-bold text-uninorte-red hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-amber-600 hover:underline flex items-center gap-1"
           >
             <span>Ver Directorio</span>
             <ChevronRight className="w-4 h-4" />
@@ -397,14 +397,14 @@ export default function HomePage() {
         {loadingData ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="bg-white rounded-2xl h-64 animate-pulse border border-gray-100" />
+              <div key={n} className="bg-white rounded-2xl h-64 animate-pulse border border-slate-200" />
             ))}
           </div>
         ) : businesses.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border border-gray-100 p-8 space-y-3">
-            <Store className="w-12 h-12 text-gray-300 mx-auto" />
-            <h3 className="font-bold text-gray-800 text-base">No se encontraron emprendimientos</h3>
-            <p className="text-xs text-gray-500">
+          <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 p-8 space-y-3">
+            <Store className="w-12 h-12 text-slate-300 mx-auto" />
+            <h3 className="font-bold text-slate-900 text-base">No se encontraron emprendimientos</h3>
+            <p className="text-xs text-slate-500">
               Prueba buscando por otro término o selecciona una categoría diferente.
             </p>
           </div>
@@ -419,7 +419,7 @@ export default function HomePage() {
 
       {/* Banner para Estudiantes que quieren Vender */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-br from-slate-900 to-gray-900 text-white rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-slate-800">
           <div className="space-y-2 text-center md:text-left">
             <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
               ¿Tienes un negocio en la U?
@@ -427,14 +427,14 @@ export default function HomePage() {
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
               Vende en UniPide y llega a todo el campus
             </h3>
-            <p className="text-xs sm:text-sm text-slate-200 font-medium max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-xl leading-relaxed">
               Crea tu menú digital, recibe pedidos organizados por salón y administra tus ofertas con cálculo automático de distancias entre bloques.
             </p>
           </div>
 
           <Link
             href="/register"
-            className="px-6 py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs sm:text-sm font-bold rounded-2xl shadow-lg shadow-red-900/40 transition whitespace-nowrap flex items-center gap-2"
+            className="px-6 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-black rounded-2xl shadow-lg shadow-amber-500/25 transition whitespace-nowrap flex items-center gap-2 active:scale-98"
           >
             <span>Registrar mi Emprendimiento</span>
             <ArrowRight className="w-4 h-4" />

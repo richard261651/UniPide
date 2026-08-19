@@ -58,7 +58,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
         {/* Info del Negocio con Legibilidad Nítida */}
         <div className="pt-6 px-5 pb-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-extrabold text-[#1F222E] text-base group-hover:text-[#F56649] transition-colors line-clamp-1">
+            <h3 className="font-extrabold text-[#1F222E] text-base group-hover:text-amber-600 transition-colors line-clamp-1">
               {business.nombre}
             </h3>
             <div className="flex items-center gap-1 bg-amber-50 px-2 py-0.5 rounded-full text-amber-900 text-xs font-bold shrink-0 border border-amber-200">
@@ -73,7 +73,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           </p>
 
           <div className="pt-1 flex items-center gap-2 text-xs text-slate-800">
-            <MapPin className="w-3.5 h-3.5 text-[#F56649] shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="line-clamp-1 font-bold text-slate-800">{business.ubicacionCampus || 'Campus Uninorte'}</span>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
           <Clock className="w-3.5 h-3.5 text-emerald-600" />
           <span>Entrega en Campus</span>
         </div>
-        <div className="flex items-center gap-1 text-[#F56649] font-bold group-hover:translate-x-1 transition-transform">
+        <div className="flex items-center gap-1 text-amber-600 font-bold group-hover:translate-x-1 transition-transform">
           <span>Ver Menú</span>
           <ChevronRight className="w-4 h-4" />
         </div>

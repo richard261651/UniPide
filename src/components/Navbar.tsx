@@ -41,8 +41,8 @@ export default function Navbar() {
                   alt="UniPide Icon"
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
-                <span className="font-black text-[#1F222E] tracking-tight text-lg sm:text-2xl">
-                  Uni<span className="text-[#F56649]">Pide</span>
+                <span className="font-black text-slate-900 tracking-tight text-lg sm:text-2xl">
+                  Uni<span className="text-amber-500">Pide</span>
                 </span>
               </Link>
 
@@ -52,8 +52,8 @@ export default function Navbar() {
                   href="/"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/'
-                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
+                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
                   Inicio
@@ -62,8 +62,8 @@ export default function Navbar() {
                   href="/negocios"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname.startsWith('/negocios')
-                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
+                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
                   Emprendimientos
@@ -72,8 +72,8 @@ export default function Navbar() {
                   href="/nosotros"
                   className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                     pathname === '/nosotros'
-                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
-                      : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
+                      ? 'text-amber-900 bg-amber-50 border-amber-200'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                   }`}
                 >
                   Nosotros
@@ -83,8 +83,8 @@ export default function Navbar() {
                     href="/pedidos"
                     className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
                       pathname.startsWith('/pedidos')
-                        ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
-                        : 'text-[#4A4E5A] hover:text-[#1F222E] hover:bg-[#F8F6F4] border-transparent'
+                        ? 'text-amber-900 bg-amber-50 border-amber-200'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                     }`}
                   >
                     Mis Pedidos
@@ -212,13 +212,13 @@ export default function Navbar() {
                 <div className="flex items-center gap-1 sm:gap-2">
                   <Link
                     href="/login"
-                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-gray-700 hover:text-uninorte-red transition whitespace-nowrap"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-amber-600 transition whitespace-nowrap"
                   >
                     Ingresar
                   </Link>
                   <Link
                     href="/register"
-                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-xs transition whitespace-nowrap"
+                    className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl shadow-xs transition whitespace-nowrap"
                   >
                     Registrarme
                   </Link>
@@ -228,7 +228,7 @@ export default function Navbar() {
               {/* Botón Menú Mobile */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-1.5 text-gray-700 hover:bg-gray-100 rounded-xl md:hidden transition shrink-0"
+                className="p-1.5 text-slate-700 hover:bg-slate-100 rounded-xl md:hidden transition shrink-0"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -238,30 +238,30 @@ export default function Navbar() {
 
         {/* Menú Desplegable Mobile */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-4 pt-2 pb-4 space-y-2 animate-in slide-in-from-top duration-150">
+          <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-4 space-y-2 animate-in slide-in-from-top duration-150">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-800 rounded-xl hover:bg-gray-50"
+              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-800 rounded-xl hover:bg-slate-50"
             >
-              <Compass className="w-4 h-4 text-uninorte-red" />
+              <Compass className="w-4 h-4 text-amber-600" />
               Inicio y Ofertas
             </Link>
             <Link
               href="/negocios"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-800 rounded-xl hover:bg-gray-50"
+              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-800 rounded-xl hover:bg-slate-50"
             >
-              <Store className="w-4 h-4 text-uninorte-red" />
+              <Store className="w-4 h-4 text-amber-600" />
               Explorar Emprendimientos
             </Link>
             {user && (
               <Link
                 href="/pedidos"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-800 rounded-xl hover:bg-gray-50"
+                className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-800 rounded-xl hover:bg-slate-50"
               >
-                <Clock className="w-4 h-4 text-uninorte-red" />
+                <Clock className="w-4 h-4 text-amber-600" />
                 Mis Pedidos
               </Link>
             )}
@@ -281,39 +281,39 @@ export default function Navbar() {
               <Link
                 href="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-red-900 bg-red-50 rounded-xl"
+                className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold text-slate-900 bg-slate-100 rounded-xl"
               >
-                <Shield className="w-4 h-4 text-uninorte-red" />
+                <Shield className="w-4 h-4 text-slate-700" />
                 Panel Administrador
               </Link>
             )}
 
             {user ? (
-              <div className="pt-2 border-t border-gray-100 space-y-2">
+              <div className="pt-2 border-t border-slate-100 space-y-2">
                 <button
                   onClick={async () => {
                     setMobileMenuOpen(false);
                     await logout();
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-4 h-4 text-slate-700" />
                   <span>Cerrar Sesión</span>
                 </button>
               </div>
             ) : (
-              <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
+              <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 text-center text-xs font-bold text-gray-800 bg-gray-100 rounded-xl"
+                  className="w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-slate-100 rounded-xl"
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 text-center text-xs font-bold text-white bg-uninorte-red rounded-xl"
+                  className="w-full py-2.5 text-center text-xs font-bold text-white bg-slate-900 rounded-xl"
                 >
                   Crear Cuenta Gratis
                 </Link>
@@ -328,7 +328,7 @@ export default function Navbar() {
         <Link
           href="/"
           className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
-            pathname === '/' ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
+            pathname === '/' ? 'text-amber-600' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <Compass className={`w-5 h-5 ${pathname === '/' ? 'stroke-[2.5]' : 'stroke-2'}`} />
@@ -338,7 +338,7 @@ export default function Navbar() {
         <Link
           href="/negocios"
           className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
-            pathname.startsWith('/negocios') ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
+            pathname.startsWith('/negocios') ? 'text-amber-600' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <Store className={`w-5 h-5 ${pathname.startsWith('/negocios') ? 'stroke-[2.5]' : 'stroke-2'}`} />
@@ -353,7 +353,7 @@ export default function Navbar() {
           <div className="relative">
             <ShoppingBag className="w-5 h-5 text-slate-700" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-uninorte-red text-white text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+              <span className="absolute -top-1.5 -right-2 bg-amber-500 text-slate-950 text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
                 {totalItems}
               </span>
             )}
@@ -364,7 +364,7 @@ export default function Navbar() {
         <Link
           href={user ? '/pedidos' : '/login'}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
-            pathname.startsWith('/pedidos') ? 'text-uninorte-red' : 'text-slate-500 hover:text-slate-800'
+            pathname.startsWith('/pedidos') ? 'text-amber-600' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <Clock className={`w-5 h-5 ${pathname.startsWith('/pedidos') ? 'stroke-[2.5]' : 'stroke-2'}`} />
@@ -375,7 +375,7 @@ export default function Navbar() {
           href={isEmprendedor ? '/emprendedor' : isAdmin ? '/admin' : user ? '/pqrs' : '/login'}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition active:scale-90 ${
             pathname.startsWith('/emprendedor') || pathname.startsWith('/admin') || pathname.startsWith('/pqrs')
-              ? 'text-uninorte-red'
+              ? 'text-amber-600'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >

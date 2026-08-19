@@ -24,6 +24,7 @@ const config: Config = {
           redLight: '#FEEBE7',  // Fondo Pastel de Selección
           redBorder: '#FBC6BB', // Borde Pastel Relevante
           redHover: '#F77C64',  // Hover de Botón Primario
+          darkRed: '#C94026',   // Rojo Oscuro Oficial para Hovers y Gradiantes
           gold: '#EAA228',      // Ámbar Cálido
           amber: '#EAA228',
           dark: '#1F222E',
