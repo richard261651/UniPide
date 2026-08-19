@@ -13,34 +13,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Reseña no encontrada' }, { status: 404 });
     }
 
-    const businessId = existing.businessId;
-
     await prisma.rating.delete({ where: { id } });
-
-    // Recalcular promedio de estrellas del negocio
-    const remainingRatings = await prisma.rating.findMany({
-      where: { businessId },
-    });
-
-    let newPromedio = 5.0;
-    let newNumResenas = remainingRatings.length;
-
-    if (newNumResenas > 0) {
-      const sum = remainingRatings.reduce((acc, r) => acc + r.puntuacion, 0);
-      newPromedio = Number((sum / newNumResenas).toFixed(1));
-    }
-
-    await prisma.business.update({
-      where: { id: businessId },
-      data: {
-        calificacionPromedio: newPromedio,
-        numCalificaciones: newNumResenas,
-      },
-    });
 
     return NextResponse.json({
       success: true,
-      message: 'Reseña eliminada con éxito y promedio de negocio actualizado',
+      message: 'Reseña eliminada con éxito',
     });
   } catch (error: any) {
     console.error('Error al eliminar reseña:', error);
@@ -69,22 +46,6 @@ export async function PUT(
       data: {
         puntuacion: puntuacion ? Number(puntuacion) : existing.puntuacion,
         comentario: comentario !== undefined ? comentario : existing.comentario,
-      },
-    });
-
-    // Recalcular promedio de estrellas del negocio
-    const allRatings = await prisma.rating.findMany({
-      where: { businessId: existing.businessId },
-    });
-
-    const sum = allRatings.reduce((acc, r) => acc + r.puntuacion, 0);
-    const newPromedio = Number((sum / allRatings.length).toFixed(1));
-
-    await prisma.business.update({
-      where: { id: existing.businessId },
-      data: {
-        calificacionPromedio: newPromedio,
-        numCalificaciones: allRatings.length,
       },
     });
 
