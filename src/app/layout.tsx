@@ -54,10 +54,10 @@ export default function RootLayout({
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': 'https://unipide.vercel.app/#organization',
+        '@id': 'https://unipide.com/#organization',
         name: 'UniPide',
         alternateName: 'UniPide Uninorte',
-        url: 'https://unipide.vercel.app',
+        url: 'https://unipide.com',
         logo: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
         description: 'Marketplace oficial de emprendimientos estudiantiles en el campus de la Universidad del Norte en Barranquilla.',
         address: {
@@ -69,12 +69,12 @@ export default function RootLayout({
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://unipide.vercel.app/#website',
-        url: 'https://unipide.vercel.app',
+        '@id': 'https://unipide.com/#website',
+        url: 'https://unipide.com',
         name: 'UniPide',
         description: 'Pide comida, postres, bebidas y productos en el campus Uninorte',
         publisher: {
-          '@id': 'https://unipide.vercel.app/#organization',
+          '@id': 'https://unipide.com/#organization',
         },
       },
     ],
