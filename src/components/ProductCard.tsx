@@ -136,8 +136,8 @@ export default function ProductCard({ product, showBusinessInfo = false }: Produ
               {product.nombre}
             </h3>
 
-            <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-              {product.descripcion}
+            <p className="text-xs text-slate-700 font-medium mt-1 line-clamp-2 leading-relaxed">
+              {product.descripcion || 'Delicioso producto disponible en el campus.'}
             </p>
 
             {/* Badges de Opciones disponibles (Tallas, Colores, Variantes) */}

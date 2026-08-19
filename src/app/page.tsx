@@ -427,7 +427,7 @@ export default function HomePage() {
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
               Vende en UniPide y llega a todo el campus
             </h3>
-            <p className="text-xs sm:text-sm text-gray-400 max-w-xl">
+            <p className="text-xs sm:text-sm text-slate-200 font-medium max-w-xl leading-relaxed">
               Crea tu menú digital, recibe pedidos organizados por salón y administra tus ofertas con cálculo automático de distancias entre bloques.
             </p>
           </div>
