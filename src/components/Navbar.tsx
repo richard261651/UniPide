@@ -35,12 +35,15 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
             {/* Logo e Identidad UniPide */}
             <div className="flex items-center gap-3 sm:gap-6 min-w-0">
-              <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <Link href="/" className="flex items-center gap-2.5 group shrink-0">
                 <img
-                  src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/logo_horizontal_kip1ul.svg"
-                  alt="UniPide Logo"
-                  className="h-9 sm:h-11 w-auto object-contain group-hover:scale-102 transition"
+                  src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+                  alt="UniPide Icon"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-contain group-hover:scale-105 transition shadow-xs"
                 />
+                <span className="font-black text-gray-900 tracking-tight text-lg sm:text-2xl">
+                  Uni<span className="text-uninorte-red">Pide</span>
+                </span>
               </Link>
 
               {/* Enlaces Principales Desktop */}

@@ -121,13 +121,21 @@ export default function HomePage() {
     return (
       <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-red-50/40 via-white to-slate-50">
         <div className="max-w-md w-full space-y-6">
-          {/* Encabezado UniPide con Lockup Oficial */}
+          {/* Encabezado UniPide con Ícono Favicon */}
           <div className="text-center space-y-3">
             <img
-              src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/lockup_oficila_tsalrq.svg"
-              alt="UniPide Lockup Oficial"
-              className="w-48 sm:w-56 h-auto mx-auto object-contain hover:scale-102 transition"
+              src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+              alt="UniPide Icon"
+              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
             />
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+                Uni<span className="text-uninorte-red">Pide</span>
+              </h1>
+              <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-red-100 text-uninorte-red px-3 py-1 rounded-full">
+                LO DE TU CAMPUS, A UN PEDIDO DE DISTANCIA
+              </span>
+            </div>
             <p className="text-xs text-gray-500 max-w-sm mx-auto">
               Inicia sesión con tu correo electrónico para acceder a los pedidos, emprendimientos y entregas en el campus.
             </p>

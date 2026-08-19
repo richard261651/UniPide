@@ -9,12 +9,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Columna 1: Marca */}
           <div className="space-y-4 md:col-span-1">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-2">
               <img
-                src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/logo_horizontal_kip1ul.svg"
-                alt="UniPide Logo"
-                className="h-10 w-auto object-contain"
+                src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+                alt="UniPide Icon"
+                className="w-8 h-8 rounded-lg object-contain shadow-xs"
               />
+              <span className="font-black text-gray-900 text-xl tracking-tight">
+                Uni<span className="text-uninorte-red">Pide</span>
+              </span>
             </Link>
             <p className="text-xs text-gray-500 leading-relaxed">
               La plataforma oficial de pedidos para los emprendimientos de estudiantes de la

@@ -169,9 +169,11 @@ export default function RegisterPage() {
       <div className="max-w-xl w-full space-y-6">
         {/* Encabezado */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 text-white font-black text-xl flex items-center justify-center mx-auto shadow-md shadow-red-900/20">
-            U
-          </div>
+          <img
+            src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+            alt="UniPide Icon"
+            className="w-14 h-14 mx-auto object-contain drop-shadow-sm hover:scale-105 transition"
+          />
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
             Crear Cuenta en <span className="text-uninorte-red">UniPide</span>
           </h1>

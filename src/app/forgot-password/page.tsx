@@ -99,9 +99,11 @@ export default function ForgotPasswordPage() {
       <div className="max-w-md w-full space-y-6">
         {/* Encabezado */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-uninorte-red to-red-800 text-white font-black text-xl flex items-center justify-center mx-auto shadow-md shadow-red-900/20">
-            <Smartphone className="w-6 h-6" />
-          </div>
+          <img
+            src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+            alt="UniPide Icon"
+            className="w-14 h-14 mx-auto object-contain drop-shadow-sm hover:scale-105 transition"
+          />
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
             Recuperar Contraseña con 2FA
           </h1>
