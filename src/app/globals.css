@@ -4,11 +4,11 @@
 
 @layer base {
   :root {
-    --background: #FAF7F2;     /* Fondo Lino Suave Pastel */
-    --foreground: #1E2022;     /* Títulos y Jerarquía (Contraste 100% Nítido) */
-    --body-text: #2D3136;      /* Texto de Lectura Nítido */
-    --primary-red: #D9534F;    /* Rojo Coral Pastel */
-    --border-pastel: #E8E4DD;  /* Borde Suave Pastel */
+    --background: #FAFAFA;     /* Blanco Limpio y Luminoso */
+    --foreground: #0F172A;     /* Títulos en Slate Profundo (100% Legible) */
+    --body-text: #334155;      /* Texto de Lectura Nítido */
+    --primary-red: #C8102E;    /* Rojo Uninorte Oficial */
+    --border-light: #E2E8F0;   /* Borde Suave */
     --card-white: #FFFFFF;     /* Tarjeta Blanco Puro */
   }
 
@@ -26,13 +26,18 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: #1E2022; /* Títulos Oscuros Nítidos */
+    color: #0F172A; /* Títulos Oscuros Nítidos de Alto Contraste */
     font-weight: 700;
   }
 
-  p, span, label, input, textarea {
-    color: #2D3136; /* Texto de Lectura Nítido sin cansancio visual */
+  p, label, input, textarea {
+    color: #334155; /* Texto de Lectura Nítido y Limpio */
   }
+}
+
+/* Forzar que spans en botones e íconos hereden el color de texto del contenedor */
+button *, a.btn-primary *, [class*="bg-"] * {
+  color: inherit;
 }
 
 /* Ocultar barra de desplazamiento en navegación móvil preservando el scroll táctil */
@@ -58,33 +63,37 @@ button, a {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Estilo Tarjeta Pastel */
+/* Estilo Tarjeta */
 .card-aesthetic {
   background-color: #FFFFFF;
-  border: 1px solid #E8E4DD;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 16px -2px rgba(30, 32, 34, 0.04);
+  border: 1px solid #E2E8F0;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-aesthetic:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px -4px rgba(217, 83, 79, 0.12);
-  border-color: rgba(217, 83, 79, 0.3);
+  box-shadow: 0 12px 28px -4px rgba(200, 16, 46, 0.12);
+  border-color: rgba(200, 16, 46, 0.3);
 }
 
-/* Botón Primario de Acción Coral Pastel (#D9534F) */
+/* Botón Primario de Acción Rojo Uninorte (#C8102E) con Texto Blanco Nítido (#FFFFFF) */
 .btn-primary {
-  background-color: #D9534F;
-  color: #FFFFFF;
+  background-color: #C8102E;
+  color: #FFFFFF !important;
   font-weight: 700;
   border-radius: 0.875rem;
-  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.2);
+  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.25);
   transition: all 0.2s ease;
 }
 
+.btn-primary * {
+  color: #FFFFFF !important;
+}
+
 .btn-primary:hover {
-  background-color: #C8433F;
-  box-shadow: 0 6px 16px rgba(217, 83, 79, 0.3);
+  background-color: #A01A1E;
+  box-shadow: 0 6px 16px rgba(200, 16, 46, 0.35);
   transform: translateY(-1px);
 }

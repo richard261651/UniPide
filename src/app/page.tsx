@@ -195,17 +195,17 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-red-900/20 transition flex items-center justify-center gap-2 active:scale-98"
+                className="w-full py-3.5 bg-uninorte-red hover:bg-uninorte-darkRed text-white [&_*]:text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-red-900/20 transition flex items-center justify-center gap-2 active:scale-98"
               >
                 {loginLoading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Verificando acceso...</span>
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span className="text-white">Verificando acceso...</span>
                   </>
                 ) : (
                   <>
-                    <span>Ingresar al Portal</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span className="text-white">Ingresar al Portal</span>
+                    <ArrowRight className="w-4 h-4 text-white" />
                   </>
                 )}
               </button>
