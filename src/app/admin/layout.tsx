@@ -11,7 +11,8 @@ import {
   Building2,
   Users,
   ArrowLeft,
-  Lock,
+  ShoppingBag,
+  Star,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', label: 'Métricas Globales', icon: LayoutDashboard, exact: true },
     { href: '/admin/solicitudes', label: 'Solicitudes Pendientes', icon: CheckSquare },
     { href: '/admin/negocios', label: 'Gestión de Emprendimientos', icon: Building2 },
-    { href: '/admin/usuarios', label: 'Gestión de Usuarios & Cuentas', icon: Users },
+    { href: '/admin/productos', label: 'Productos del Menú', icon: ShoppingBag },
+    { href: '/admin/reseñas', label: 'Moderación de Reseñas', icon: Star },
+    { href: '/admin/usuarios', label: 'Usuarios & Cuentas', icon: Users },
   ];
 
   return (
@@ -51,14 +54,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </span>
             <span className="text-xs text-red-200 font-semibold flex items-center gap-1">
               <Shield className="w-3.5 h-3.5 text-uninorte-red" />
-              Control de Calidad & Moderación
+              Control Total & Moderación Absoluta
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             Gestión Central UniPide Campus
           </h1>
           <p className="text-xs text-gray-300 mt-1">
-            Eliminación y aprobación de negocios, moderación de cuentas de usuario y supervisión de métricas
+            Supervisión, edición y eliminación de productos, reseñas, emprendimientos y usuarios
           </p>
         </div>
 
@@ -71,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Link>
       </div>
 
-      {/* Pestañas */}
+      {/* Pestañas de Navegación Admin */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 border-b border-gray-200 mb-8 scrollbar-none">
         {adminLinks.map((link) => {
           const Icon = link.icon;

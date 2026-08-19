@@ -17,6 +17,7 @@ import {
   Power,
   Layers,
 } from 'lucide-react';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function EmprendedorProductosPage() {
   const { user } = useAuth();
@@ -368,18 +369,13 @@ export default function EmprendedorProductosPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block font-semibold text-gray-700 mb-1">
-                  URL de la Foto del Producto
-                </label>
-                <input
-                  type="url"
-                  value={foto}
-                  onChange={(e) => setFoto(e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-..."
-                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
-                />
-              </div>
+              <ImageUpload
+                label="Foto del Producto"
+                value={foto}
+                onChange={(val) => setFoto(val)}
+                aspectRatio="square"
+                placeholderText="Arrastra o sube la foto del producto"
+              />
 
               <div>
                 <label className="block font-semibold text-gray-700 mb-1">

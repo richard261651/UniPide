@@ -19,8 +19,12 @@ import {
   Loader2,
   User,
   Filter,
+  Edit2,
+  Check,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function AdminNegociosPage() {
   const [businesses, setBusinesses] = useState<BusinessItem[]>([]);
@@ -29,7 +33,18 @@ export default function AdminNegociosPage() {
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('TODOS');
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
-  // Modal de confirmación para eliminar negocio
+  // Modal Edición Negocio
+  const [editingBiz, setEditingBiz] = useState<BusinessItem | null>(null);
+  const [editNombre, setEditNombre] = useState('');
+  const [editCategoria, setEditCategoria] = useState('');
+  const [editUbicacion, setEditUbicacion] = useState('');
+  const [editDescripcion, setEditDescripcion] = useState('');
+  const [editLogo, setEditLogo] = useState('');
+  const [editBanner, setEditBanner] = useState('');
+  const [editPrepMin, setEditPrepMin] = useState(15);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  // Modal Confirmación Eliminar Negocio
   const [deletingBusiness, setDeletingBusiness] = useState<BusinessItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -52,6 +67,52 @@ export default function AdminNegociosPage() {
   useEffect(() => {
     fetchBusinesses();
   }, []);
+
+  const openEditModal = (b: BusinessItem) => {
+    setEditingBiz(b);
+    setEditNombre(b.nombre);
+    setEditCategoria(b.categoria);
+    setEditUbicacion(b.ubicacionCampus);
+    setEditDescripcion(b.descripcion || '');
+    setEditLogo(b.logo || '');
+    setEditBanner(b.banner || '');
+    setEditPrepMin(b.tiempoBasePrepMin || 15);
+  };
+
+  const handleSaveEditBiz = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBiz) return;
+    setSavingEdit(true);
+
+    try {
+      const res = await fetch(`/api/businesses/${editingBiz.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: editNombre,
+          categoria: editCategoria,
+          ubicacionCampus: editUbicacion,
+          descripcion: editDescripcion,
+          logo: editLogo,
+          banner: editBanner,
+          tiempoBasePrepMin: editPrepMin,
+        }),
+      });
+
+      if (res.ok) {
+        setEditingBiz(null);
+        setFeedbackMsg({ type: 'success', text: `Emprendimiento "${editNombre}" actualizado correctamente por admin.` });
+        fetchBusinesses();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Error al actualizar negocio');
+      }
+    } catch (err) {
+      alert('Error de conexión');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   const handleToggleActivo = async (b: BusinessItem) => {
     try {
@@ -149,15 +210,14 @@ export default function AdminNegociosPage() {
         <div>
           <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
             <Building2 className="w-5 h-5 text-uninorte-red" />
-            <span>Gestión y Eliminación de Emprendimientos</span>
+            <span>Gestión y Edición de Emprendimientos</span>
           </h2>
           <p className="text-xs text-gray-500">
-            Administra, suspende, aprueba o elimina definitivamente negocios estudiantiles
+            Edita datos, fotos, suspende, aprueba o elimina definitivamente cualquier negocio estudiantil
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-2">
-          {/* Filtro de Aprobación */}
           <select
             value={selectedStatusFilter}
             onChange={(e) => setSelectedStatusFilter(e.target.value)}
@@ -170,7 +230,6 @@ export default function AdminNegociosPage() {
             <option value="SUSPENDIDO">Suspendidos</option>
           </select>
 
-          {/* Buscador */}
           <div className="w-full sm:w-64 relative">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
             <input
@@ -184,7 +243,6 @@ export default function AdminNegociosPage() {
         </div>
       </div>
 
-      {/* Alerta de Feedback */}
       {feedbackMsg && (
         <div
           className={`p-4 rounded-2xl text-xs font-semibold flex items-center justify-between shadow-xs ${
@@ -194,10 +252,7 @@ export default function AdminNegociosPage() {
           }`}
         >
           <span>{feedbackMsg.text}</span>
-          <button
-            onClick={() => setFeedbackMsg(null)}
-            className="text-xs font-bold px-2 hover:opacity-70"
-          >
+          <button onClick={() => setFeedbackMsg(null)} className="text-xs font-bold px-2 hover:opacity-70">
             ✕
           </button>
         </div>
@@ -239,7 +294,7 @@ export default function AdminNegociosPage() {
                         <div>
                           <p className="font-bold text-gray-900">{b.nombre}</p>
                           <span className="text-[10px] text-gray-400">
-                            {b.categoria} • Creado: {formatShortDate(b.fechaCreacion)}
+                            {b.categoria} • {b.tiempoBasePrepMin || 15} min prep.
                           </span>
                         </div>
                       </div>
@@ -252,9 +307,6 @@ export default function AdminNegociosPage() {
                           <span>{b.user?.nombre || 'Estudiante'}</span>
                         </p>
                         <p className="text-[11px] text-gray-500">{b.user?.correo}</p>
-                        {b.user?.telefono && (
-                          <p className="text-[10px] text-gray-400">Tel: {b.user.telefono}</p>
-                        )}
                       </div>
                     </td>
 
@@ -294,7 +346,6 @@ export default function AdminNegociosPage() {
                             ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800'
                             : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
                         }`}
-                        title="Clic para cambiar visibilidad"
                       >
                         <Power className="w-3 h-3" />
                         <span>{b.activo ? 'Activo' : 'Pausado'}</span>
@@ -303,6 +354,14 @@ export default function AdminNegociosPage() {
 
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => openEditModal(b)}
+                          className="p-2 text-gray-500 hover:text-uninorte-red hover:bg-red-50 rounded-xl transition"
+                          title="Editar información y fotos del negocio"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+
                         {b.estadoAprobacion === 'APROBADO' && (
                           <Link
                             href={`/negocios/${b.slug}`}
@@ -313,7 +372,6 @@ export default function AdminNegociosPage() {
                           </Link>
                         )}
 
-                        {/* Botón Eliminar Definitivo */}
                         <button
                           onClick={() => setDeletingBusiness(b)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition"
@@ -327,16 +385,118 @@ export default function AdminNegociosPage() {
                 ))}
               </tbody>
             </table>
-            {filtered.length === 0 && (
-              <div className="p-12 text-center text-xs text-gray-400">
-                No se encontraron emprendimientos con los filtros seleccionados
-              </div>
-            )}
           </div>
         </div>
       )}
 
-      {/* Modal de Confirmación para Eliminar Emprendimiento */}
+      {/* Modal Editar Negocio por Admin */}
+      {editingBiz && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="font-black text-gray-900 text-sm">Editar Emprendimiento (Admin)</h3>
+              <button onClick={() => setEditingBiz(null)} className="text-gray-400 hover:text-gray-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditBiz} className="space-y-4 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-gray-700 mb-1">Nombre del Negocio *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editNombre}
+                    onChange={(e) => setEditNombre(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-gray-700 mb-1">Categoría</label>
+                  <input
+                    type="text"
+                    required
+                    value={editCategoria}
+                    onChange={(e) => setEditCategoria(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-gray-700 mb-1">Ubicación Campus</label>
+                  <input
+                    type="text"
+                    required
+                    value={editUbicacion}
+                    onChange={(e) => setEditUbicacion(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-gray-700 mb-1">Tiempo Preparación (Min)</label>
+                  <input
+                    type="number"
+                    min="3"
+                    max="60"
+                    value={editPrepMin}
+                    onChange={(e) => setEditPrepMin(Number(e.target.value))}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                  />
+                </div>
+              </div>
+
+              <ImageUpload
+                label="Logo del Emprendimiento"
+                value={editLogo}
+                onChange={(val) => setEditLogo(val)}
+                aspectRatio="square"
+              />
+
+              <ImageUpload
+                label="Portada / Banner"
+                value={editBanner}
+                onChange={(val) => setEditBanner(val)}
+                aspectRatio="banner"
+              />
+
+              <div>
+                <label className="block font-bold text-gray-700 mb-1">Descripción</label>
+                <textarea
+                  rows={2}
+                  value={editDescripcion}
+                  onChange={(e) => setEditDescripcion(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingBiz(null)}
+                  className="flex-1 py-2.5 font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  className="flex-1 py-2.5 font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-md flex items-center justify-center gap-1.5"
+                >
+                  {savingEdit ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                  <span>Guardar Cambios</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmación Eliminar Negocio */}
       {deletingBusiness && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl border border-gray-100 animate-in zoom-in-95">
@@ -352,11 +512,6 @@ export default function AdminNegociosPage() {
                 Estás a punto de eliminar permanentemente a{' '}
                 <span className="font-bold text-gray-800">"{deletingBusiness.nombre}"</span>. Se borrarán todos sus productos, menús y registros asociados.
               </p>
-            </div>
-
-            <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-[11px] text-amber-800 font-medium space-y-1">
-              <p>⚠️ <strong>Atención:</strong> Esta acción no se puede deshacer.</p>
-              <p>Estudiante dueño: {deletingBusiness.user?.nombre} ({deletingBusiness.user?.correo})</p>
             </div>
 
             <div className="flex items-center gap-3 pt-2">

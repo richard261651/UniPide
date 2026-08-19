@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { BusinessItem, CampusZoneItem } from '@/types';
 import { Store, MapPin, Clock, Check, Loader2, Image, Layers, Sparkles } from 'lucide-react';
+import ImageUpload from '@/components/ImageUpload';
 
 export default function EmprendedorPerfilPage() {
   const { user } = useAuth();
@@ -225,32 +226,22 @@ export default function EmprendedorPerfilPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                URL del Logo
-              </label>
-              <input
-                type="url"
-                value={logo}
-                onChange={(e) => setLogo(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
+            <ImageUpload
+              label="Logo del Emprendimiento"
+              value={logo}
+              onChange={(val) => setLogo(val)}
+              aspectRatio="square"
+              placeholderText="Arrastra el logo de tu negocio aquí"
+            />
 
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                URL del Banner / Portada
-              </label>
-              <input
-                type="url"
-                value={banner}
-                onChange={(e) => setBanner(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none"
-              />
-            </div>
+            <ImageUpload
+              label="Banner / Imagen de Portada"
+              value={banner}
+              onChange={(val) => setBanner(val)}
+              aspectRatio="banner"
+              placeholderText="Arrastra la portada de tu negocio aquí"
+            />
           </div>
 
           <button
