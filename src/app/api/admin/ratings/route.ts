@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const ratings = await prisma.rating.findMany({
       include: {
-        user: { select: { id: true, nombre: true, correo: true } },
+        cliente: { select: { id: true, nombre: true, correo: true } },
         business: { select: { id: true, nombre: true, logo: true } },
         order: { select: { id: true, codigoPedido: true } },
       },

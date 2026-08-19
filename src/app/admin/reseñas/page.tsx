@@ -9,7 +9,7 @@ interface AdminRatingItem {
   puntuacion: number;
   comentario?: string | null;
   fechaCreacion: string;
-  user?: { id: string; nombre: string; correo: string };
+  cliente?: { id: string; nombre: string; correo: string };
   business?: { id: string; nombre: string; logo?: string | null };
   order?: { id: string; codigoPedido: string };
 }
@@ -48,7 +48,7 @@ export default function AdminResenasPage() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar permanentemente esta reseña y actualizar el promedio del emprendimiento?')) {
+    if (!confirm('¿Estás seguro de que deseas eliminar permanentemente esta reseña?')) {
       return;
     }
 
@@ -108,8 +108,8 @@ export default function AdminResenasPage() {
   const filteredRatings = ratings.filter((r) => {
     const matchesSearch =
       (r.business?.nombre || '').toLowerCase().includes(search.toLowerCase()) ||
-      (r.user?.nombre || '').toLowerCase().includes(search.toLowerCase()) ||
-      (r.user?.correo || '').toLowerCase().includes(search.toLowerCase()) ||
+      (r.cliente?.nombre || '').toLowerCase().includes(search.toLowerCase()) ||
+      (r.cliente?.correo || '').toLowerCase().includes(search.toLowerCase()) ||
       (r.comentario || '').toLowerCase().includes(search.toLowerCase());
 
     const matchesStar = filterStar === 'ALL' || r.puntuacion === filterStar;
@@ -209,7 +209,7 @@ export default function AdminResenasPage() {
                   <div className="flex items-center gap-1 text-[11px] text-gray-500">
                     <User className="w-3 h-3 text-gray-400" />
                     <span>
-                      Cliente: <strong>{r.user?.nombre}</strong> ({r.user?.correo})
+                      Cliente: <strong>{r.cliente?.nombre}</strong> ({r.cliente?.correo})
                     </span>
                   </div>
                   {r.comentario ? (
