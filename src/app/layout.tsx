@@ -6,6 +6,7 @@ import { CartProvider } from '@/context/CartContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import WelcomeSplashScreen from '@/components/WelcomeSplashScreen';
 
 const questrial = Questrial({ weight: '400', subsets: ['latin'] });
 
@@ -90,6 +91,7 @@ export default function RootLayout({
       <body className={`${questrial.className} min-h-screen flex flex-col bg-[#FAF8F5] text-slate-900 overflow-x-hidden selection:bg-red-500 selection:text-white tracking-wide`}>
         <AuthProvider>
           <CartProvider>
+            <WelcomeSplashScreen />
             <Navbar />
             <CartDrawer />
             <main className="flex-1 pb-20 md:pb-8">{children}</main>
