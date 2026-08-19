@@ -225,15 +225,19 @@ export default function EmprendedorProductosPage() {
 
     try {
       const res = await fetch(`/api/products/${deletingProduct.id}`, { method: 'DELETE' });
+      const data = await res.json();
       if (res.ok) {
         setDeletingProduct(null);
         if (modalOpen && editingProduct?.id === deletingProduct.id) {
           setModalOpen(false);
         }
         fetchProducts();
+      } else {
+        alert(data.error || 'Error al eliminar el producto');
       }
     } catch (err) {
       console.error('Error eliminando producto:', err);
+      alert('Error de conexión al procesar la eliminación');
     } finally {
       setIsDeleting(false);
     }

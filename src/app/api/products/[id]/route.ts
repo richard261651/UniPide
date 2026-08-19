@@ -134,12 +134,29 @@ export async function DELETE(
     }
 
     const { id } = params;
-    await prisma.product.delete({
-      where: { id },
-    });
 
-    return NextResponse.json({ success: true, message: 'Producto eliminado' });
+    // 1. Intentar borrado físico en base de datos
+    try {
+      await prisma.product.delete({
+        where: { id },
+      });
+      return NextResponse.json({ success: true, message: 'Producto eliminado exitosamente' });
+    } catch (deleteErr: any) {
+      // 2. Si falla por restricción de clave foránea (p. ej. producto con historial de pedidos)
+      // se desactiva y se oculta sin romper la integridad de la base de datos
+      await prisma.product.update({
+        where: { id },
+        data: { disponible: false, stock: 0 },
+      });
+      return NextResponse.json({
+        success: true,
+        message: 'Producto deshabilitado (conservado por historial de ventas)',
+      });
+    }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Error al eliminar producto' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Error al eliminar producto' },
+      { status: 500 }
+    );
   }
 }
