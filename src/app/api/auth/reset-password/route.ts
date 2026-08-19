@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { hashPassword } from '@/lib/auth';
 import { isValidEmail } from '@/lib/utils';
-import { recoveryTokens } from '../forgot-password/route';
+import { recoveryTokens } from '@/lib/recoveryStore';
 
 export async function POST(request: NextRequest) {
   try {

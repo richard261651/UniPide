@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { isValidEmail } from '@/lib/utils';
-
-// Mapa en memoria para tokens/códigos temporales de recuperación en desarrollo
-const recoveryTokens = new Map<string, { code: string; expiresAt: number }>();
+import { recoveryTokens } from '@/lib/recoveryStore';
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,5 +62,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-export { recoveryTokens };
