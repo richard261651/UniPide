@@ -206,9 +206,22 @@ export default function AdminSolicitudesPage() {
                   )}
 
                   {b.nombreFirmante && (
-                    <p className="text-[11px] text-slate-600 font-medium">
-                      📜 Firmante Legal POL-EMP-001: <strong>{b.nombreFirmante}</strong> ({b.documentoFirmante})
-                    </p>
+                    <div className="pt-1.5 border-t border-slate-200/80 space-y-1">
+                      <p className="text-[11px] text-slate-600 font-medium">
+                        📜 Firmante Legal POL-EMP-001: <strong>{b.nombreFirmante}</strong> ({b.documentoFirmante})
+                      </p>
+                      {b.contratoDriveUrl && (
+                        <a
+                          href={b.contratoDriveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-[11px] font-black text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg transition"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>📁 Ver Contrato POL-EMP-001 en Google Drive</span>
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

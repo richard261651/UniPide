@@ -50,6 +50,8 @@ export interface BusinessItem {
   versionPolitica?: string | null;
   nombreFirmante?: string | null;
   documentoFirmante?: string | null;
+  contratoDriveUrl?: string | null;
+  contratoDriveId?: string | null;
   user?: {
     nombre: string;
     correo: string;

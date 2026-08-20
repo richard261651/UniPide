@@ -34,8 +34,15 @@ export default function PolicySignatureModal({
       return;
     }
 
-    if (!documentoFirmante.trim()) {
-      setError('Por favor ingresa tu Documento de Identidad o Código de Estudiante Uninorte');
+    const docClean = documentoFirmante.replace(/\D/g, '');
+
+    if (!docClean) {
+      setError('Por favor ingresa tu número de Cédula de Ciudadanía Colombiana');
+      return;
+    }
+
+    if (docClean.length < 7 || docClean.length > 10) {
+      setError('La Cédula de Ciudadanía Colombiana debe contener entre 7 y 10 dígitos numéricos (ej. 1032456789 o 72123456)');
       return;
     }
 
@@ -193,15 +200,17 @@ export default function PolicySignatureModal({
 
               <div>
                 <label className="block text-xs font-bold text-slate-800 mb-1">
-                  Documento de Identidad / Código Estudiantil *
+                  Cédula de Ciudadanía Colombiana (7 a 10 dígitos) *
                 </label>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  maxLength={10}
                   required
                   value={documentoFirmante}
-                  onChange={(e) => setDocumentoFirmante(e.target.value)}
-                  placeholder="Ej. CC 1032456789 / Cod. 200123456"
-                  className="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#D85A30] outline-none font-medium text-slate-900 bg-white"
+                  onChange={(e) => setDocumentoFirmante(e.target.value.replace(/[^0-9]/g, ''))}
+                  placeholder="Ej. 1032456789 o 72123456"
+                  className="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#D85A30] outline-none font-medium text-slate-900 bg-white font-mono"
                 />
               </div>
             </div>

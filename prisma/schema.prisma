@@ -67,6 +67,8 @@ model Business {
   versionPolitica             String?      @default("POL-EMP-001 v1.0")
   nombreFirmante              String?
   documentoFirmante           String?
+  contratoDriveUrl            String?
+  contratoDriveId             String?
 
   products          Product[]
   orders            Order[]
