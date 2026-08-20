@@ -187,19 +187,19 @@ export default function EmprendedorSuscripcionPage() {
 
   const estaPorCaducar = diasRestantes !== null && diasRestantes <= 7 && diasRestantes >= 0;
 
-  return (
+    return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       {/* Header */}
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FEEBE7] border border-[#FBC6BB] text-[#D85A30] text-xs font-extrabold rounded-full mb-2">
           <CreditCard className="w-3.5 h-3.5" />
-          <span>Pasarela Wompi Colombia & Facturación</span>
+          <span>Gestión de Suscripción & Verificación de Pago</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Gestión de Suscripción Wompi
+          Suscripción de Emprendimiento
         </h1>
         <p className="text-xs text-slate-500 font-medium">
-          Selecciona tu modalidad de cobro (Prepagado o Débito Automático), verifica tu pago con Wompi y recibe tu factura digital.
+          Consulta el estado de tu suscripción, confirma la firma de la política legal y revisa los datos para la verificación de tu pago por el Administrador.
         </p>
       </div>
 
@@ -211,25 +211,40 @@ export default function EmprendedorSuscripcionPage() {
             <span>⚠️ Notificación de Vencimiento: ¡Tu suscripción caduca en {diasRestantes} días!</span>
           </div>
           <p className="text-xs text-amber-800 font-medium leading-relaxed">
-            Tu tarifa promocional finaliza el <strong>{fechaFinPromo ? formatShortDate(fechaFinPromo) : ''}</strong>. Renueva ahora por PSE o Wompi para mantener tu posición de <strong>Fundador UniPide ⭐</strong> de primero en tu categoría.
+            Tu tarifa promocional finaliza el <strong>{fechaFinPromo ? formatShortDate(fechaFinPromo) : ''}</strong>. Realiza tu renovación para mantener tu posición de <strong>Fundador UniPide ⭐</strong>.
           </p>
         </div>
       )}
 
-      {/* Banner de Estado de Aprobación Admin si se Verificó el Pago pero Falta Aprobación Admin */}
-      {business.pagoVerificado && business.estadoAprobacion === 'PENDIENTE' && (
+      {/* Banner de Estado de Pago y Aprobación */}
+      {business.pagoVerificado && business.estadoAprobacion === 'APROBADO' ? (
         <div className="p-5 bg-gradient-to-r from-emerald-900 to-slate-900 text-white rounded-3xl border border-emerald-500/40 shadow-lg space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 font-extrabold text-sm text-emerald-400">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-              <span>1. Pago Verificado por Wompi Colombia (Ref: {business.wompiReference || 'WMP-OK'})</span>
+              <span>✅ Pago Verificado y Negocio Abierto</span>
             </div>
-            <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
-              Pendiente Aprobación Final Admin
+            <span className="bg-emerald-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
+              Activo en Campus
             </span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed font-medium">
-            ✅ Tu pago de suscripción de <strong>{formatPrice(montoMes)} COP</strong> ha sido procesado exitosamente y la Factura Digital ha sido enviada a tu correo. El Administrador ha sido notificado para dar la autorización final de publicación de tu tienda.
+            El Administrador ha verificado tu pago de suscripción de <strong>{formatPrice(montoMes)} COP</strong>. Tu tienda se encuentra abierta y visible para los estudiantes del campus Uninorte.
+          </p>
+        </div>
+      ) : (
+        <div className="p-5 bg-gradient-to-r from-amber-900 via-amber-950 to-slate-900 text-white rounded-3xl border border-amber-500/40 shadow-lg space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2 font-extrabold text-sm text-amber-400">
+              <Clock className="w-5 h-5 text-amber-400" />
+              <span>⏳ Pago Pendiente de Verificación por el Administrador</span>
+            </div>
+            <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">
+              Pendiente Apertura
+            </span>
+          </div>
+          <p className="text-xs text-slate-200 leading-relaxed font-medium">
+            Tu negocio no se abrirá ni será visible en la plataforma hasta que el <strong>Administrador verifique tu pago de suscripción ({formatPrice(montoMes)} COP)</strong>. Tan pronto el Administrador confirme tu pago desde el portal de control, recibirás un correo de notificación en <strong>{user?.correo}</strong> y tu tienda quedará activa automáticamente.
           </p>
         </div>
       )}
@@ -256,7 +271,7 @@ export default function EmprendedorSuscripcionPage() {
           </div>
 
           <div className="text-left sm:text-right">
-            <span className="text-xs text-slate-400 block font-medium">Tarifa Mensual Actual</span>
+            <span className="text-xs text-slate-400 block font-medium">Tarifa Mensual</span>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-black text-[#F56649]">{formatPrice(montoMes)}</span>
               <span className="text-xs text-slate-300">/mes</span>
@@ -270,7 +285,7 @@ export default function EmprendedorSuscripcionPage() {
             <span className="text-slate-400 font-medium block">Estado de Suscripción</span>
             <span className="font-extrabold text-emerald-400 flex items-center gap-1.5 text-sm">
               <CheckCircle2 className="w-4 h-4" />
-              <span>{business.suscripcionEstado || 'ACTIVA'}</span>
+              <span>{business.pagoVerificado ? 'ACTIVA Y PAGADA' : 'PENDIENTE VERIFICACIÓN'}</span>
             </span>
           </div>
 
@@ -284,24 +299,24 @@ export default function EmprendedorSuscripcionPage() {
           </div>
 
           <div className="bg-white/10 p-3.5 rounded-2xl border border-white/10 space-y-1">
-            <span className="text-slate-400 font-medium block">Modalidad Actual</span>
+            <span className="text-slate-400 font-medium block">Verificación Admin</span>
             <span className="font-bold text-amber-300 flex items-center gap-1">
-              <Zap className="w-3.5 h-3.5" />
-              <span>{business.tipoSuscripcion === 'DEBITO_AUTOMATICO' ? 'Débito Automático' : 'Prepagado Manual'}</span>
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{business.pagoVerificado ? 'Verificado ✅' : 'En espera'}</span>
             </span>
           </div>
         </div>
       </div>
 
-      {/* Formulario de Pago con Pasarela Wompi Colombia */}
+      {/* Instrucciones de Pago y Firma Legal */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
         <div className="border-b border-slate-100 pb-4">
           <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-[#D85A30]" />
-            <span>Verificar Pago con Wompi Colombia (Bancolombia)</span>
+            <span>Instrucciones de Pago y Firma de Política</span>
           </h3>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Pasarela oficial certificada para PSE, Nequi, Daviplata y Tarjetas de Crédito.
+            Requisitos obligatorios para la apertura y funcionamiento de tu emprendimiento en UniPide.
           </p>
         </div>
 
@@ -331,7 +346,7 @@ export default function EmprendedorSuscripcionPage() {
           <p className="text-xs text-slate-600 leading-relaxed font-medium">
             {business.firmaPoliticaHigiene
               ? `Firmado digitalmente por ${business.nombreFirmante} (${business.documentoFirmante}) el ${business.fechaFirmaPolitica ? formatShortDate(business.fechaFirmaPolitica) : 'Registro'}.`
-              : 'Para procesar tu pago de suscripción y activar tu emprendimiento es obligatorio firmar digitalmente la Política POL-EMP-001.'}
+              : 'Para procesar la apertura de tu emprendimiento es obligatorio firmar digitalmente la Política POL-EMP-001.'}
           </p>
 
           {!business.firmaPoliticaHigiene && (
@@ -346,209 +361,22 @@ export default function EmprendedorSuscripcionPage() {
           )}
         </div>
 
-        {paymentSuccess && (
-          <div className="p-5 bg-emerald-50 border-2 border-emerald-200 text-emerald-900 rounded-3xl space-y-3 animate-in fade-in">
-            <div className="flex items-center gap-2 font-black text-sm text-emerald-950">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-              <span>{paymentSuccess.mensaje}</span>
-            </div>
-            <div className="text-xs text-emerald-800 space-y-1 font-medium bg-white/70 p-3 rounded-2xl border border-emerald-100">
-              <p className="flex items-center gap-1.5">
-                <Receipt className="w-4 h-4 text-emerald-700" />
-                <span>Ref. Transacción Wompi: <strong>{paymentSuccess.wompiRef}</strong></span>
-              </p>
-              <p>Monto abonado: <strong>{formatPrice(paymentSuccess.monto)} COP</strong></p>
-              <p>Modalidad de Cobro: <strong>{paymentSuccess.tipoSuscripcion === 'DEBITO_AUTOMATICO' ? 'Débito Automático' : 'Prepagado'}</strong></p>
-              <p className="text-[#0F6E56] font-bold pt-1">
-                📧 Factura Digital enviada a {user?.correo}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="p-3 bg-red-50 text-red-700 text-xs rounded-xl font-medium">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleWompiCheckout} className="space-y-6">
-          {/* Selector 1: Prepagado vs Débito Automático */}
-          <div className="space-y-3">
-            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-              1. Selecciona Modalidad de Suscripción
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setTipoSuscripcion('PREPAGADO')}
-                className={`p-4 rounded-2xl border-2 text-left text-xs transition space-y-1 ${
-                  tipoSuscripcion === 'PREPAGADO'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                    <RefreshCw className="w-4 h-4 text-[#D85A30]" />
-                    <span>Prepagado (Manual)</span>
-                  </span>
-                  {tipoSuscripcion === 'PREPAGADO' && <Check className="w-4 h-4 text-[#D85A30]" />}
-                </div>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Realizas el pago mes a mes libremente por PSE, Nequi o Daviplata.
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setTipoSuscripcion('DEBITO_AUTOMATICO')}
-                className={`p-4 rounded-2xl border-2 text-left text-xs transition space-y-1 ${
-                  tipoSuscripcion === 'DEBITO_AUTOMATICO'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-slate-900 text-xs sm:text-sm flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-purple-600" />
-                    <span>Débito Automático (Recurrente)</span>
-                  </span>
-                  {tipoSuscripcion === 'DEBITO_AUTOMATICO' && <Check className="w-4 h-4 text-[#D85A30]" />}
-                </div>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Cobro recurrente automático sin preocupaciones con tarjeta o Wompi.
-                </p>
-              </button>
-            </div>
-          </div>
-
-          {/* Selector 2: Medio de Pago */}
-          <div className="space-y-3">
-            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-              2. Selecciona Medio de Pago Wompi
-            </label>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {/* PSE */}
-              <button
-                type="button"
-                onClick={() => setMetodoPago('PSE')}
-                className={`p-3.5 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center justify-center gap-2 ${
-                  metodoPago === 'PSE'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <Building2 className="w-5 h-5 text-[#D85A30]" />
-                <span>PSE (Bancos)</span>
-              </button>
-
-              {/* Nequi */}
-              <button
-                type="button"
-                onClick={() => setMetodoPago('NEQUI')}
-                className={`p-3.5 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center justify-center gap-2 ${
-                  metodoPago === 'NEQUI'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <Smartphone className="w-5 h-5 text-purple-600" />
-                <span>Nequi</span>
-              </button>
-
-              {/* Daviplata */}
-              <button
-                type="button"
-                onClick={() => setMetodoPago('DAVIPLATA')}
-                className={`p-3.5 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center justify-center gap-2 ${
-                  metodoPago === 'DAVIPLATA'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <Smartphone className="w-5 h-5 text-red-600" />
-                <span>Daviplata</span>
-              </button>
-
-              {/* Tarjeta */}
-              <button
-                type="button"
-                onClick={() => setMetodoPago('TARJETA')}
-                className={`p-3.5 rounded-2xl border-2 text-xs font-bold transition flex flex-col items-center justify-center gap-2 ${
-                  metodoPago === 'TARJETA'
-                    ? 'border-[#D85A30] bg-[#FEEBE7]/40 text-[#D85A30] shadow-xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <CreditCard className="w-5 h-5 text-emerald-600" />
-                <span>Tarjeta</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Opciones dinámicas según medio de pago */}
-          {metodoPago === 'PSE' && (
-            <div className="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-              <label className="block text-xs font-bold text-slate-800">
-                Selecciona tu Banco de Origen
-              </label>
-              <select
-                value={bancoSeleccionado}
-                onChange={(e) => setBancoSeleccionado(e.target.value)}
-                className="w-full text-xs p-3 rounded-xl border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-[#D85A30] focus:outline-none"
-              >
-                {BANCOS_COLOMBIA.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {(metodoPago === 'NEQUI' || metodoPago === 'DAVIPLATA') && (
-            <div className="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-              <label className="block text-xs font-bold text-slate-800">
-                Número de Celular registrado en {metodoPago}
-              </label>
-              <input
-                type="tel"
-                value={celularInput}
-                onChange={(e) => setCelularInput(e.target.value)}
-                placeholder="Ej. 3001234567"
-                className="w-full text-xs p-3 rounded-xl border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-[#D85A30] focus:outline-none"
-              />
-            </div>
-          )}
-
-          {/* Resumen Final de Cobro y Botón */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-slate-500 font-medium block text-xs">Total a abonar hoy vía Wompi:</span>
-              <span className="text-base font-black text-slate-900">{formatPrice(montoMes)} COP</span>
-            </div>
-
-            <button
-              type="submit"
-              disabled={paying}
-              className="px-6 py-3 bg-[#D85A30] hover:bg-[#F56649] disabled:opacity-50 text-white text-xs font-black rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer"
-            >
-              {paying ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Conectando con Wompi...</span>
-                </>
-              ) : (
-                <>
-                  <span>Verificar Pago Wompi ({metodoPago})</span>
-                  <ArrowRight className="w-4 h-4 text-white" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+        {/* Instrucciones de Pago Manual */}
+        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 text-xs text-slate-700">
+          <h4 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+            <span>💳 Medios de Pago Directos para Verificación</span>
+          </h4>
+          <p className="leading-relaxed">
+            Realiza la transferencia del valor correspondiente a tu mensualidad (<strong>{formatPrice(montoMes)} COP</strong>) a la administración de UniPide a través de cualquiera de estos canales:
+          </p>
+          <ul className="space-y-1.5 pl-4 list-disc font-medium text-slate-800">
+            <li><strong>Nequi / Daviplata:</strong> 300 123 4567 (Richard Francisco Guzmán Guzmán)</li>
+            <li><strong>Transferencia Bancolombia:</strong> Cuenta de Ahorros Administración UniPide</li>
+          </ul>
+          <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-200/80 italic">
+            Una vez realizado el pago, el Administrador verificará la transacción en la plataforma, aprobará tu negocio y se enviará la confirmación a tu correo electrónico.
+          </p>
+        </div>
       </div>
 
       {/* Modal de Firma Digital POL-EMP-001 */}

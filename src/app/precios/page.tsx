@@ -62,9 +62,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#D85A30] text-white font-black text-xs rounded-full flex items-center justify-center">
                 2
               </span>
-              <h3 className="font-extrabold text-slate-900 text-sm">Selección de Modalidad</h3>
+              <h3 className="font-extrabold text-slate-900 text-sm">Pago de Suscripción</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
-                Eliges entre Prepagado (abono manual mes a mes) o Débito Automático recurrente con tarjeta o Nequi tokenizado en Wompi.
+                Realizas el pago de la tarifa correspondiente por Nequi, Daviplata o Transferencia Bancaria directa a la administración.
               </p>
             </div>
 
@@ -73,9 +73,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#D85A30] text-white font-black text-xs rounded-full flex items-center justify-center">
                 3
               </span>
-              <h3 className="font-extrabold text-slate-900 text-sm">Pago Wompi & Factura</h3>
+              <h3 className="font-extrabold text-slate-900 text-sm">Verificación del Admin</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
-                Efectúas el pago seguro en Wompi (PSE, Nequi, Daviplata) y recibes tu Factura Digital de inmediato en tu correo electrónico.
+                El Administrador confirma la recepción del pago en el Portal Admin, activa tu cuenta de emprendedor y autoriza la apertura del negocio.
               </p>
             </div>
 
@@ -84,9 +84,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#0F6E56] text-white font-black text-xs rounded-full flex items-center justify-center">
                 4
               </span>
-              <h3 className="font-extrabold text-emerald-950 text-sm">Aprobación del Admin</h3>
+              <h3 className="font-extrabold text-emerald-950 text-sm">Apertura & Correo</h3>
               <p className="text-emerald-800 font-medium leading-relaxed">
-                El Administrador revisa la verificación de pago y autoriza la activación final para que tu negocio aparezca en el campus.
+                Recibes un correo electrónico automático informándote que tu negocio está abierto y listo para publicar productos en el campus Uninorte.
               </p>
             </div>
           </div>

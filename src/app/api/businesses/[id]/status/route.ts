@@ -35,16 +35,21 @@ export async function PATCH(
     if (estadoAprobacion) {
       updateData.estadoAprobacion = estadoAprobacion;
 
-      // Si se está aprobando por primera vez (o pasa a APROBADO)
-      if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
+      // Si se está aprobando por primera vez (o pasa a APROBADO desde PENDIENTE)
+      if (estadoAprobacion === 'APROBADO') {
         const now = new Date();
         updateData.fechaAprobacion = now;
+        updateData.pagoVerificado = true;
+        updateData.fechaPagoVerificado = now;
+        updateData.activo = true;
+        updateData.suscripcionEstado = 'ACTIVA';
 
         // Verificar cupos de lanzamiento (máximo 10)
         const founderCount = await prisma.business.count({
           where: {
             esFundador: true,
             estadoAprobacion: 'APROBADO',
+            id: { not: id },
           },
         });
 
@@ -56,11 +61,9 @@ export async function PATCH(
           updateData.fechaInicioPromocion = now;
           updateData.fechaFinPromocion = threeMonthsLater;
           updateData.suscripcionMonto = 19900;
-          updateData.suscripcionEstado = 'ACTIVA';
         } else {
           updateData.esFundador = false;
           updateData.suscripcionMonto = 29900;
-          updateData.suscripcionEstado = 'ACTIVA';
         }
       }
     }
@@ -70,7 +73,7 @@ export async function PATCH(
       data: updateData,
     });
 
-    // Si fue APROBADO por el Administrador, enviar correo de felicitación al emprendedor
+    // Si fue APROBADO por el Administrador, enviar correo de confirmación de pago y apertura al emprendedor
     if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
       await sendBusinessApprovedEmail({
         toEmail: currentBusiness.user.correo,

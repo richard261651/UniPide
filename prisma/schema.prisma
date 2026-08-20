@@ -15,10 +15,12 @@ model User {
   rol              String      @default("CLIENTE") // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
   telefono         String?
   foto             String?
-  twoFactorSecret  String?     // Secreto TOTP para Google Authenticator
-  twoFactorEnabled Boolean     @default(false)
-  activo           Boolean     @default(true)
-  fechaRegistro    DateTime    @default(now())
+  twoFactorSecret         String?     // Secreto TOTP para Google Authenticator
+  twoFactorEnabled        Boolean     @default(false)
+  correoVerificado        Boolean     @default(false) // Verificación de correo Gmail del emprendedor
+  tokenVerificacionCorreo String?     // Código o token de verificación enviado a su Gmail
+  activo                  Boolean     @default(true)
+  fechaRegistro           DateTime    @default(now())
 
   businesses    Business[]
   orders        Order[]

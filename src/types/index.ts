@@ -56,6 +56,7 @@ export interface BusinessItem {
     nombre: string;
     correo: string;
     telefono?: string | null;
+    correoVerificado?: boolean;
   };
   products?: ProductItem[];
   ratings?: RatingItem[];

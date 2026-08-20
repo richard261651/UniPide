@@ -163,7 +163,7 @@ export const SquishyPricingCard = ({
               </li>
               <li className="flex items-center gap-2 text-white/95 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
-                <span>💳 Pagos Wompi (Prepagado o Débito Automático).</span>
+                <span>💳 Verificación de Pago y Activación por Admin.</span>
               </li>
               <li className="flex items-center gap-2 text-white/95 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />

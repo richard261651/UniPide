@@ -34,17 +34,17 @@ const FAQS_EMPRENDEDORES = [
   {
     pregunta: '¿Qué sucede cuando se acaban los 10 cupos de lanzamiento?',
     respuesta:
-      'Los siguientes emprendimientos se registrarán con el Plan Estándar a la tarifa regular de $29.900 COP/mes. Todos los emprendimientos disfrutan de las mismas funciones de catálogo, pedidos y pagos por Wompi.',
+      'Los siguientes emprendimientos se registrarán con el Plan Estándar a la tarifa regular de $29.900 COP/mes. Todos los emprendimientos disfrutan de las mismas funciones de catálogo, pedidos y visibilidad en el campus.',
   },
   {
     pregunta: '¿Cómo se pagan las suscripciones en la plataforma?',
     respuesta:
-      'Puedes elegir entre Prepagado (abono manual mes a mes por PSE, Nequi o Daviplata) o Débito Automático (cobro recurrente sin interrupciones a través de Wompi). Al pagar se envía la Factura Digital a tu correo.',
+      'Puedes realizar el pago por Nequi, Daviplata o transferencia bancaria directa a la administración. Al confirmar tu pago, el Administrador activa tu cuenta y abre tu negocio.',
   },
   {
     pregunta: '¿Cuál es el proceso para que mi emprendimiento aparezca en la web?',
     respuesta:
-      '1) Llenas el formulario de registro y firmas la Política POL-EMP-001. 2) Verificas tu pago de suscripción con Wompi. 3) El Administrador aprueba tu tienda en /admin/solicitudes y queda visible inmediatamente para todo el campus Uninorte.',
+      '1) Llenas el formulario de registro y firmas la Política POL-EMP-001. 2) Realizas el pago de la suscripción. 3) El Administrador verifica tu pago en /admin/solicitudes, abre tu tienda y recibes una notificación por correo electrónico.',
   },
 ];
 

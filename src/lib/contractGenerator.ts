@@ -86,7 +86,7 @@ export async function generateDigitalContractDocument(data: ContractData) {
     <div style="font-size: 14px; font-weight: 800; color: #15803D;">✅ FIRMADO LEGALMENTE Y VERIFICADO DIGITALMENTE</div>
     <div style="font-size: 11px; color: #166534; margin-top: 4px;">Estampa de Firma Digital Criptográfica (SHA-256):</div>
     <div class="hash">${digitalHash}</div>
-    <div style="font-size: 10px; color: #65a30d; margin-top: 6px;">Destino de Archivo: Google Drive ("contratos emprendimientos unipide" - richardbb839@gmail.com)</div>
+    <div style="font-size: 10px; color: #65a30d; margin-top: 6px;">Destino de Archivo: Google Drive ("contratos emprendimientos unipide" - ID: 1f-6z7SoD3x-s7Wp6cfny-Usfyj0guFQp - richardbb839@gmail.com)</div>
   </div>
 
   <div class="footer">

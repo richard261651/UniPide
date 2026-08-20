@@ -54,6 +54,64 @@ export async function sendRecoveryEmail(
   return { sent: false, provider: 'Console' };
 }
 
+/**
+ * Envía el Código de Verificación de Correo Gmail al Emprendedor al registrarse
+ */
+export async function sendEmailVerificationCode(data: {
+  toEmail: string;
+  nombre: string;
+  code: string;
+}): Promise<{ sent: boolean; provider: string; error?: string }> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Administrador <richardbb839@gmail.com>';
+  const subject = `📧 Código de Verificación de Correo Gmail - UniPide (${data.code})`;
+  const htmlContent = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 18px; background-color: #ffffff; text-align: center;">
+      <div style="margin-bottom: 18px;">
+        <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
+        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
+      </div>
+
+      <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Verificación de tu Correo Gmail</h3>
+      <p style="font-size: 13px; color: #334155; line-height: 1.5; text-align: justify; margin-bottom: 20px;">
+        Hola <strong>${data.nombre}</strong>, para completar tu registro de emprendedor en <strong>UniPide</strong> y activar tu cuenta, ingresa el siguiente código de verificación de 6 dígitos:
+      </p>
+
+      <div style="background-color: #FAF8F5; border: 2px border-dashed #D85A30; border-radius: 14px; text-align: center; padding: 20px; margin: 20px 0;">
+        <span style="font-size: 34px; font-weight: 900; letter-spacing: 8px; color: #D85A30; font-family: monospace;">${data.code}</span>
+      </div>
+
+      <p style="font-size: 11px; color: #64748b; text-align: center; line-height: 1.4;">
+        🔒 Este código es personal e intransferible. Si no realizaste este registro, puedes ignorar este correo.
+      </p>
+
+      <div style="border-top: 1px solid #f1f5f9; margin-top: 28px; padding-top: 14px;">
+        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla</p>
+      </div>
+    </div>
+  `;
+
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
+        body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
+      });
+
+      if (res.ok) {
+        console.log(`📧 [GMAIL VERIFICATION CODE] Código enviado desde ${fromEmail} a ${data.toEmail}`);
+        return { sent: true, provider: 'Resend' };
+      }
+    } catch (err: any) {
+      console.error('Error enviando código de verificación por correo:', err);
+    }
+  }
+
+  console.log(`📧 [GMAIL VERIFICATION CONSOLE] Código para ${data.toEmail}: ${data.code} (Remitente: ${fromEmail})`);
+  return { sent: false, provider: 'Console' };
+}
+
 interface InvoiceEmailData {
   toEmail: string;
   nombreEmprendedor: string;
@@ -174,7 +232,7 @@ export async function sendAdminNewPendingBusinessEmail(data: {
 }
 
 /**
- * Notifica al Emprendedor que su emprendimiento ha sido APROBADO por el Admin y ya está visible
+ * Notifica al Emprendedor que su pago ha sido verificado por el Administrador y su emprendimiento ha sido APROBADO Y ABIERTO
  */
 export async function sendBusinessApprovedEmail(data: {
   toEmail: string;
@@ -182,38 +240,62 @@ export async function sendBusinessApprovedEmail(data: {
   nombreNegocio: string;
 }) {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const subject = `🎉 ¡Tu emprendimiento ${data.nombreNegocio} ha sido APROBADO en UniPide!`;
+  const subject = `🎉 ¡Pago Confirmado! Tu emprendimiento ${data.nombreNegocio} ha sido APROBADO y ABIERTO en UniPide`;
   const htmlContent = `
-    <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px; text-align: center;">
-      <h2 style="color: #0F6E56; margin-top: 0;">¡Felicitaciones, ${data.nombreEmprendedor}! 🎉</h2>
-      <p style="font-size: 14px; color: #334155; line-height: 1.5;">
-        El administrador ha revisado y <strong>APROBADO</strong> tu emprendimiento <strong>${data.nombreNegocio}</strong>.
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff; text-align: center;">
+      <div style="margin-bottom: 20px;">
+        <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
+        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
+      </div>
+
+      <h2 style="color: #0F6E56; margin-top: 0; font-size: 20px; font-weight: 800;">¡Pago Confirmado y Tienda Abierta, ${data.nombreEmprendedor}! 🎉</h2>
+      
+      <p style="font-size: 13.5px; color: #334155; line-height: 1.6; text-align: justify; margin-top: 14px;">
+        El Administrador de <strong>UniPide</strong> ha verificado exitosamente tu pago de afiliación y ha <strong>APROBADO Y ACTIVADO</strong> tu emprendimiento <strong>${data.nombreNegocio}</strong>.
       </p>
-      <div style="background-color: #F0FDF4; border: 1px solid #BBF7D0; padding: 16px; border-radius: 12px; margin: 20px 0;">
-        <p style="margin: 0; font-size: 13px; color: #166534; font-weight: 700;">
-          🚀 Tu tienda ya es visible para miles de estudiantes en el campus Uninorte.
+
+      <div style="background-color: #F0FDF4; border: 2px border-dashed #4ADE80; padding: 18px; border-radius: 16px; margin: 24px 0; text-align: left;">
+        <p style="margin: 0 0 6px 0; font-size: 13px; color: #166534; font-weight: 800;">
+          ✅ Estado del Negocio: ABIERTO Y OPERATIVO
+        </p>
+        <p style="margin: 0; font-size: 12px; color: #15803D; line-height: 1.5;">
+          • Pago verificado manualmente por la administración.<br />
+          • Catálogo de productos visible para estudiantes en campus Uninorte.<br />
+          • Recepción de pedidos en tiempo real activada.
         </p>
       </div>
-      <p style="font-size: 12px; color: #64748b;">
-        Ya puedes ingresar a tu portal de emprendedor para agregar tus productos, promociones y gestionar tus pedidos en tiempo real.
+
+      <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 24px;">
+        Ya puedes ingresar a tu portal con tu correo (<strong>${data.toEmail}</strong>) para publicar tus productos, combos y gestionar tus pedidos.
       </p>
+
+      <div style="margin-top: 20px;">
+        <a href="https://unipide.app/login" style="background-color: #D85A30; color: #ffffff; padding: 13px 28px; border-radius: 12px; font-weight: 800; font-size: 13px; text-decoration: none; display: inline-block;">
+          Ingresar al Portal del Emprendedor
+        </a>
+      </div>
+
+      <div style="border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 16px;">
+        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla, Colombia</p>
+      </div>
     </div>
   `;
 
   if (resendApiKey) {
     try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide <onboarding@resend.dev>';
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Administrador <richardbb839@gmail.com>';
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
         body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
       });
+      console.log(`[CORREO PAGO CONFIRMADO] Enviado desde ${fromEmail} a ${data.toEmail} para ${data.nombreNegocio}`);
     } catch (e) {
       console.error('Error enviando correo de aprobación:', e);
     }
   }
 
-  console.log(`🎉 [BUSINESS APPROVED] Correo enviado a ${data.toEmail} para ${data.nombreNegocio}`);
+  console.log(`🎉 [BUSINESS APPROVED & PAYMENT CONFIRMED] Correo notificado a ${data.toEmail} para ${data.nombreNegocio}`);
 }
 
 /**

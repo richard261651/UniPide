@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import { hashPassword, signJwtToken, TOKEN_COOKIE_NAME } from '@/lib/auth';
 import { slugify, isValidEmail } from '@/lib/utils';
 
+import { sendEmailVerificationCode } from '@/lib/email';
+
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'uninorte2026';
 
 export async function POST(request: NextRequest) {
@@ -86,7 +88,10 @@ export async function POST(request: NextRequest) {
     // Encriptar contraseña
     const passwordHash = await hashPassword(password);
 
-    // Crear Usuario con 2FA habilitado
+    // Generar código de 6 dígitos para verificación de correo Gmail
+    const emailVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Crear Usuario con 2FA habilitado y código de verificación de correo
     const newUser = await prisma.user.create({
       data: {
         nombre: nombre.trim(),
@@ -96,7 +101,16 @@ export async function POST(request: NextRequest) {
         telefono: telefono?.trim() || null,
         twoFactorSecret: body.twoFactorSecret || null,
         twoFactorEnabled: Boolean(body.twoFactorSecret),
+        correoVerificado: false,
+        tokenVerificacionCorreo: emailVerificationCode,
       },
+    });
+
+    // Enviar correo de verificación Gmail
+    await sendEmailVerificationCode({
+      toEmail: cleanEmail,
+      nombre: nombre.trim(),
+      code: emailVerificationCode,
     });
 
     let primaryBusiness = null;
@@ -130,14 +144,15 @@ export async function POST(request: NextRequest) {
           ubicacionCampus: ubicacionCampus?.trim() || 'Venta Móvil / Entrega en Campus',
           zonaCampusCodigo: zonaCampusCodigo || 'ZONA_EMPRENDIMIENTOS',
           tiempoBasePrepMin: 0,
-          estadoAprobacion: 'APROBADO',
-          activo: true,
+          estadoAprobacion: 'PENDIENTE',
+          activo: false,
+          pagoVerificado: false,
           esFundador: isFounder,
-          fechaAprobacion: now,
-          fechaInicioPromocion: isFounder ? now : null,
-          fechaFinPromocion: isFounder ? threeMonths : null,
+          fechaAprobacion: null,
+          fechaInicioPromocion: null,
+          fechaFinPromocion: null,
           suscripcionMonto: isFounder ? 19900 : 29900,
-          suscripcionEstado: 'ACTIVA',
+          suscripcionEstado: 'PENDIENTE_PAGO',
           firmaPoliticaHigiene: true,
           fechaFirmaPolitica: now,
           versionPolitica: 'POL-EMP-001 v1.0',

@@ -33,8 +33,13 @@ const CAMPUS_ZONES = [
 
 export default function RegisterPage() {
   const { register } = useAuth();
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [rol, setRol] = useState<'CLIENTE' | 'EMPRENDEDOR' | 'ADMIN'>('CLIENTE');
+
+  // Código de Verificación de Correo Gmail
+  const [emailCode, setEmailCode] = useState('');
+  const [verifyingEmail, setVerifyingEmail] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   // Datos de usuario
   const [nombre, setNombre] = useState('');
@@ -169,10 +174,53 @@ export default function RegisterPage() {
       if (!res.success) {
         setError(res.error || 'Error al registrar la cuenta');
         setLoading(false);
+        return;
+      }
+
+      // Si es emprendedor, avanzar al Paso 3 para verificar correo Gmail
+      if (rol === 'EMPRENDEDOR') {
+        setLoading(false);
+        setStep(3);
       }
     } catch (err: any) {
       setError(err.message || 'Error al completar registro con 2FA');
       setLoading(false);
+    }
+  };
+
+  // Paso 3: Verificar código enviado al correo Gmail
+  const handleVerifyEmailCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!emailCode || emailCode.trim().length !== 6) {
+      setError('Por favor ingresa el código de 6 dígitos que enviamos a tu correo Gmail');
+      return;
+    }
+
+    try {
+      setVerifyingEmail(true);
+      const res = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          correo,
+          code: emailCode.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Código de verificación incorrecto');
+      }
+
+      setEmailVerified(true);
+      // Redireccionar al panel de emprendedor / suscripción
+      window.location.href = '/emprendedor/suscripcion';
+    } catch (err: any) {
+      setError(err.message || 'Error al verificar el código de correo Gmail');
+    } finally {
+      setVerifyingEmail(false);
     }
   };
 
@@ -559,6 +607,61 @@ export default function RegisterPage() {
                     <>
                       <span>Verificar 2FA y Crear Cuenta</span>
                       <CheckCircle2 className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* PASO 3: Verificación Obligatoria de Correo Gmail */}
+          {step === 3 && (
+            <form onSubmit={handleVerifyEmailCode} className="space-y-5 animate-in fade-in">
+              <div className="bg-slate-900 text-white rounded-2xl p-4 text-xs space-y-2 text-center">
+                <div className="flex items-center justify-center gap-2 text-amber-400 font-bold text-sm">
+                  <Mail className="w-5 h-5 text-amber-400 shrink-0" />
+                  <span>Verificación de Correo Gmail Obligatoria</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Enviamos un código de verificación de 6 dígitos a tu correo registrado: <strong className="text-white font-mono">{correo}</strong>.
+                </p>
+                <p className="text-[10px] text-amber-300 font-medium">
+                  Remitente: UniPide Administrador (richardbb839@gmail.com)
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-800 mb-1.5 text-center">
+                  Ingresa el Código de 6 dígitos recibido en tu Gmail *
+                </label>
+                <div className="relative max-w-xs mx-auto">
+                  <input
+                    type="text"
+                    required
+                    maxLength={6}
+                    value={emailCode}
+                    onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="000 000"
+                    className="w-full text-lg font-mono font-black tracking-widest text-center py-3 px-4 rounded-xl border-2 border-amber-500 focus:ring-4 focus:ring-amber-100 outline-none shadow-xs text-gray-900 bg-white"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="submit"
+                  disabled={verifyingEmail || emailCode.trim().length !== 6}
+                  className="w-full py-3 text-xs sm:text-sm font-black text-white bg-[#D85A30] hover:bg-[#F56649] disabled:opacity-50 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {verifyingEmail ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Verificando Correo Gmail...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                      <span>Verificar Correo Gmail y Activar Cuenta</span>
                     </>
                   )}
                 </button>
