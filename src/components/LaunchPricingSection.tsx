@@ -16,6 +16,7 @@ import {
   HelpCircle,
   ChevronDown,
 } from 'lucide-react';
+import { SquishyPricingCard } from '@/components/ui/squishy-card';
 
 interface LaunchStats {
   totalCupos: number;
@@ -111,166 +112,28 @@ export default function LaunchPricingSection() {
           </p>
         </div>
 
-        {/* REJILLA DUAL DE PLANES DE PRECIO */}
+        {/* REJILLA DUAL DE PLANES DE PRECIO ANIMADOS (SQUISHY CARDS) */}
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
-          
-          {/* PLAN 1: OFERTA DE LANZAMIENTO (PLAN FUNDADOR) */}
-          <div className={`relative bg-white rounded-3xl p-6 sm:p-8 border-2 ${promocionActiva ? 'border-[#D85A30] shadow-xl shadow-[#D85A30]/10 ring-2 ring-[#D85A30]/20' : 'border-slate-200 opacity-90'} flex flex-col justify-between space-y-6`}>
-            
-            {promocionActiva && (
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D85A30] to-amber-500 text-white text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1.5 whitespace-nowrap">
-                <Flame className="w-3.5 h-3.5 fill-white" />
-                <span>Oferta Limitada de Lanzamiento</span>
-              </div>
-            )}
+          {/* TARJETA 1: PLAN FUNDADOR (OFERTA DE LANZAMIENTO) */}
+          <SquishyPricingCard
+            variant="fundador"
+            monto={19900}
+            montoTachado={29900}
+            promocionActiva={promocionActiva}
+            cuposOcupados={cuposOcupados}
+            totalCupos={totalCupos}
+            ctaText={promocionActiva ? 'Quiero ser uno de los 10 Fundadores' : 'Registrar Emprendimiento'}
+            ctaHref="/register?rol=EMPRENDEDOR&plan=fundador"
+          />
 
-            <div className="space-y-4 pt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider px-3 py-1 bg-[#FEEBE7] text-[#D85A30] rounded-full border border-[#FBC6BB]">
-                  Plan Fundador ⭐
-                </span>
-                <Award className="w-6 h-6 text-[#D85A30]" />
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold text-slate-400">Precio regular: <span className="line-through">$29.900 COP/mes</span></p>
-                <div className="flex items-baseline gap-1.5 mt-1">
-                  <span className="text-4xl sm:text-5xl font-black text-[#D85A30] tracking-tight">
-                    $19.900
-                  </span>
-                  <span className="text-xs font-bold text-slate-600">COP/mes</span>
-                </div>
-                <p className="text-xs font-bold text-[#0F6E56] mt-1 flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Por tus primeros 3 meses de suscripción (33% OFF)</span>
-                </p>
-              </div>
-
-              {/* Contador de Cupos en Vivo */}
-              <div className="pt-3 border-t border-slate-100 space-y-2">
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2 py-2 text-xs text-slate-400">
-                    <Loader2 className="w-4 h-4 animate-spin text-[#D85A30]" />
-                    <span>Cargando disponibilidad de cupos...</span>
-                  </div>
-                ) : promocionActiva ? (
-                  <>
-                    <div className="flex items-center justify-between text-xs font-extrabold text-[#1F222E]">
-                      <span className="flex items-center gap-1 text-[#D85A30]">
-                        <Flame className="w-4 h-4 fill-[#D85A30]" />
-                        <span>Cupos Fundador:</span>
-                      </span>
-                      <span className="bg-[#FEEBE7] text-[#D85A30] px-2.5 py-0.5 rounded-full border border-[#FBC6BB]">
-                        {cuposOcupados} de {totalCupos} ocupados
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-[#D85A30] to-amber-500 h-full rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min(100, (cuposOcupados / totalCupos) * 100)}%` }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <div className="p-2.5 bg-slate-100 rounded-2xl text-[11px] text-slate-600 font-medium">
-                    Los 10 cupos promocionales han sido completados.
-                  </div>
-                )}
-              </div>
-
-              {/* Lista de Beneficios */}
-              <ul className="space-y-3 pt-2 text-xs">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0F6E56] shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">⭐ <strong>Insignia de Fundador UniPide</strong> permanente en tu perfil.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0F6E56] shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">🥇 <strong>1º Posición en tu categoría</strong> durante 3 meses.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0F6E56] shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">💳 Pagos por <strong>Wompi (Prepagado o Débito Automático)</strong>.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0F6E56] shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">📜 Firma Digital POL-EMP-001 enviada a Google Drive.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="pt-4 border-t border-slate-100">
-              <Link
-                href="/register?rol=EMPRENDEDOR&plan=fundador"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#D85A30] hover:bg-[#F56649] text-white text-xs font-black rounded-2xl shadow-md transition transform active:scale-98 cursor-pointer"
-              >
-                <span>{promocionActiva ? 'Quiero ser uno de los 10 Fundadores' : 'Registrar Emprendimiento'}</span>
-                <ArrowRight className="w-4 h-4 text-white" />
-              </Link>
-            </div>
-          </div>
-
-          {/* PLAN 2: PRECIO FULL (PLAN ESTÁNDAR REGULAR) */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md flex flex-col justify-between space-y-6">
-            <div className="space-y-4 pt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
-                  Plan Estándar Regular
-                </span>
-                <Zap className="w-6 h-6 text-slate-600" />
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold text-slate-400">Tarifa Regular Post-Lanzamiento:</p>
-                <div className="flex items-baseline gap-1.5 mt-1">
-                  <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
-                    $29.900
-                  </span>
-                  <span className="text-xs font-bold text-slate-600">COP/mes</span>
-                </div>
-                <p className="text-xs font-medium text-slate-500 mt-1">
-                  Tarifa full oficial aplicable al agotarse los 10 cupos o tras la promo.
-                </p>
-              </div>
-
-              {/* Detalle informativo */}
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-600 font-medium">
-                Sin comisiones por ventas. Pagas únicamente tu mensualidad fija de suscripción.
-              </div>
-
-              {/* Lista de Beneficios Plan Estándar */}
-              <ul className="space-y-3 pt-2 text-xs">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">🛍️ Catálogo de productos y promociones ilimitado.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">🛵 Rastreador de entregas por bloques del campus Uninorte.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">🧾 Facturación Digital automática por correo.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-700 font-medium">⚡ Opción de cobro en Débito Automático con Wompi.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="pt-4 border-t border-slate-100">
-              <Link
-                href="/register?rol=EMPRENDEDOR&plan=estandar"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-2xl shadow-md transition transform active:scale-98 cursor-pointer"
-              >
-                <span>Registrarme con Tarifa Estándar</span>
-                <ArrowRight className="w-4 h-4 text-white" />
-              </Link>
-            </div>
-          </div>
-
+          {/* TARJETA 2: PLAN ESTÁNDAR (PRECIO FULL) */}
+          <SquishyPricingCard
+            variant="estandar"
+            monto={29900}
+            promocionActiva={false}
+            ctaText="Registrarme con Tarifa Estándar"
+            ctaHref="/register?rol=EMPRENDEDOR&plan=estandar"
+          />
         </div>
 
         {/* SECCIÓN PREGUNTAS FRECUENTES (FAQ) */}

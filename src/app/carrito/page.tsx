@@ -422,6 +422,16 @@ export default function CarritoPage() {
                 <span>Total a pagar:</span>
                 <span className="text-lg text-uninorte-red">{formatPrice(subtotal)}</span>
               </div>
+
+              {/* Distintivo Informativo de Pago Contraentrega */}
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-[11px] text-emerald-900 font-medium space-y-0.5">
+                <p className="font-extrabold text-emerald-950 flex items-center gap-1.5">
+                  💵 Método de Pago: Pago Contraentrega
+                </p>
+                <p className="text-emerald-800 text-[10.5px]">
+                  Le pagas directamente al emprendedor en efectivo o transferencia Nequi/Daviplata al recibir tu pedido en el bloque seleccionado. UniPide no cobra comisiones.
+                </p>
+              </div>
             </div>
 
             {/* Botón Confirmar */}
