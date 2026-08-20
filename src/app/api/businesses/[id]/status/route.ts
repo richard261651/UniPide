@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
+import { sendBusinessApprovedEmail } from '@/lib/email';
 
 export async function PATCH(
   request: NextRequest,
@@ -18,6 +19,7 @@ export async function PATCH(
 
     const currentBusiness = await prisma.business.findUnique({
       where: { id },
+      include: { user: true },
     });
 
     if (!currentBusiness) {
@@ -67,6 +69,15 @@ export async function PATCH(
       where: { id },
       data: updateData,
     });
+
+    // Si fue APROBADO por el Administrador, enviar correo de felicitación al emprendedor
+    if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
+      await sendBusinessApprovedEmail({
+        toEmail: currentBusiness.user.correo,
+        nombreEmprendedor: currentBusiness.user.nombre,
+        nombreNegocio: currentBusiness.nombre,
+      });
+    }
 
     return NextResponse.json({ success: true, business: updated });
   } catch (error: any) {

@@ -39,6 +39,12 @@ export interface BusinessItem {
   suscripcionMonto?: number;
   metodoPagoSuscripcion?: string | null;
   fechaUltimoPago?: string | Date | null;
+  tipoSuscripcion?: string;
+  pagoVerificado?: boolean;
+  fechaPagoVerificado?: string | Date | null;
+  wompiTransactionId?: string | null;
+  wompiReference?: string | null;
+  fechaNotificacionExpiracion?: string | Date | null;
   firmaPoliticaHigiene?: boolean;
   fechaFirmaPolitica?: string | Date | null;
   versionPolitica?: string | null;
