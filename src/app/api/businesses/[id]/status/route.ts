@@ -16,12 +16,56 @@ export async function PATCH(
     const body = await request.json();
     const { estadoAprobacion, activo } = body;
 
+    const currentBusiness = await prisma.business.findUnique({
+      where: { id },
+    });
+
+    if (!currentBusiness) {
+      return NextResponse.json({ error: 'Emprendimiento no encontrado' }, { status: 404 });
+    }
+
+    const updateData: any = {};
+
+    if (activo !== undefined) {
+      updateData.activo = activo;
+    }
+
+    if (estadoAprobacion) {
+      updateData.estadoAprobacion = estadoAprobacion;
+
+      // Si se está aprobando por primera vez (o pasa a APROBADO)
+      if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
+        const now = new Date();
+        updateData.fechaAprobacion = now;
+
+        // Verificar cupos de lanzamiento (máximo 10)
+        const founderCount = await prisma.business.count({
+          where: {
+            esFundador: true,
+            estadoAprobacion: 'APROBADO',
+          },
+        });
+
+        if (founderCount < 10) {
+          const threeMonthsLater = new Date(now);
+          threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+          updateData.esFundador = true;
+          updateData.fechaInicioPromocion = now;
+          updateData.fechaFinPromocion = threeMonthsLater;
+          updateData.suscripcionMonto = 19900;
+          updateData.suscripcionEstado = 'ACTIVA';
+        } else {
+          updateData.esFundador = false;
+          updateData.suscripcionMonto = 29900;
+          updateData.suscripcionEstado = 'ACTIVA';
+        }
+      }
+    }
+
     const updated = await prisma.business.update({
       where: { id },
-      data: {
-        ...(estadoAprobacion && { estadoAprobacion }),
-        ...(activo !== undefined && { activo }),
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true, business: updated });

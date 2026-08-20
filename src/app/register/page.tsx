@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { isValidEmail } from '@/lib/utils';
-import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin, QrCode, Sparkles, Copy, Check } from 'lucide-react';
+import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin, QrCode, Sparkles, Copy, Check, ShieldCheck, FileText } from 'lucide-react';
+import PolicySignatureModal from '@/components/PolicySignatureModal';
 
 const CAMPUS_ZONES = [
   { codigo: 'BLOQUE_A', nombre: 'Bloque A' },
@@ -51,6 +52,10 @@ export default function RegisterPage() {
   // Clave de Administrador
   const [adminKey, setAdminKey] = useState('');
 
+  // Firma de Política POL-EMP-001
+  const [policyModalOpen, setPolicyModalOpen] = useState(false);
+  const [signatureData, setSignatureData] = useState<{ nombreFirmante: string; documentoFirmante: string } | null>(null);
+
   // 2FA Setup
   const [totpSecret, setTotpSecret] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
@@ -72,6 +77,17 @@ export default function RegisterPage() {
 
     if (password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (rol === 'EMPRENDEDOR' && !nombreNegocio.trim()) {
+      setError('Por favor ingresa el nombre de tu emprendimiento');
+      return;
+    }
+
+    // Requisito Legal Obligatorio: Firma de POL-EMP-001 para emprendedores
+    if (rol === 'EMPRENDEDOR' && !signatureData) {
+      setPolicyModalOpen(true);
       return;
     }
 
@@ -142,6 +158,8 @@ export default function RegisterPage() {
           ubicacionCampus,
           zonaCampusCodigo,
           descripcionNegocio,
+          nombreFirmante: signatureData?.nombreFirmante || nombre,
+          documentoFirmante: signatureData?.documentoFirmante || telefono || 'CC / ID Estudiantil',
         }),
         ...(rol === 'ADMIN' && {
           adminKey,
@@ -392,6 +410,44 @@ export default function RegisterPage() {
                     />
                   </div>
 
+                  <div className="p-3.5 bg-[#FAF8F5] rounded-2xl border-2 border-[#D85A30]/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-black text-[#D85A30]">
+                        <ShieldCheck className="w-4 h-4 text-[#D85A30]" />
+                        <span>Firma de Política POL-EMP-001 *</span>
+                      </div>
+                      {signatureData ? (
+                        <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Firmado</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                          Pendiente de firma
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 leading-normal font-medium">
+                      {signatureData
+                        ? `Firmado por ${signatureData.nombreFirmante} (${signatureData.documentoFirmante})`
+                        : 'Para afiliar tu emprendimiento debes aceptar la Política de Responsabilidad, Calidad e Higiene.'}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={() => setPolicyModalOpen(true)}
+                      className={`w-full py-2 px-3 text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer ${
+                        signatureData
+                          ? 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                          : 'bg-[#D85A30] text-white hover:bg-[#F56649] shadow-xs'
+                      }`}
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>{signatureData ? 'Revisar / Modificar Firma POL-EMP-001' : 'Leer y Firmar Digitalmente POL-EMP-001'}</span>
+                    </button>
+                  </div>
+
                   <p className="text-[11px] text-gray-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
                     💡 <strong className="text-slate-800">Sin punto físico ni demoras:</strong> Tu negocio operará como emprendimiento móvil dentro del campus. Las entregas se acuerdan directamente en el bloque o salón donde se encuentre el cliente.
                   </p>
@@ -518,6 +574,21 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Firma Digital POL-EMP-001 */}
+      <PolicySignatureModal
+        isOpen={policyModalOpen}
+        onClose={() => setPolicyModalOpen(false)}
+        initialNombre={nombre}
+        onSign={(data) => {
+          setSignatureData(data);
+          setPolicyModalOpen(false);
+          // Intentar avanzar a 2FA si los campos básicos están completos
+          if (nombre && correo && password.length >= 6) {
+            handleProceedTo2FA({ preventDefault: () => {} } as any);
+          }
+        }}
+      />
     </div>
   );
 }

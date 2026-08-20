@@ -14,6 +14,8 @@ import {
   Mail,
   Phone,
   Loader2,
+  ShieldCheck,
+  FileText,
 } from 'lucide-react';
 
 export default function AdminSolicitudesPage() {
@@ -161,20 +163,31 @@ export default function AdminSolicitudesPage() {
                   <p className="text-gray-500 pt-1 italic">"{b.descripcion}"</p>
                 </div>
 
-                <div className="bg-gray-50 p-3 rounded-2xl space-y-1 text-gray-700">
-                  <p className="font-bold text-gray-900 text-xs flex items-center gap-1">
-                    <User className="w-3.5 h-3.5 text-gray-400" />
-                    <span>Estudiante Responsable:</span>
+                <div className="bg-gray-50 p-3 rounded-2xl space-y-1.5 text-gray-700">
+                  <p className="font-bold text-gray-900 text-xs flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <User className="w-3.5 h-3.5 text-gray-400" />
+                      <span>Estudiante Responsable:</span>
+                    </span>
+                    {b.firmaPoliticaHigiene ? (
+                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                        <span>POL-EMP-001 Firmada</span>
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                        Sin firma registrada
+                      </span>
+                    )}
                   </p>
                   <p>{b.user?.nombre || 'Estudiante Uninorte'}</p>
                   <p className="text-gray-500 flex items-center gap-1">
                     <Mail className="w-3 h-3 text-gray-400" />
                     <span>{b.user?.correo}</span>
                   </p>
-                  {b.user?.telefono && (
-                    <p className="text-gray-500 flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-gray-400" />
-                      <span>{b.user.telefono}</span>
+                  {b.nombreFirmante && (
+                    <p className="text-[11px] text-slate-600 font-medium pt-1 border-t border-slate-200/80">
+                      📜 Firmante Legal: <strong>{b.nombreFirmante}</strong> ({b.documentoFirmante})
                     </p>
                   )}
                 </div>

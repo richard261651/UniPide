@@ -31,6 +31,19 @@ export interface BusinessItem {
   estadoAprobacion: BusinessStatus;
   activo: boolean;
   fechaCreacion: string | Date;
+  esFundador?: boolean;
+  fechaAprobacion?: string | Date | null;
+  fechaInicioPromocion?: string | Date | null;
+  fechaFinPromocion?: string | Date | null;
+  suscripcionEstado?: string;
+  suscripcionMonto?: number;
+  metodoPagoSuscripcion?: string | null;
+  fechaUltimoPago?: string | Date | null;
+  firmaPoliticaHigiene?: boolean;
+  fechaFirmaPolitica?: string | Date | null;
+  versionPolitica?: string | null;
+  nombreFirmante?: string | null;
+  documentoFirmante?: string | null;
   user?: {
     nombre: string;
     correo: string;

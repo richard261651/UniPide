@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     let primaryBusiness = null;
 
-    // Si es Emprendedor, crear el Negocio inicial asociado
+    // Si es Emprendedor, crear el Negocio inicial asociado con firma legal POL-EMP-001
     if (userRole === 'EMPRENDEDOR' && nombreNegocio) {
       const baseSlug = slugify(nombreNegocio);
       let uniqueSlug = baseSlug;
@@ -111,6 +111,14 @@ export async function POST(request: NextRequest) {
         uniqueSlug = `${baseSlug}-${count}`;
         count++;
       }
+
+      const founderCount = await prisma.business.count({
+        where: { esFundador: true, estadoAprobacion: 'APROBADO' },
+      });
+      const isFounder = founderCount < 10;
+      const now = new Date();
+      const threeMonths = new Date(now);
+      threeMonths.setMonth(threeMonths.getMonth() + 3);
 
       primaryBusiness = await prisma.business.create({
         data: {
@@ -124,6 +132,17 @@ export async function POST(request: NextRequest) {
           tiempoBasePrepMin: 0,
           estadoAprobacion: 'APROBADO',
           activo: true,
+          esFundador: isFounder,
+          fechaAprobacion: now,
+          fechaInicioPromocion: isFounder ? now : null,
+          fechaFinPromocion: isFounder ? threeMonths : null,
+          suscripcionMonto: isFounder ? 19900 : 29900,
+          suscripcionEstado: 'ACTIVA',
+          firmaPoliticaHigiene: true,
+          fechaFirmaPolitica: now,
+          versionPolitica: 'POL-EMP-001 v1.0',
+          nombreFirmante: body.nombreFirmante?.trim() || nombre.trim(),
+          documentoFirmante: body.documentoFirmante?.trim() || body.telefono || 'ID Estudiantil Uninorte',
         },
       });
     }

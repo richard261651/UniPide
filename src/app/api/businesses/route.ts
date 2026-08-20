@@ -40,9 +40,9 @@ async function ensureInitialData() {
         }
       }
 
-      // 2. Admin
+      // 2. Admin Principal
       const pass = await hashPassword('admin123');
-      const admin = await prisma.user.upsert({
+      await prisma.user.upsert({
         where: { correo: 'admin@uninorte.edu.co' },
         update: {},
         create: {
@@ -52,191 +52,6 @@ async function ensureInitialData() {
           rol: 'ADMIN',
           telefono: '3001234567',
         },
-      });
-
-      // 3. Negocio de Comida: Burger Lab
-      const passEmp = await hashPassword('emprendedor123');
-      const userBurgers = await prisma.user.upsert({
-        where: { correo: 'burgers@uninorte.edu.co' },
-        update: {},
-        create: {
-          nombre: 'Carlos Mendoza (Ing. Industrial)',
-          correo: 'burgers@uninorte.edu.co',
-          passwordHash: passEmp,
-          rol: 'EMPRENDEDOR',
-          telefono: '3015551234',
-        },
-      });
-
-      const bizBurgers = await prisma.business.create({
-        data: {
-          userId: userBurgers.id,
-          nombre: 'Burger Lab Uninorte 🍔',
-          slug: 'burger-lab-uninorte',
-          categoria: 'Comida Rápida',
-          descripcion: 'Hamburguesas artesanales smash, sándwiches gourmet y papas rústicas preparados al instante por estudiantes de Ingeniería.',
-          logo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop&q=80',
-          banner: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&auto=format&fit=crop&q=80',
-          ubicacionCampus: 'Zona de Emprendimientos - Kiosco 03 (Frente a Bloque F)',
-          zonaCampusCodigo: 'ZONA_EMPRENDIMIENTOS',
-          tiempoBasePrepMin: 12,
-          estadoAprobacion: 'APROBADO',
-          activo: true,
-        },
-      });
-
-      await prisma.product.createMany({
-        data: [
-          {
-            businessId: bizBurgers.id,
-            nombre: 'Smash Burger Doble Queso',
-            descripcion: 'Dos carnes de 90g smash, doble cheddar americano, tocineta crujiente y salsa especial de la casa en pan brioche artesanal.',
-            precio: 18000,
-            foto: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80',
-            stock: 25,
-            disponible: true,
-            categoria: 'Hamburguesas',
-            esOferta: true,
-            precioOferta: 15500,
-            descripcionOferta: '¡Oferta especial almuerzo universitario!',
-          },
-          {
-            businessId: bizBurgers.id,
-            nombre: 'Sándwich Crispy Chicken',
-            descripcion: 'Pechuga de pollo apanada ultra crujiente, pepinillos dulces y coleslaw en pan brioche tostado.',
-            precio: 16000,
-            foto: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=600&auto=format&fit=crop&q=80',
-            stock: 18,
-            disponible: true,
-            categoria: 'Sándwiches',
-          },
-          {
-            businessId: bizBurgers.id,
-            nombre: 'Papas Rústicas Cheddar & Bacon',
-            descripcion: 'Papas naturales fritas bañadas en queso cheddar fundido y tocineta crujiente.',
-            precio: 8500,
-            foto: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80',
-            stock: 30,
-            disponible: true,
-            categoria: 'Acompañamientos',
-          },
-        ],
-      });
-
-      // 4. Negocio de Postres: Sweet Bites
-      const userSweet = await prisma.user.upsert({
-        where: { correo: 'sweet@uninorte.edu.co' },
-        update: {},
-        create: {
-          nombre: 'Valentina Restrepo (Adm. Empresas)',
-          correo: 'sweet@uninorte.edu.co',
-          passwordHash: passEmp,
-          rol: 'EMPRENDEDOR',
-          telefono: '3024449876',
-        },
-      });
-
-      const bizSweet = await prisma.business.create({
-        data: {
-          userId: userSweet.id,
-          nombre: 'Sweet Bites Bakery 🍰',
-          slug: 'sweet-bites-bakery',
-          categoria: 'Postres & Dulces',
-          descripcion: 'Brownies melcochudos, galletas rellenas estilo NYC, postres de tres leches y cheesecakes caseros.',
-          logo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&auto=format&fit=crop&q=80',
-          banner: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&auto=format&fit=crop&q=80',
-          ubicacionCampus: 'Bloque F - Pasillo Central Piso 1',
-          zonaCampusCodigo: 'BLOQUE_F',
-          tiempoBasePrepMin: 8,
-          estadoAprobacion: 'APROBADO',
-          activo: true,
-        },
-      });
-
-      await prisma.product.createMany({
-        data: [
-          {
-            businessId: bizSweet.id,
-            nombre: 'Cookie NYC Red Velvet & Nutella',
-            descripcion: 'Galleta gigante recién horneada crujiente por fuera y rellena de abundante Nutella por dentro.',
-            precio: 6500,
-            foto: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
-            stock: 20,
-            disponible: true,
-            categoria: 'Galletas',
-            esOferta: true,
-            precioOferta: 5000,
-            descripcionOferta: 'Promo 2x1 en la segunda unidad',
-          },
-          {
-            businessId: bizSweet.id,
-            nombre: 'Brownie Melcochudo con Arequipe',
-            descripcion: 'Brownie de chocolate semi-amargo 70% cacao con centro suave y vetas de arequipe.',
-            precio: 5500,
-            foto: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop&q=80',
-            stock: 15,
-            disponible: true,
-            categoria: 'Brownies',
-          },
-        ],
-      });
-
-      // 5. Negocio de Merch & Stickers
-      const userMerch = await prisma.user.upsert({
-        where: { correo: 'merch@uninorte.edu.co' },
-        update: {},
-        create: {
-          nombre: 'Andrés Camargo (Diseño Gráfico)',
-          correo: 'merch@uninorte.edu.co',
-          passwordHash: passEmp,
-          rol: 'EMPRENDEDOR',
-          telefono: '3048883456',
-        },
-      });
-
-      const bizMerch = await prisma.business.create({
-        data: {
-          userId: userMerch.id,
-          nombre: 'Campus Craft & Stickers 🎨',
-          slug: 'campus-craft-stickers',
-          categoria: 'Accesorios & Merch',
-          descripcion: 'Stickers resistentes al agua de Uninorte y cultura pop, pines metálicos y libretas personalizadas.',
-          logo: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400&auto=format&fit=crop&q=80',
-          banner: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1200&auto=format&fit=crop&q=80',
-          ubicacionCampus: 'Bloque G (Diseño) - Ágora de Talleres',
-          zonaCampusCodigo: 'BLOQUE_G',
-          tiempoBasePrepMin: 5,
-          estadoAprobacion: 'APROBADO',
-          activo: true,
-        },
-      });
-
-      await prisma.product.createMany({
-        data: [
-          {
-            businessId: bizMerch.id,
-            nombre: 'Pack 5 Stickers Uninorte & Barranquilla',
-            descripcion: 'Stickers de vinilo laminado resistentes al agua, termos y portátiles con temática Uninorte.',
-            precio: 7500,
-            foto: 'https://images.unsplash.com/photo-1572375992501-4b0892d50c69?w=600&auto=format&fit=crop&q=80',
-            stock: 50,
-            disponible: true,
-            categoria: 'Stickers',
-            esOferta: true,
-            precioOferta: 6000,
-            descripcionOferta: 'Pack universitario exclusivo',
-          },
-          {
-            businessId: bizMerch.id,
-            nombre: 'Tote Bag Universitaria en Dril',
-            descripcion: 'Bolsa ecológica gruesa con bolsillo interno para carnet y celular, estampada en serigrafía.',
-            precio: 25000,
-            foto: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&auto=format&fit=crop&q=80',
-            stock: 12,
-            disponible: true,
-            categoria: 'Moda & Accesorios',
-          },
-        ],
       });
     }
   } catch (err) {
@@ -285,7 +100,11 @@ export async function GET(request: NextRequest) {
           select: { puntuacion: true },
         },
       },
-      orderBy: { fechaCreacion: 'desc' },
+      orderBy: [
+        { esFundador: 'desc' },
+        { fechaAprobacion: 'desc' },
+        { fechaCreacion: 'desc' },
+      ],
     });
 
     const formatted = businesses.map((b) => {
@@ -343,6 +162,14 @@ export async function POST(request: NextRequest) {
       count++;
     }
 
+    const founderCount = await prisma.business.count({
+      where: { esFundador: true, estadoAprobacion: 'APROBADO' },
+    });
+    const isFounder = founderCount < 10;
+    const now = new Date();
+    const threeMonths = new Date(now);
+    threeMonths.setMonth(threeMonths.getMonth() + 3);
+
     const business = await prisma.business.create({
       data: {
         userId: session.id,
@@ -357,6 +184,12 @@ export async function POST(request: NextRequest) {
         tiempoBasePrepMin: Number(tiempoBasePrepMin) || 15,
         estadoAprobacion: 'APROBADO', // Auto-aprobado para visibilidad inmediata en el campus
         activo: true,
+        esFundador: isFounder,
+        fechaAprobacion: now,
+        fechaInicioPromocion: isFounder ? now : null,
+        fechaFinPromocion: isFounder ? threeMonths : null,
+        suscripcionMonto: isFounder ? 19900 : 29900,
+        suscripcionEstado: 'ACTIVA',
       },
     });
 

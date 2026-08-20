@@ -9,6 +9,7 @@ import ProductCard from '@/components/ProductCard';
 import { isValidEmail } from '@/lib/utils';
 import { BUSINESS_CATEGORIES } from '@/lib/categories';
 import WhatToOrderModal from '@/components/WhatToOrderModal';
+import LaunchPricingSection from '@/components/LaunchPricingSection';
 import {
   Search,
   Sparkles,
@@ -232,6 +233,11 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Sección de Precios de Lanzamiento para Emprendedores */}
+        <div className="w-full max-w-6xl mt-8">
+          <LaunchPricingSection />
+        </div>
       </div>
     );
   }
@@ -451,6 +457,9 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Sección de Precios de Lanzamiento para Emprendimientos */}
+      <LaunchPricingSection />
 
       {/* Modal interactivo Recomendador ¿No sabes qué pedir? */}
       <WhatToOrderModal
