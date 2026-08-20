@@ -80,6 +80,16 @@ export default function Navbar() {
                 >
                   Nosotros
                 </Link>
+                <Link
+                  href="/precios"
+                  className={`px-3.5 py-2 rounded-xl text-sm font-bold transition border ${
+                    pathname === '/precios'
+                      ? 'text-[#F56649] bg-[#FEEBE7] border-[#FBC6BB]'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
+                  }`}
+                >
+                  Precios & Afiliación
+                </Link>
                 {user && (
                   <>
                     <Link
@@ -277,6 +287,14 @@ export default function Navbar() {
             >
               <Store className="w-4 h-4 text-amber-600" />
               Explorar Emprendimientos
+            </Link>
+            <Link
+              href="/precios"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-800 rounded-xl hover:bg-slate-50"
+            >
+              <Zap className="w-4 h-4 text-[#D85A30]" />
+              Precios & Afiliación
             </Link>
             {user && (
               <Link
