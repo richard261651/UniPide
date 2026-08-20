@@ -89,21 +89,21 @@ export default function LaunchPricingSection() {
   const totalCupos = stats ? stats.totalCupos : 10;
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-      <div className="relative overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-white to-[#FEEBE7]/40 rounded-3xl sm:rounded-[36px] p-6 sm:p-10 lg:p-14 border border-[#FBC6BB]/60 shadow-xl shadow-slate-950/5 space-y-12">
+    <section className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-16">
+      <div className="relative overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-white to-[#FEEBE7]/40 rounded-3xl sm:rounded-[36px] p-4 sm:p-8 lg:p-14 border border-[#FBC6BB]/60 shadow-xl shadow-slate-950/5 space-y-8 sm:space-y-12">
         
         {/* Elementos Decorativos */}
         <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#D85A30]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-[#0F6E56]/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Encabezado */}
-        <div className="relative z-10 text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEEBE7] border border-[#FBC6BB] text-[#D85A30] text-xs font-black uppercase tracking-wider shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#D85A30]" />
+        <div className="relative z-10 text-center space-y-2.5 sm:space-y-3 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#FEEBE7] border border-[#FBC6BB] text-[#D85A30] text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#D85A30] shrink-0" />
             <span>Tarifas & Planes de Afiliación UniPide</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#1F222E] tracking-tight leading-tight">
+          <h2 className="text-xl sm:text-4xl lg:text-5xl font-black text-[#1F222E] tracking-tight leading-tight">
             Planes de Suscripción para Emprendedores Uninorte
           </h2>
 
@@ -113,7 +113,7 @@ export default function LaunchPricingSection() {
         </div>
 
         {/* REJILLA DUAL DE PLANES DE PRECIO ANIMADOS (SQUISHY CARDS) */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 items-stretch max-w-5xl mx-auto">
           {/* TARJETA 1: PLAN FUNDADOR (OFERTA DE LANZAMIENTO) */}
           <SquishyPricingCard
             variant="fundador"
