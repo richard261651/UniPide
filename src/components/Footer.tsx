@@ -20,7 +20,7 @@ export default function Footer() {
  </span>
  </Link>
           <p className="text-xs text-slate-300 leading-relaxed font-normal">
-            La plataforma oficial de pedidos para los emprendimientos de la Universidad del Norte. Creada e impulsada por <strong>Richard Guzmán</strong>, estudiante de Uninorte en Barranquilla, Colombia.
+            Plataforma oficial de pedidos para los emprendimientos de la Universidad del Norte. Creada y liderada por <strong>Richard Guzmán (CEO)</strong>.
           </p>
  <div className="flex items-center gap-1.5 text-xs text-slate-300 font-medium">
  <MapPin className="w-3.5 h-3.5 text-[#F56649]" />
@@ -109,7 +109,7 @@ export default function Footer() {
  </div>
 
  <div className="border-t border-slate-800 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
-        <p>© {new Date().getFullYear()} UniPide — Creado por <strong>Richard Guzmán</strong>, estudiante de la Universidad del Norte.</p>
+        <p>© {new Date().getFullYear()} UniPide — Creado por <strong>Richard Guzmán (CEO)</strong>.</p>
  <p>Entregas en campus • Pagos contra entrega / Nequi</p>
  </div>
  </div>

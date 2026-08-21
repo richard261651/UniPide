@@ -392,8 +392,8 @@ export default function EmprendedorSuscripcionPage() {
  Realiza la transferencia del valor correspondiente a tu mensualidad (<strong>{formatPrice(montoMes)} COP</strong>) a la administración de UniPide a través de cualquiera de estos canales:
  </p>
  <ul className="space-y-1.5 pl-4 list-disc font-medium text-slate-800">
- <li><strong>Nequi / Daviplata:</strong> 300 123 4567 (Richard Francisco Guzmán Guzmán)</li>
- <li><strong>Transferencia Bancolombia:</strong> Cuenta de Ahorros Administración UniPide</li>
+ <li><strong>Nequi Número:</strong> 314 753 5514 (Richard Guzmán - CEO UniPide)</li>
+ <li><strong>Llave Nequi / Cédula:</strong> 1043640071</li>
  </ul>
  <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-200/80 italic">
  Una vez realizado el pago, el Administrador verificará la transacción en la plataforma, aprobará tu negocio y se enviará la confirmación a tu correo electrónico.
