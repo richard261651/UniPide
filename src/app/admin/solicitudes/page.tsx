@@ -16,6 +16,7 @@ import {
  Loader2,
  ShieldCheck,
  FileText,
+ CreditCard,
 } from 'lucide-react';
 
 export default function AdminSolicitudesPage() {
@@ -221,17 +222,27 @@ export default function AdminSolicitudesPage() {
  <p className="text-[11px] text-slate-600 font-medium">
  Firmante Legal POL-EMP-001: <strong>{b.nombreFirmante}</strong> ({b.documentoFirmante})
  </p>
- {b.contratoDriveUrl && (
+ <div className="flex items-center gap-2 flex-wrap pt-1">
  <a
- href={b.contratoDriveUrl}
+ href={`/api/businesses/${b.id}/contract`}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 text-[11px] font-black text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg transition"
+ className="inline-flex items-center gap-1.5 text-[11px] font-black text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 px-2.5 py-1 rounded-lg transition"
  >
- <FileText className="w-3.5 h-3.5 text-emerald-600" />
- <span> Ver Contrato POL-EMP-001 en Google Drive</span>
+ <FileText className="w-3.5 h-3.5 text-[#D85A30]" />
+ <span>Ver Contrato POL-EMP-001</span>
  </a>
- )}
+
+ <a
+ href={`/api/businesses/${b.id}/receipt`}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="inline-flex items-center gap-1.5 text-[11px] font-black text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg transition"
+ >
+ <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+ <span>Ver Constancia de Pago</span>
+ </a>
+ </div>
  </div>
  )}
  </div>

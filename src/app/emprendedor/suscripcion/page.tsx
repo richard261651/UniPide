@@ -343,23 +343,45 @@ export default function EmprendedorSuscripcionPage() {
  )}
  </div>
 
- <p className="text-xs text-slate-600 leading-relaxed font-medium">
- {business.firmaPoliticaHigiene
- ? `Firmado digitalmente por ${business.nombreFirmante} (${business.documentoFirmante}) el ${business.fechaFirmaPolitica ? formatShortDate(business.fechaFirmaPolitica) : 'Registro'}.`
- : 'Para procesar la apertura de tu emprendimiento es obligatorio firmar digitalmente la Política POL-EMP-001.'}
- </p>
+          <p className="text-xs text-slate-600 leading-relaxed font-medium">
+            {business.firmaPoliticaHigiene
+              ? `Firmado digitalmente por ${business.nombreFirmante} (${business.documentoFirmante}) el ${business.fechaFirmaPolitica ? formatShortDate(business.fechaFirmaPolitica) : 'Registro'}.`
+              : 'Para procesar la apertura de tu emprendimiento es obligatorio firmar digitalmente la Política POL-EMP-001.'}
+          </p>
 
- {!business.firmaPoliticaHigiene && (
- <button
- type="button"
- onClick={() => setPolicyModalOpen(true)}
- className="px-4 py-2.5 bg-[#D85A30] hover:bg-[#F56649] text-white text-xs font-black rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer"
- >
- <FileText className="w-4 h-4" />
- <span>Firmar Digitalmente POL-EMP-001 Ahora</span>
- </button>
- )}
- </div>
+          {!business.firmaPoliticaHigiene ? (
+            <button
+              type="button"
+              onClick={() => setPolicyModalOpen(true)}
+              className="px-4 py-2.5 bg-[#D85A30] hover:bg-[#F56649] text-white text-xs font-black rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Firmar Digitalmente POL-EMP-001 Ahora</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 flex-wrap pt-2">
+              <a
+                href={`/api/businesses/${business.id}/contract`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl shadow-md transition flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4 text-amber-400" />
+                <span>Ver Mi Contrato Firmado POL-EMP-001</span>
+              </a>
+
+              <a
+                href={`/api/businesses/${business.id}/receipt`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 bg-[#0F6E56] hover:bg-[#0A4A3A] text-white text-xs font-black rounded-xl shadow-md transition flex items-center gap-2"
+              >
+                <CreditCard className="w-4 h-4 text-emerald-300" />
+                <span>Ver / Imprimir Constancia de Pago</span>
+              </a>
+            </div>
+          )}
+        </div>
 
  {/* Instrucciones de Pago Manual */}
  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3 text-xs text-slate-700">
