@@ -31,12 +31,19 @@ export async function GET(
       versionPolitica: business.versionPolitica || 'POL-EMP-001 v1.0',
     });
 
-    // Retornar el documento HTML con encabezados para visualización e impresión limpia
-    return new NextResponse(contractDoc.htmlDocument, {
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-      },
-    });
+    const isDownload = request.nextUrl.searchParams.get('download') === 'true';
+    const safeName = business.nombre.replace(/[^a-zA-Z0-9]/g, '_');
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'text/html; charset=utf-8',
+    };
+
+    if (isDownload) {
+      headers['Content-Disposition'] = `attachment; filename="POL-EMP-001_${safeName}.html"`;
+    }
+
+    // Retornar el documento HTML para visualización o descarga en equipo local
+    return new NextResponse(contractDoc.htmlDocument, { headers });
   } catch (error: any) {
     console.error('Error generando vista de contrato:', error);
     return NextResponse.json({ error: 'Error al generar vista de contrato' }, { status: 500 });

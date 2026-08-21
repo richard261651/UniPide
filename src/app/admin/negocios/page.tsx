@@ -22,6 +22,8 @@ import {
  Edit2,
  Check,
  X,
+ Download,
+ FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
@@ -361,6 +363,13 @@ export default function AdminNegociosPage() {
  >
  <Edit2 className="w-4 h-4" />
  </button>
+ <a
+ href={`/api/businesses/${b.id}/contract?download=true`}
+ className="p-2 text-[#D85A30] hover:text-[#F56649] hover:bg-orange-50 rounded-xl transition"
+ title="Descargar Contrato POL-EMP-001 a mi equipo local"
+ >
+ <Download className="w-4 h-4" />
+ </a>
 
  {b.estadoAprobacion === 'APROBADO' && (
  <Link
