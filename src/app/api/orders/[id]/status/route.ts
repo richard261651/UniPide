@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
+import { createNotification } from '@/lib/notifications';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,6 +66,25 @@ export async function PATCH(
         cliente: { select: { nombre: true, correo: true, telefono: true } },
       },
     });
+
+    if (estado && estado !== order.estado) {
+      const estadoLabels: Record<string, string> = {
+        EN_PREPARACION: 'En Preparación',
+        EN_CAMINO: 'En Camino por el Campus',
+        ENTREGADO: 'Entregado Con Éxito',
+        CANCELADO: 'Cancelado',
+      };
+
+      const label = estadoLabels[estado] || estado;
+
+      await createNotification({
+        userId: order.clienteId,
+        titulo: `Actualización Pedido #${order.codigoPedido}: ${label}`,
+        mensaje: `Tu pedido en "${order.business.nombre}" cambió su estado a: ${label}.`,
+        tipo: 'ESTADO_PEDIDO',
+        url: `/pedidos/${order.id}`,
+      });
+    }
 
     return NextResponse.json({ success: true, order: updatedOrder });
   } catch (error: any) {

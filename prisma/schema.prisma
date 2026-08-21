@@ -28,6 +28,7 @@ model User {
   chatMessages  ChatMessage[]
   pqrs          PQRS[]
   favorites     Favorite[]
+  notifications Notification[]
 }
 
 model Business {
@@ -219,4 +220,16 @@ model Favorite {
   fechaCreacion DateTime @default(now())
 
   @@unique([userId, productId])
+}
+
+model Notification {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  titulo        String
+  mensaje       String
+  tipo          String   // "NUEVO_PEDIDO" | "PAGO_CONFIRMADO" | "ESTADO_PEDIDO" | "APROBACION_NEGOCIO" | "SISTEMA" | "PQRS"
+  leido         Boolean  @default(false)
+  url           String?
+  fechaCreacion DateTime @default(now())
 }

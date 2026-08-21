@@ -13,9 +13,13 @@ import {
  Sparkles,
  UtensilsCrossed,
  Package,
+ ShieldCheck,
+ FileText,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function EmprendedorDashboard() {
+ const { user } = useAuth();
  const [stats, setStats] = useState<any>(null);
  const [loading, setLoading] = useState(true);
 
@@ -51,6 +55,46 @@ export default function EmprendedorDashboard() {
 
  return (
  <div className="space-y-8">
+ {/* Banner de Solicitud en Revisión por el Administrador */}
+ {user?.rol === 'EMPRENDEDOR' && (user?.businessEstadoAprobacion === 'PENDIENTE' || !user?.businessPagoVerificado) && (
+   <div className="p-6 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-3xl shadow-xl space-y-3 relative overflow-hidden animate-in fade-in zoom-in-95">
+     <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+     
+     <div className="flex items-center gap-3">
+       <div className="p-3 bg-white/20 backdrop-blur-md rounded-2xl shrink-0 text-white shadow-md">
+         <Clock className="w-6 h-6 animate-pulse text-white" />
+       </div>
+       <div>
+         <span className="text-[10px] font-black uppercase tracking-widest bg-slate-900/40 text-amber-100 px-2.5 py-0.5 rounded-full">
+           Estado: Solicitud Pendiente de Verificación Admin
+         </span>
+         <h2 className="text-lg sm:text-xl font-black text-white tracking-tight mt-1">
+           ¡Tu emprendimiento "{user.businessName}" está en proceso de revisión y activación! ⏳
+         </h2>
+       </div>
+     </div>
+
+     <p className="text-xs sm:text-sm text-amber-50 leading-relaxed font-medium max-w-3xl">
+       Tu registro de cuenta, comprobante de pago y firma del contrato <strong>POL-EMP-001</strong> han sido recibidos. El Administrador (Richard Guzmán - <code className="bg-slate-900/40 px-1.5 py-0.5 rounded text-amber-200">richardbb839@gmail.com</code>) está verificando tu pago para abrir oficialmente tu tienda en UniPide.
+     </p>
+
+     <div className="flex items-center gap-3 flex-wrap pt-2 border-t border-white/20 text-xs">
+       <span className="font-bold flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-xl border border-white/20">
+         <ShieldCheck className="w-4 h-4 text-emerald-300" />
+         <span>Te avisaremos por correo y notificación en cuanto tu pago sea verificado.</span>
+       </span>
+
+       <Link
+         href="/emprendedor/suscripcion"
+         className="font-black text-slate-900 bg-white hover:bg-amber-100 px-4 py-1.5 rounded-xl shadow-md transition inline-flex items-center gap-1.5 cursor-pointer"
+       >
+         <FileText className="w-4 h-4 text-[#D85A30]" />
+         <span>Ver Contrato & Constancia de Pago</span>
+       </Link>
+     </div>
+   </div>
+ )}
+
  {/* Tarjetas de Métricas Principales */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
  {/* Ventas Hoy */}

@@ -14,6 +14,9 @@ export interface UserSession {
   businessId?: string | null;
   businessSlug?: string | null;
   businessName?: string | null;
+  businessEstadoAprobacion?: string | null;
+  businessPagoVerificado?: boolean;
+  businessActivo?: boolean;
 }
 
 export interface BusinessItem {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 import { sendBusinessApprovedEmail } from '@/lib/email';
+import { createNotification } from '@/lib/notifications';
 
 export async function PATCH(
   request: NextRequest,
@@ -73,12 +74,20 @@ export async function PATCH(
       data: updateData,
     });
 
-    // Si fue APROBADO por el Administrador, enviar correo de confirmación de pago y apertura al emprendedor
+    // Si fue APROBADO por el Administrador, enviar correo de confirmación de pago y crear notificación in-app
     if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
       await sendBusinessApprovedEmail({
         toEmail: currentBusiness.user.correo,
         nombreEmprendedor: currentBusiness.user.nombre,
         nombreNegocio: currentBusiness.nombre,
+      });
+
+      await createNotification({
+        userId: currentBusiness.userId,
+        titulo: '✅ ¡Pago Confirmado y Negocio Abierto!',
+        mensaje: `Tu emprendimiento "${currentBusiness.nombre}" ha sido verificado y aprobado. Ya se encuentra abierto y activo en UniPide.`,
+        tipo: 'APROBACION_NEGOCIO',
+        url: '/emprendedor/suscripcion',
       });
     }
 

@@ -19,6 +19,7 @@ import {
   FileText,
   Heart,
 } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -132,6 +133,9 @@ export default function Navbar() {
                   </span>
                 )}
               </button>
+
+              {/* Campana de Notificaciones en Tiempo Real */}
+              <NotificationBell />
 
               {/* Usuario o Login */}
               {user ? (
