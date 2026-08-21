@@ -179,29 +179,27 @@ export default function OrderChatModal({
                   key={msg.id}
                   className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
                 >
-                  <div className="flex items-center gap-1 mb-1 text-[10px] text-slate-500 font-semibold px-1">
+                  <div className="flex items-center gap-1.5 mb-1 text-[10px] text-gray-600 font-semibold px-1">
                     <span>{msg.remitente?.nombre || 'Usuario'}</span>
                     <span>•</span>
-                    <span className={isAdmin ? 'text-purple-600 font-bold' : isEntrepreneur ? 'text-amber-700 font-bold' : 'text-blue-600 font-bold'}>
+                    <span className={isAdmin ? 'text-purple-700 font-bold' : isEntrepreneur ? 'text-amber-700 font-bold' : 'text-blue-700 font-bold'}>
                       {isAdmin ? 'Admin' : isEntrepreneur ? 'Vendedor' : 'Cliente'}
                     </span>
                   </div>
 
                   <div
-                    className={`max-w-[82%] px-3.5 py-2.5 rounded-2xl text-xs shadow-xs leading-relaxed ${
+                    className={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed shadow-xs ${
                       isMe
-                        ? 'bg-uninorte-red text-white rounded-br-xs'
+                        ? 'bg-uninorte-red text-white rounded-br-xs font-medium'
                         : isAdmin
-                        ? 'bg-purple-900 text-white rounded-bl-xs'
-                        : isEntrepreneur
-                        ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-bl-xs'
-                        : 'bg-white text-slate-900 border border-slate-200 rounded-bl-xs'
+                        ? 'bg-purple-50 text-purple-950 border border-purple-200 rounded-bl-xs font-medium'
+                        : 'bg-white text-gray-900 border border-gray-200 rounded-bl-xs font-medium'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words">{msg.mensaje}</p>
                     <span
-                      className={`text-[9px] block text-right mt-1 opacity-70 ${
-                        isMe || isAdmin ? 'text-slate-200' : 'text-slate-500'
+                      className={`text-[9px] block text-right mt-1.5 ${
+                        isMe ? 'text-red-100 font-medium' : 'text-gray-500 font-medium'
                       }`}
                     >
                       {new Date(msg.fechaCreacion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
