@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import os from 'os';
 
 interface ContractData {
  nombreNegocio: string;
@@ -95,23 +96,26 @@ export async function generateDigitalContractDocument(data: ContractData) {
 </body>
 </html>`;
 
- // Guardar copia local de resguardo en storage/contratos/
- const storageDir = path.join(process.cwd(), 'storage', 'contratos');
- if (!fs.existsSync(storageDir)) {
- fs.mkdirSync(storageDir, { recursive: true });
- }
+  const safeBizName = data.nombreNegocio.replace(/[^a-zA-Z0-9]/g, '_');
+  const safeDoc = data.documentoFirmante.replace(/[^a-zA-Z0-9]/g, '_');
+  const fileName = `POL-EMP-001_${safeBizName}_${safeDoc}.html`;
+  let filePath = path.join(os.tmpdir(), fileName);
 
- const safeBizName = data.nombreNegocio.replace(/[^a-zA-Z0-9]/g, '_');
- const safeDoc = data.documentoFirmante.replace(/[^a-zA-Z0-9]/g, '_');
- const fileName = `POL-EMP-001_${safeBizName}_${safeDoc}.html`;
- const filePath = path.join(storageDir, fileName);
+  try {
+    const storageDir = path.join(os.tmpdir(), 'unipide-contratos');
+    if (!fs.existsSync(storageDir)) {
+      fs.mkdirSync(storageDir, { recursive: true });
+    }
+    filePath = path.join(storageDir, fileName);
+    fs.writeFileSync(filePath, htmlDocument, 'utf8');
+  } catch (fsErr: any) {
+    console.warn('📁 [AVISO DISCO SERVERLESS] No se pudo escribir archivo físico en disco, continuando en memoria:', fsErr.message);
+  }
 
- fs.writeFileSync(filePath, htmlDocument, 'utf8');
-
- return {
- fileName,
- filePath,
- htmlDocument,
- digitalHash,
- };
+  return {
+    fileName,
+    filePath,
+    htmlDocument,
+    digitalHash,
+  };
 }

@@ -91,7 +91,10 @@ async function uploadFileToDriveApi({
   folderId: string;
 }): Promise<{ fileId: string; webViewLink: string } | null> {
   try {
-    const fileContent = fs.readFileSync(filePath);
+    let fileContent: Buffer = Buffer.from('');
+    if (fs.existsSync(filePath)) {
+      fileContent = fs.readFileSync(filePath);
+    }
     const mimeType = fileName.endsWith('.html') ? 'text/html' : fileName.endsWith('.pdf') ? 'application/pdf' : 'text/plain';
 
     const metadata = {
