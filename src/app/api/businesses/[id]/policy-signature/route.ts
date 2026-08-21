@@ -16,7 +16,7 @@ export async function POST(
 
     const { id } = params;
     const body = await request.json();
-    const { nombreFirmante, documentoFirmante } = body;
+    const { nombreFirmante, documentoFirmante, firmaVirtualBase64 } = body;
 
     if (!nombreFirmante || !documentoFirmante) {
       return NextResponse.json(
@@ -43,16 +43,17 @@ export async function POST(
 
     const now = new Date();
 
-    // 1. Generar Documento Legal de Contrato POL-EMP-001
+    // 1. Generar Documento Legal de Contrato POL-EMP-001 con la firma manuscrita
     const contractDoc = await generateDigitalContractDocument({
       nombreNegocio: business.nombre,
       nombreFirmante: nombreFirmante.trim(),
       documentoFirmante: documentoFirmante.trim(),
       correo: business.user?.correo || session.correo,
       fechaFirma: now,
+      firmaVirtualBase64: firmaVirtualBase64 || null,
     });
 
-    // 2. Subir / Sincronizar archivo en Google Drive (richardbb839@gmail.com / "contratos emprendimientos unipide")
+    // 2. Subir / Sincronizar archivo en Google Drive (richardbb839@gmail.com)
     const driveResult = await uploadContractToGoogleDrive({
       filePath: contractDoc.filePath,
       fileName: contractDoc.fileName,
@@ -60,7 +61,7 @@ export async function POST(
       documentoFirmante: documentoFirmante.trim(),
     });
 
-    // 3. Actualizar la base de datos con los datos de firma y enlace a Google Drive
+    // 3. Actualizar la base de datos con los datos de firma y la imagen de firma manuscrita
     const updated = await prisma.business.update({
       where: { id },
       data: {
@@ -69,6 +70,7 @@ export async function POST(
         versionPolitica: 'POL-EMP-001 v1.0',
         nombreFirmante: nombreFirmante.trim(),
         documentoFirmante: documentoFirmante.trim(),
+        firmaVirtualBase64: firmaVirtualBase64 || null,
         contratoDriveUrl: driveResult.driveUrl,
         contratoDriveId: driveResult.fileId,
       },

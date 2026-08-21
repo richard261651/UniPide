@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       }
 
       const founderCount = await prisma.business.count({
-        where: { esFundador: true, estadoAprobacion: 'APROBADO' },
+        where: { esFundador: true, estadoAprobacion: { in: ['APROBADO', 'PENDIENTE'] } },
       });
       const isFounder = founderCount < 10;
       const now = new Date();

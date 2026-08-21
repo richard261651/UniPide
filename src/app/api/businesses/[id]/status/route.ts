@@ -48,7 +48,7 @@ export async function PATCH(
         const founderCount = await prisma.business.count({
           where: {
             esFundador: true,
-            estadoAprobacion: 'APROBADO',
+            estadoAprobacion: { in: ['APROBADO', 'PENDIENTE'] },
             id: { not: id },
           },
         });

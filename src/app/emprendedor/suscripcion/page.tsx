@@ -80,7 +80,7 @@ export default function EmprendedorSuscripcionPage() {
  loadBusinessData();
  }, [user]);
 
- const handleSignPolicy = async (data: { nombreFirmante: string; documentoFirmante: string }) => {
+ const handleSignPolicy = async (data: { nombreFirmante: string; documentoFirmante: string; firmaVirtualBase64?: string }) => {
  if (!business) return;
 
  try {

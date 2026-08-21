@@ -29,6 +29,7 @@ export async function GET(
       correo: business.user?.correo || 'correo@uninorte.edu.co',
       fechaFirma,
       versionPolitica: business.versionPolitica || 'POL-EMP-001 v1.0',
+      firmaVirtualBase64: business.firmaVirtualBase64,
     });
 
     const isDownload = request.nextUrl.searchParams.get('download') === 'true';

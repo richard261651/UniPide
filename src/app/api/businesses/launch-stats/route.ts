@@ -7,7 +7,7 @@ export async function GET() {
     const cuposOcupados = await prisma.business.count({
       where: {
         esFundador: true,
-        estadoAprobacion: 'APROBADO',
+        estadoAprobacion: { in: ['APROBADO', 'PENDIENTE'] },
       },
     });
 

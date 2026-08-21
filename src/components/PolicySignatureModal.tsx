@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ShieldCheck, FileText, CheckCircle2, Lock, X, AlertCircle, ScrollText, UserCheck } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ShieldCheck, FileText, CheckCircle2, Lock, X, AlertCircle, ScrollText, UserCheck, Eraser, PenTool } from 'lucide-react';
 
 interface PolicySignatureModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSign: (data: { nombreFirmante: string; documentoFirmante: string }) => void;
+  onSign: (data: { nombreFirmante: string; documentoFirmante: string; firmaVirtualBase64?: string }) => void;
   initialNombre?: string;
   isSubmitting?: boolean;
 }
@@ -23,7 +23,69 @@ export default function PolicySignatureModal({
   const [hasReadAndAgreed, setHasReadAndAgreed] = useState(false);
   const [error, setError] = useState('');
 
+  // Canvas de Firma Virtual Manuscrita
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [hasDrawnSignature, setHasDrawnSignature] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setNombreFirmante(initialNombre);
+      setError('');
+      setHasDrawnSignature(false);
+    }
+  }, [isOpen, initialNombre]);
+
   if (!isOpen) return null;
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    setIsDrawing(true);
+    setHasDrawnSignature(true);
+    setError('');
+
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    ctx.beginPath();
+    ctx.moveTo(clientX - rect.left, clientY - rect.top);
+  };
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#0f172a'; // Tinta oscura Slate-900
+    ctx.lineTo(clientX - rect.left, clientY - rect.top);
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setHasDrawnSignature(false);
+  };
 
   const handleSubmitSignature = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,14 +108,25 @@ export default function PolicySignatureModal({
       return;
     }
 
+    if (!hasDrawnSignature) {
+      setError('Por favor traza tu firma manuscrita en el recuadro interactivo');
+      return;
+    }
+
     if (!hasReadAndAgreed) {
       setError('Debes marcar la casilla declarando haber leído y aceptado la Política POL-EMP-001');
       return;
     }
 
+    let firmaVirtualBase64: string | undefined = undefined;
+    if (canvasRef.current && hasDrawnSignature) {
+      firmaVirtualBase64 = canvasRef.current.toDataURL('image/png');
+    }
+
     onSign({
       nombreFirmante: nombreFirmante.trim(),
       documentoFirmante: documentoFirmante.trim(),
+      firmaVirtualBase64,
     });
   };
 
@@ -70,7 +143,7 @@ export default function PolicySignatureModal({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">
-                  Firma Digital Obligatoria
+                  Firma Digital & Manuscrita
                 </span>
                 <span className="text-[11px] text-slate-400 font-mono">POL-EMP-001 v1.0</span>
               </div>
@@ -97,83 +170,33 @@ export default function PolicySignatureModal({
           </div>
 
           {/* Texto Oficial de la Política */}
-          <div className="space-y-4 text-slate-700 bg-white p-4 sm:p-6 rounded-2xl border border-slate-150 shadow-inner">
+          <div className="space-y-4 text-slate-700 bg-white p-4 sm:p-6 rounded-2xl border border-slate-150 shadow-inner max-h-60 overflow-y-auto">
             <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm sm:text-base border-b border-slate-200 pb-1 mb-2">
+              <h3 className="font-extrabold text-[#1F222E] text-sm border-b border-slate-200 pb-1 mb-2">
                 1. Objetivo
               </h3>
               <p>
-                Establecer las condiciones, responsabilidades y procedimientos que deben cumplir los emprendimientos afiliados a la plataforma para garantizar la calidad, higiene y seguridad de los productos que ofrecen a los usuarios, delimitando claramente que dicha responsabilidad recae en el emprendedor, y definiendo el rol de la plataforma como intermediario tecnológico no productor.
+                Establecer las condiciones, responsabilidades y procedimientos que deben cumplir los emprendimientos afiliados para garantizar la calidad, higiene y seguridad de los productos ofrecidos, delimitando que la responsabilidad recae de forma exclusiva en el emprendedor.
               </p>
             </div>
 
             <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm sm:text-base border-b border-slate-200 pb-1 mb-2">
-                2. Alcance
+              <h3 className="font-extrabold text-[#1F222E] text-sm border-b border-slate-200 pb-1 mb-2">
+                2. Directrices & Exención de Responsabilidad
               </h3>
-              <p>Esta política aplica a:</p>
-              <ul className="list-disc pl-5 space-y-1 pt-1">
-                <li>Todos los emprendimientos que soliciten afiliación o se encuentren afiliados a la plataforma, especialmente aquellos que comercialicen alimentos y bebidas.</li>
-                <li>El equipo administrador de la plataforma, en cuanto a los procesos de aprobación, supervisión y respuesta ante incidentes.</li>
-                <li>Los usuarios/clientes, en cuanto a los canales disponibles para reportar incidentes relacionados con calidad o higiene.</li>
-              </ul>
-              <p className="pt-1 italic text-slate-500">
-                No aplica a la elaboración, producción o manipulación física de los productos, actividad que es responsabilidad exclusiva de cada emprendimiento.
+              <p>
+                El emprendimiento es el único responsable de la inocuidad, frescura y calidad de sus productos. La plataforma UniPide actúa únicamente como intermediario tecnológico.
               </p>
-            </div>
-
-            <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm sm:text-base border-b border-slate-200 pb-1 mb-2">
-                3. Definiciones
-              </h3>
-              <ul className="space-y-2">
-                <li><strong>Emprendimiento afiliado:</strong> Persona natural o grupo de estudiantes que ofrece productos o servicios a través de la plataforma, previa aprobación del administrador.</li>
-                <li><strong>Plataforma:</strong> El sistema tecnológico (web/app) que actúa como intermediario entre emprendimientos y clientes, sin participar en la producción, preparación o manipulación de los productos.</li>
-                <li><strong>Incidente de calidad o higiene:</strong> Cualquier situación reportada por un cliente relacionada con intoxicación, contaminación, mal estado del producto, o incumplimiento evidente de condiciones básicas de higiene.</li>
-                <li><strong>Declaración de buenas prácticas:</strong> Documento firmado digitalmente por el emprendedor al momento de su registro, en el cual declara cumplir con condiciones mínimas de manipulación segura de alimentos.</li>
-                <li><strong>Suspensión preventiva:</strong> Medida temporal que desactiva la visibilidad y operación de un emprendimiento en la plataforma mientras se investiga un incidente reportado.</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm sm:text-base border-b border-slate-200 pb-1 mb-2">
-                4. Directrices
-              </h3>
-              
-              <h4 className="font-bold text-[#D85A30] pt-1">4.1 Responsabilidad del emprendimiento</h4>
-              <p>El emprendimiento es el único responsable de la calidad, higiene, seguridad y legalidad de los productos que ofrece. Debe cumplir con la normativa vigente aplicable a la manipulación de alimentos, cuando su actividad lo requiera, y aceptar expresamente la exención de responsabilidad para la plataforma.</p>
-
-              <h4 className="font-bold text-[#D85A30] pt-2">4.2 Requisitos de ingreso a la plataforma</h4>
-              <p>Todo emprendimiento debe firmar digitalmente la Declaración de Buenas Prácticas antes de ser aprobado. La plataforma no realiza inspecciones físicas como condición de ingreso; la aprobación se basa en la declaración juramentada.</p>
-
-              <h4 className="font-bold text-[#D85A30] pt-2">4.3 Gestión de incidentes reportados</h4>
-              <p>Ante un reporte grave de higiene (ej. sospecha de intoxicación), el administrador aplicará suspensión preventiva en un máximo de 24 horas para investigación.</p>
-
-              <h4 className="font-bold text-[#D85A30] pt-2">4.4 Exclusión de responsabilidad de la plataforma</h4>
-              <p>La plataforma no participa en la preparación, manipulación o entrega física de los productos y, por lo tanto, no asume responsabilidad legal por daños derivados de la calidad de los mismos.</p>
-
-              <h4 className="font-bold text-[#D85A30] pt-2">4.5 Consecuencias por incumplimiento</h4>
-              <p>Incidentes comprobados resultan en suspensión o desactivación permanente. La plataforma no cubrirá gastos médicos ni indemnizaciones; estos son responsabilidad exclusiva del emprendimiento.</p>
-            </div>
-
-            <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm sm:text-base border-b border-slate-200 pb-1 mb-2">
-                5. Roles y responsabilidades
-              </h3>
-              <ul className="space-y-1.5">
-                <li><strong>Emprendedor:</strong> Cumplir normas de higiene aplicables, firmar la declaración de buenas prácticas, responder ante incidentes relacionados con sus productos, aceptar Términos y Condiciones.</li>
-                <li><strong>Administrador de la plataforma:</strong> Aprobar/rechazar emprendimientos, gestionar el canal de reportes, aplicar suspensiones preventivas, documentar incidentes.</li>
-                <li><strong>Cliente:</strong> Reportar incidentes de forma oportuna y veraz.</li>
-                <li><strong>Equipo legal / CEO:</strong> Validar periódicamente la redacción y validez jurídica frente a la normativa colombiana (CEO Richard Francisco Guzmán Guzmán).</li>
-              </ul>
             </div>
           </div>
 
-          {/* Formulario de Firma Digital Juramentada */}
+          {/* Formulario de Firma Digital Juramentada & Canvas Manuscrito */}
           <form onSubmit={handleSubmitSignature} id="signature-form" className="bg-[#FAF8F5] p-5 rounded-2xl border-2 border-[#D85A30]/30 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-black text-[#D85A30] uppercase tracking-wider">
-              <UserCheck className="w-4 h-4 text-[#D85A30]" />
-              <span>Diligenciamiento de Firma Digital Legal</span>
+            <div className="flex items-center justify-between gap-2 text-xs font-black text-[#D85A30] uppercase tracking-wider">
+              <span className="flex items-center gap-2">
+                <UserCheck className="w-4 h-4 text-[#D85A30]" />
+                <span>Diligenciamiento de Firma Digital & Manuscrita</span>
+              </span>
             </div>
 
             {error && (
@@ -215,6 +238,47 @@ export default function PolicySignatureModal({
               </div>
             </div>
 
+            {/* Recuadro Interactivo de Firma Manuscrita en Canvas */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                  <PenTool className="w-3.5 h-3.5 text-[#D85A30]" />
+                  <span>Traza tu Firma Manuscrita con tu Mouse o Pantalla Táctil *</span>
+                </label>
+                {hasDrawnSignature && (
+                  <button
+                    type="button"
+                    onClick={clearCanvas}
+                    className="text-[11px] font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer"
+                  >
+                    <Eraser className="w-3.5 h-3.5" />
+                    <span>Borrar y Volver a Firmar</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="relative bg-white rounded-2xl border-2 border-dashed border-slate-300 overflow-hidden shadow-inner">
+                <canvas
+                  ref={canvasRef}
+                  width={600}
+                  height={140}
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={stopDrawing}
+                  onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing}
+                  onTouchMove={draw}
+                  onTouchEnd={stopDrawing}
+                  className="w-full h-32 cursor-crosshair touch-none bg-white"
+                />
+                {!hasDrawnSignature && (
+                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-slate-400 text-xs font-semibold">
+                    Firma aquí usando tu mouse, lápiz o dedo...
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Checkbox de Aceptación Juramentada */}
             <label className="flex items-start gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-amber-50/50 transition">
               <input
@@ -234,7 +298,7 @@ export default function PolicySignatureModal({
         <div className="bg-slate-50 p-4 sm:p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-[#0F6E56]" />
-            <span>Firma digital encriptada con registro de IP y Timestamp.</span>
+            <span>Firma virtual manuscrita e información legal encriptadas.</span>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -248,7 +312,7 @@ export default function PolicySignatureModal({
             <button
               type="submit"
               form="signature-form"
-              disabled={isSubmitting || !hasReadAndAgreed}
+              disabled={isSubmitting || !hasReadAndAgreed || !hasDrawnSignature}
               className="w-1/2 sm:w-auto px-6 py-2.5 text-xs font-black text-white bg-[#D85A30] hover:bg-[#F56649] disabled:opacity-50 rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />

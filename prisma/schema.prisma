@@ -69,6 +69,7 @@ model Business {
   versionPolitica             String?      @default("POL-EMP-001 v1.0")
   nombreFirmante              String?
   documentoFirmante           String?
+  firmaVirtualBase64          String?      // Imagen PNG en Base64 de la firma manuscrita trazada en canvas
   contratoDriveUrl            String?
   contratoDriveId             String?
 

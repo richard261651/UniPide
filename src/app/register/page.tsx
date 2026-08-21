@@ -59,7 +59,7 @@ export default function RegisterPage() {
 
  // Firma de Política POL-EMP-001
  const [policyModalOpen, setPolicyModalOpen] = useState(false);
- const [signatureData, setSignatureData] = useState<{ nombreFirmante: string; documentoFirmante: string } | null>(null);
+ const [signatureData, setSignatureData] = useState<{ nombreFirmante: string; documentoFirmante: string; firmaVirtualBase64?: string } | null>(null);
 
  // 2FA Setup
  const [totpSecret, setTotpSecret] = useState('');
@@ -165,6 +165,7 @@ export default function RegisterPage() {
  descripcionNegocio,
  nombreFirmante: signatureData?.nombreFirmante || nombre,
  documentoFirmante: signatureData?.documentoFirmante || telefono || 'CC / ID Estudiantil',
+ firmaVirtualBase64: signatureData?.firmaVirtualBase64 || null,
  }),
  ...(rol === 'ADMIN' && {
  adminKey,

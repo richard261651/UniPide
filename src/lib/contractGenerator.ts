@@ -10,6 +10,7 @@ interface ContractData {
  correo: string;
  fechaFirma: Date;
  versionPolitica?: string;
+ firmaVirtualBase64?: string | null;
 }
 
 /**
@@ -83,12 +84,19 @@ export async function generateDigitalContractDocument(data: ContractData) {
  <h3 class="section-title">5. DECLARACIÓN JURAMENTADA DE ACEPTACIÓN</h3>
  <p>Yo, <strong>${data.nombreFirmante}</strong>, identificado con documento/código <strong>${data.documentoFirmante}</strong>, en calidad de representante de <strong>${data.nombreNegocio}</strong>, declaro juramentadamente haber leído, entendido y aceptado de manera voluntaria los términos de la Política POL-EMP-001 v1.0 emitida el 18 de agosto de 2026.</p>
 
- <div class="stamp-box">
- <div style="font-size: 14px; font-weight: 800; color: #15803D;"> FIRMADO LEGALMENTE Y VERIFICADO DIGITALMENTE</div>
- <div style="font-size: 11px; color: #166534; margin-top: 4px;">Estampa de Firma Digital Criptográfica (SHA-256):</div>
- <div class="hash">${digitalHash}</div>
- <div style="font-size: 10px; color: #65a30d; margin-top: 6px;">Destino de Archivo: Google Drive ("contratos emprendimientos unipide" - ID: 1f-6z7SoD3x-s7Wp6cfny-Usfyj0guFQp - richardbb839@gmail.com)</div>
- </div>
+  <div class="stamp-box">
+    <div style="font-size: 14px; font-weight: 800; color: #15803D;">FIRMADO LEGALMENTE Y VERIFICADO DIGITALMENTE</div>
+    ${
+      data.firmaVirtualBase64
+        ? `<div style="margin: 15px 0; text-align: center;">
+            <p style="font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 6px;">FIRMA VIRTUAL MANUSCRITA TRAZADA:</p>
+            <img src="${data.firmaVirtualBase64}" alt="Firma Manuscrita Virtual" style="max-height: 80px; max-width: 280px; margin: 0 auto; display: block; border-bottom: 1.5px solid #0f172a;" />
+          </div>`
+        : ''
+    }
+    <div style="font-size: 11px; color: #166534; margin-top: 4px;">Estampa de Firma Digital Criptográfica (SHA-256):</div>
+    <div class="hash">${digitalHash}</div>
+  </div>
 
  <div class="footer">
  UniPide — Universidad del Norte, Barranquilla, Colombia | Documento generado automáticamente el ${fechaStr}

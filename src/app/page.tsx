@@ -114,132 +114,137 @@ export default function HomePage() {
  // 2. PANTALLA INICIAL DE LOGGEO: Si el usuario NO ha iniciado sesión, es lo primero que ve antes de entrar al portal
  if (!user) {
  return (
- <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 bg-gradient-to-b from-[#FEEBE7]/60 via-slate-50 to-white">
- <div className="max-w-md w-full space-y-6">
- {/* Encabezado UniPide con Ícono Favicon */}
- <div className="text-center space-y-3">
- <img
- src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
- alt="UniPide Icon"
- className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
- />
- <div>
- <h1 className="text-3xl sm:text-4xl font-black text-[#1F222E] tracking-tight">
- Uni<span className="text-[#F56649]">Pide</span>
- </h1>
- <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-[#FEEBE7] text-[#F56649] border border-[#FBC6BB] px-3 py-1 rounded-full">
- LO DE TU CAMPUS, A UN PEDIDO DE DISTANCIA
- </span>
- </div>
- <p className="text-xs text-slate-500 max-w-sm mx-auto font-medium leading-relaxed">
- Inicia sesión con tu correo electrónico para acceder a los pedidos, emprendimientos y entregas en el campus.
- </p>
- </div>
+ <div className="min-h-[85vh] w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-gradient-to-b from-[#FEEBE7]/60 via-slate-50 to-white">
+   <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 lg:gap-12">
+     
+     {/* Columna Izquierda (En PC) / Arriba (En Teléfonos): Formulario de Login */}
+     <div className="w-full max-w-md shrink-0 space-y-6">
+       {/* Encabezado UniPide con Ícono Favicon */}
+       <div className="text-center space-y-3">
+         <img
+           src="https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg"
+           alt="UniPide Icon"
+           className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-md hover:scale-105 transition duration-300"
+         />
+         <div>
+           <h1 className="text-3xl sm:text-4xl font-black text-[#1F222E] tracking-tight">
+             Uni<span className="text-[#F56649]">Pide</span>
+           </h1>
+           <span className="inline-block mt-1.5 text-[10px] font-bold uppercase tracking-wider bg-[#FEEBE7] text-[#F56649] border border-[#FBC6BB] px-3 py-1 rounded-full">
+             LO DE TU CAMPUS, A UN PEDIDO DE DISTANCIA
+           </span>
+         </div>
+          <p className="text-xs text-slate-600 max-w-sm mx-auto font-medium leading-relaxed">
+            Plataforma creada por <strong>Richard Guzmán</strong>, estudiante de la Universidad del Norte. Inicia sesión para acceder a los pedidos, emprendimientos y entregas en el campus.
+          </p>
+       </div>
 
- {/* Tarjeta de Formulario de Ingreso */}
- <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E2DC] shadow-xl shadow-[#1F222E]/5 space-y-5">
- {loginError && (
- <div className="p-3 bg-[#FEEBE7] border border-[#FBC6BB] text-[#C94026] text-xs rounded-xl font-medium">
- {loginError}
- </div>
- )}
+       {/* Tarjeta de Formulario de Ingreso */}
+       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E2DC] shadow-xl shadow-[#1F222E]/5 space-y-5">
+         {loginError && (
+           <div className="p-3 bg-[#FEEBE7] border border-[#FBC6BB] text-[#C94026] text-xs rounded-xl font-medium">
+             {loginError}
+           </div>
+         )}
 
- <form onSubmit={handleDirectLogin} className="space-y-4">
- <div>
- <label className="block text-xs font-semibold text-slate-800 mb-1">
- Correo Electrónico
- </label>
- <div className="relative">
- <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
- <input
- type="email"
- required
- value={loginCorreo}
- onChange={(e) => setLoginCorreo(e.target.value)}
- placeholder="usuario@correo.com"
- className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
- />
- </div>
- </div>
+         <form onSubmit={handleDirectLogin} className="space-y-4">
+           <div>
+             <label className="block text-xs font-semibold text-slate-800 mb-1">
+               Correo Electrónico
+             </label>
+             <div className="relative">
+               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+               <input
+                 type="email"
+                 required
+                 value={loginCorreo}
+                 onChange={(e) => setLoginCorreo(e.target.value)}
+                 placeholder="usuario@correo.com"
+                 className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
+               />
+             </div>
+           </div>
 
- <div>
- <div className="flex items-center justify-between mb-1">
- <label className="block text-xs font-semibold text-slate-800">
- Contraseña
- </label>
- <Link
- href="/forgot-password"
- className="text-[11px] font-semibold text-[#F56649] hover:underline"
- >
- ¿Olvidaste tu contraseña?
- </Link>
- </div>
- <div className="relative">
- <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
- <input
- type="password"
- required
- value={loginPassword}
- onChange={(e) => setLoginPassword(e.target.value)}
- placeholder="••••••••"
- className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
- />
- </div>
- </div>
+           <div>
+             <div className="flex items-center justify-between mb-1">
+               <label className="block text-xs font-semibold text-slate-800">
+                 Contraseña
+               </label>
+               <Link
+                 href="/forgot-password"
+                 className="text-[11px] font-semibold text-[#F56649] hover:underline"
+               >
+                 ¿Olvidaste tu contraseña?
+               </Link>
+             </div>
+             <div className="relative">
+               <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+               <input
+                 type="password"
+                 required
+                 value={loginPassword}
+                 onChange={(e) => setLoginPassword(e.target.value)}
+                 placeholder="••••••••"
+                 className="w-full text-xs pl-10 pr-3 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#F56649] focus:border-transparent outline-none transition font-medium text-slate-900"
+               />
+             </div>
+           </div>
 
- <button
- type="submit"
- disabled={loginLoading}
- className="w-full py-3.5 bg-[#F56649] hover:bg-[#F77C64] text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-[#F56649]/25 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
- >
- {loginLoading ? (
- <>
- <Loader2 className="w-4 h-4 animate-spin text-white" />
- <span className="text-white">Verificando acceso...</span>
- </>
- ) : (
- <>
- <span className="text-white">Ingresar al Portal</span>
- <ArrowRight className="w-4 h-4 text-white" />
- </>
- )}
- </button>
- </form>
+           <button
+             type="submit"
+             disabled={loginLoading}
+             className="w-full py-3.5 bg-[#F56649] hover:bg-[#F77C64] text-white text-xs sm:text-sm font-black rounded-xl shadow-lg shadow-[#F56649]/25 transition flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+           >
+             {loginLoading ? (
+               <>
+                 <Loader2 className="w-4 h-4 animate-spin text-white" />
+                 <span className="text-white">Verificando acceso...</span>
+               </>
+             ) : (
+               <>
+                 <span className="text-white">Ingresar al Portal</span>
+                 <ArrowRight className="w-4 h-4 text-white" />
+               </>
+             )}
+           </button>
+         </form>
 
- <div className="pt-4 border-t border-slate-100 text-center space-y-3">
- <p className="text-xs text-slate-500">¿Aún no tienes cuenta registrada?</p>
- <Link
- href="/register"
- className="block w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-[#F8F6F4] hover:bg-[#FEEBE7] hover:text-[#F56649] border border-slate-200 rounded-xl transition"
- >
- Crear Cuenta de Estudiante o Emprendedor
- </Link>
- </div>
- </div>
+         <div className="pt-4 border-t border-slate-100 text-center space-y-3">
+           <p className="text-xs text-slate-500">¿Aún no tienes cuenta registrada?</p>
+           <Link
+             href="/register"
+             className="block w-full py-2.5 text-center text-xs font-bold text-slate-800 bg-[#F8F6F4] hover:bg-[#FEEBE7] hover:text-[#F56649] border border-slate-200 rounded-xl transition"
+           >
+             Crear Cuenta de Estudiante o Emprendedor
+           </Link>
+         </div>
+       </div>
 
- {/* Badges de Confianza del Campus */}
- <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-slate-600 font-medium pt-2">
- <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
- <MapPin className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
- <span>Todos los Bloques</span>
- </div>
- <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
- <Clock className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
- <span>Entrega Rápida</span>
- </div>
- <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
- <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
- <span>100% Uninorte</span>
- </div>
- </div>
- </div>
+       {/* Badges de Confianza del Campus */}
+       <div className="grid grid-cols-3 gap-2 text-center text-[10px] text-slate-600 font-medium pt-2">
+         <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+           <MapPin className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
+           <span>Todos los Bloques</span>
+         </div>
+         <div className="bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+           <Clock className="w-4 h-4 text-[#F56649] mx-auto mb-1" />
+           <span>Entrega Rápida</span>
+         </div>
+         <div className="bg-[#0F6E56]/10 p-2.5 rounded-2xl border border-[#0F6E56]/20 shadow-2xs">
+           <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
+           <span>100% Uninorte</span>
+         </div>
+       </div>
+     </div>
 
- {/* Sección de Precios de Lanzamiento para Emprendedores */}
- <div className="w-full max-w-6xl mt-8">
- <LaunchPricingSection />
+     {/* Columna Derecha (En PC) / Abajo (En Teléfonos): Sección de Precios */}
+     <div className="w-full flex-1 min-w-0">
+       <LaunchPricingSection />
+     </div>
+
+   </div>
  </div>
- </div>
- );
+);
  }
 
  // 3. PANTALLA PRINCIPAL: Se muestra una vez que el usuario ha iniciado sesión
