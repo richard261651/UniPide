@@ -4,6 +4,8 @@ import { hashPassword, signJwtToken, TOKEN_COOKIE_NAME } from '@/lib/auth';
 import { slugify, isValidEmail } from '@/lib/utils';
 
 import { sendEmailVerificationCode } from '@/lib/email';
+import { generateDigitalContractDocument } from '@/lib/contractGenerator';
+import { uploadContractToGoogleDrive } from '@/lib/googleDrive';
 
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || 'uninorte2026';
 
@@ -134,6 +136,26 @@ export async function POST(request: NextRequest) {
       const threeMonths = new Date(now);
       threeMonths.setMonth(threeMonths.getMonth() + 3);
 
+      const nombreFirmanteFinal = body.nombreFirmante?.trim() || nombre.trim();
+      const documentoFirmanteFinal = body.documentoFirmante?.trim() || body.telefono || 'ID Estudiantil Uninorte';
+
+      // 1. Generar Documento Legal POL-EMP-001 en servidor
+      const contractDoc = await generateDigitalContractDocument({
+        nombreNegocio: nombreNegocio.trim(),
+        nombreFirmante: nombreFirmanteFinal,
+        documentoFirmante: documentoFirmanteFinal,
+        correo: cleanEmail,
+        fechaFirma: now,
+      });
+
+      // 2. Subir o sincronizar con Google Drive
+      const driveResult = await uploadContractToGoogleDrive({
+        filePath: contractDoc.filePath,
+        fileName: contractDoc.fileName,
+        nombreNegocio: nombreNegocio.trim(),
+        documentoFirmante: documentoFirmanteFinal,
+      });
+
       primaryBusiness = await prisma.business.create({
         data: {
           userId: newUser.id,
@@ -156,8 +178,10 @@ export async function POST(request: NextRequest) {
           firmaPoliticaHigiene: true,
           fechaFirmaPolitica: now,
           versionPolitica: 'POL-EMP-001 v1.0',
-          nombreFirmante: body.nombreFirmante?.trim() || nombre.trim(),
-          documentoFirmante: body.documentoFirmante?.trim() || body.telefono || 'ID Estudiantil Uninorte',
+          nombreFirmante: nombreFirmanteFinal,
+          documentoFirmante: documentoFirmanteFinal,
+          contratoDriveUrl: driveResult.driveUrl,
+          contratoDriveId: driveResult.fileId,
         },
       });
     }
