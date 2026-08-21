@@ -12,6 +12,7 @@ interface AuthContextType {
     nombre: string;
     correo: string;
     correoPersonal?: string;
+    cedula?: string;
     password: string;
     rol: 'CLIENTE' | 'EMPRENDEDOR' | 'ADMIN';
     telefono?: string;

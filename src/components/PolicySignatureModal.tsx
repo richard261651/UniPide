@@ -8,6 +8,7 @@ interface PolicySignatureModalProps {
   onClose: () => void;
   onSign: (data: { nombreFirmante: string; documentoFirmante: string; firmaVirtualBase64?: string }) => void;
   initialNombre?: string;
+  initialDocumento?: string;
   isSubmitting?: boolean;
 }
 
@@ -16,10 +17,11 @@ export default function PolicySignatureModal({
   onClose,
   onSign,
   initialNombre = '',
+  initialDocumento = '',
   isSubmitting = false,
 }: PolicySignatureModalProps) {
   const [nombreFirmante, setNombreFirmante] = useState(initialNombre);
-  const [documentoFirmante, setDocumentoFirmante] = useState('');
+  const [documentoFirmante, setDocumentoFirmante] = useState(initialDocumento);
   const [hasReadAndAgreed, setHasReadAndAgreed] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,10 +33,13 @@ export default function PolicySignatureModal({
   useEffect(() => {
     if (isOpen) {
       setNombreFirmante(initialNombre);
+      if (initialDocumento) {
+        setDocumentoFirmante(initialDocumento);
+      }
       setError('');
       setHasDrawnSignature(false);
     }
-  }, [isOpen, initialNombre]);
+  }, [isOpen, initialNombre, initialDocumento]);
 
   if (!isOpen) return null;
 

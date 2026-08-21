@@ -47,6 +47,7 @@ export default function RegisterPage() {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [correoPersonal, setCorreoPersonal] = useState('');
+  const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
   const [telefono, setTelefono] = useState('');
 
@@ -80,6 +81,13 @@ export default function RegisterPage() {
 
     const cleanInstitucional = correo.trim().toLowerCase();
     const cleanPersonal = correoPersonal.trim().toLowerCase();
+    const cleanCed = cedula.trim().replace(/\D/g, '');
+    const cleanPhone = telefono.trim().replace(/\D/g, '');
+
+    if (!nombre.trim()) {
+      setError('Por favor ingresa tu nombre completo');
+      return;
+    }
 
     if (!isValidEmail(cleanInstitucional)) {
       setError('Por favor ingresa un correo institucional válido');
@@ -98,6 +106,16 @@ export default function RegisterPage() {
 
     if (!isValidEmail(cleanPersonal)) {
       setError('Por favor ingresa un correo personal válido (ej. tu_usuario@gmail.com).');
+      return;
+    }
+
+    if (!cleanCed || cleanCed.length < 7 || cleanCed.length > 10) {
+      setError('Por favor ingresa tu número de cédula / documento de identidad (entre 7 y 10 dígitos numéricos).');
+      return;
+    }
+
+    if (!cleanPhone || cleanPhone.length < 10) {
+      setError('Por favor ingresa un número de celular / WhatsApp válido de al menos 10 dígitos (ej. 300 123 4567).');
       return;
     }
 
@@ -175,18 +193,19 @@ export default function RegisterPage() {
         nombre: nombre.trim(),
         correo: correo.trim().toLowerCase(),
         correoPersonal: correoPersonal.trim().toLowerCase(),
+        cedula: cedula.trim().replace(/\D/g, ''),
         password,
         rol,
-        telefono,
+        telefono: telefono.trim().replace(/\D/g, ''),
         twoFactorSecret: totpSecret,
         ...(rol === 'EMPRENDEDOR' && {
-          nombreNegocio,
+          nombreNegocio: nombreNegocio.trim(),
           categoriaNegocio,
           ubicacionCampus,
           zonaCampusCodigo,
           descripcionNegocio,
           nombreFirmante: signatureData?.nombreFirmante || nombre,
-          documentoFirmante: signatureData?.documentoFirmante || telefono || 'CC / ID Estudiantil',
+          documentoFirmante: signatureData?.documentoFirmante || cedula.trim().replace(/\D/g, ''),
           firmaVirtualBase64: signatureData?.firmaVirtualBase64 || null,
         }),
         ...(rol === 'ADMIN' && {
@@ -429,35 +448,53 @@ export default function RegisterPage() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div>
         <label className="block text-xs font-semibold text-gray-700 mb-1">
-          Celular / WhatsApp
+          Cédula de Ciudadanía / Documento *
         </label>
         <div className="relative">
-          <Phone className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+          <FileText className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
-            type="tel"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            placeholder="300 123 4567"
-            className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
+            type="text"
+            required
+            value={cedula}
+            onChange={(e) => setCedula(e.target.value)}
+            placeholder="Ej. 1045123456 (7-10 dígitos)"
+            className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition font-medium"
           />
         </div>
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-gray-700 mb-1">
-          Contraseña
+          Celular / WhatsApp *
         </label>
         <div className="relative">
-          <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+          <Phone className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
-            type="password"
+            type="tel"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Mínimo 6 caracteres"
-            className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            placeholder="300 123 4567"
+            className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition font-medium"
           />
         </div>
+      </div>
+    </div>
+
+    <div>
+      <label className="block text-xs font-semibold text-gray-700 mb-1">
+        Contraseña *
+      </label>
+      <div className="relative">
+        <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+        <input
+          type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Mínimo 6 caracteres"
+          className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-uninorte-red outline-none transition"
+        />
       </div>
     </div>
   </div>
@@ -792,6 +829,7 @@ export default function RegisterPage() {
  isOpen={policyModalOpen}
  onClose={() => setPolicyModalOpen(false)}
  initialNombre={nombre}
+ initialDocumento={cedula}
  onSign={(data) => {
  setSignatureData(data);
  setPolicyModalOpen(false);

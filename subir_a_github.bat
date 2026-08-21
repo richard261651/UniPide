@@ -1,21 +1,33 @@
 @echo off
 title Subir UniPide a GitHub
 echo ================================================================
-echo   SUBIENDO PROYECTO A GITHUB: richard261651/unipide
+echo   SUBIENDO CAMBIOS DE UNIPIDE A GITHUB Y VERCEL
 echo ================================================================
 echo.
-echo Presiona cualquier tecla para enviar el codigo a tu repositorio...
-pause >nul
 
-"C:\Users\richard\MinGit\cmd\git.exe" push -u origin main
+set GIT_CMD="C:\Users\richa\MinGit\cmd\git.exe"
+if not exist %GIT_CMD% (
+    set GIT_CMD="C:\Users\%USERNAME%\MinGit\cmd\git.exe"
+)
+if not exist %GIT_CMD% (
+    set GIT_CMD=git
+)
+
+echo Preparando cambios...
+%GIT_CMD% add .
+%GIT_CMD% commit -m "feat: Sistema de doble correo obligatorio y mensajeria" 2>nul
+echo.
+echo Enviando cambios a GitHub (rama main)...
+%GIT_CMD% push -u origin main
 
 echo.
 echo ================================================================
 if %ERRORLEVEL% EQU 0 (
-    echo   EXITO: Codigo subido correctamente a GitHub!
-    echo   Ahora puedes ir a https://vercel.com/new y desplegarlo.
+    echo   [EXITO] Cambios enviados a GitHub correctamente!
+    echo   Vercel iniciara el despliegue automatico en unipide.com en unos segundos.
 ) else (
-    echo   Si te pidio inicio de sesion, completa la autorizacion.
+    echo   [ATENCION] Si te solicito credenciales o Token de GitHub,
+    echo   ingresa tu usuario y Personal Access Token (o autoriza en navegador).
 )
 echo ================================================================
 pause

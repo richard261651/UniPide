@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       nombre,
       correo,
       correoPersonal,
+      cedula,
       password,
       rol = 'CLIENTE',
       telefono,
@@ -37,6 +38,8 @@ export async function POST(request: NextRequest) {
 
     const cleanEmail = correo.trim().toLowerCase();
     const cleanPersonalEmail = correoPersonal ? correoPersonal.trim().toLowerCase() : null;
+    const cleanPhone = telefono ? telefono.trim().replace(/\D/g, '') : null;
+    const rawCedula = (cedula || body.documentoFirmante || '').toString().trim().replace(/\D/g, '');
 
     if (!isValidEmail(cleanEmail)) {
       return NextResponse.json(
@@ -53,23 +56,119 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (cleanPersonalEmail && !isValidEmail(cleanPersonalEmail)) {
+    if (!cleanPersonalEmail || !isValidEmail(cleanPersonalEmail)) {
       return NextResponse.json(
-        { error: 'El correo personal ingresado no tiene un formato válido' },
+        { error: 'Por favor ingresa un correo personal válido (Gmail, Outlook, etc.) para recibir tus códigos y notificaciones.' },
         { status: 400 }
       );
     }
 
-    // Verificar si el correo ya está registrado
-    const existingUser = await prisma.user.findUnique({
-      where: { correo: cleanEmail },
+    // 1. Validar Celular Obligatorio y No Duplicado
+    if (!cleanPhone || cleanPhone.length < 10) {
+      return NextResponse.json(
+        { error: 'Por favor ingresa un número de celular / WhatsApp válido de al menos 10 dígitos.' },
+        { status: 400 }
+      );
+    }
+
+    // 2. Validar Cédula Obligatoria y Formato
+    if (!rawCedula || rawCedula.length < 7 || rawCedula.length > 10) {
+      return NextResponse.json(
+        { error: 'El número de cédula / documento de identidad debe contener entre 7 y 10 dígitos.' },
+        { status: 400 }
+      );
+    }
+
+    // 3. Verificar si el correo institucional ya está registrado
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { correo: cleanEmail },
+          { correoPersonal: cleanEmail },
+        ],
+      },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Ya existe una cuenta registrada con este correo electrónico institucional' },
+        { error: 'Ya existe una cuenta registrada con este correo electrónico institucional (@uninorte.edu.co).' },
         { status: 400 }
       );
+    }
+
+    // 4. Verificar si el correo personal ya está registrado en otra cuenta
+    const existingPersonalUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { correoPersonal: cleanPersonalEmail },
+          { correo: cleanPersonalEmail },
+        ],
+      },
+    });
+
+    if (existingPersonalUser) {
+      return NextResponse.json(
+        { error: 'Este correo personal ya se encuentra vinculado a otra cuenta en UniPide.' },
+        { status: 400 }
+      );
+    }
+
+    // 5. Verificar si el número de teléfono ya está registrado
+    const existingPhone = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { telefono: cleanPhone },
+          { telefono: telefono?.trim() },
+        ],
+      },
+    });
+
+    if (existingPhone) {
+      return NextResponse.json(
+        { error: 'Ya existe una cuenta registrada con este número de celular / WhatsApp.' },
+        { status: 400 }
+      );
+    }
+
+    // 6. Verificar si la cédula / documento ya está registrada
+    const existingCedula = await prisma.business.findFirst({
+      where: {
+        documentoFirmante: rawCedula,
+      },
+    });
+
+    if (existingCedula) {
+      return NextResponse.json(
+        { error: 'Ya existe una cuenta o negocio registrado con este número de cédula / documento de identidad.' },
+        { status: 400 }
+      );
+    }
+
+    // 7. Si es Emprendedor, verificar que el nombre del emprendimiento no esté repetido
+    if (rol === 'EMPRENDEDOR') {
+      if (!nombreNegocio || !nombreNegocio.trim()) {
+        return NextResponse.json(
+          { error: 'Por favor ingresa el nombre de tu emprendimiento.' },
+          { status: 400 }
+        );
+      }
+
+      const cleanBusinessName = nombreNegocio.trim();
+      const existingBusinessName = await prisma.business.findFirst({
+        where: {
+          nombre: {
+            equals: cleanBusinessName,
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      if (existingBusinessName) {
+        return NextResponse.json(
+          { error: `El nombre de emprendimiento "${cleanBusinessName}" ya se encuentra registrado. Por favor elige un nombre único para tu tienda.` },
+          { status: 400 }
+        );
+      }
     }
 
     let userRole = 'CLIENTE';
@@ -118,7 +217,7 @@ export async function POST(request: NextRequest) {
         correoPersonal: cleanPersonalEmail,
         passwordHash,
         rol: userRole,
-        telefono: telefono?.trim() || null,
+        telefono: cleanPhone,
         twoFactorSecret: body.twoFactorSecret || null,
         twoFactorEnabled: Boolean(body.twoFactorSecret),
         correoVerificado: false,
@@ -157,7 +256,7 @@ export async function POST(request: NextRequest) {
       threeMonths.setMonth(threeMonths.getMonth() + 3);
 
       const nombreFirmanteFinal = body.nombreFirmante?.trim() || nombre.trim();
-      const documentoFirmanteFinal = body.documentoFirmante?.trim() || body.telefono || 'ID Estudiantil Uninorte';
+      const documentoFirmanteFinal = rawCedula || body.documentoFirmante?.trim() || cleanPhone || 'CC No Especificada';
 
       // 1. Generar Documento Legal POL-EMP-001 en servidor
       const contractDoc = await generateDigitalContractDocument({
