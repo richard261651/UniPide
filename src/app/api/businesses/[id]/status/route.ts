@@ -84,7 +84,7 @@ export async function PATCH(
 
       await createNotification({
         userId: currentBusiness.userId,
-        titulo: '✅ ¡Pago Confirmado y Negocio Abierto!',
+        titulo: 'Pago Confirmado y Negocio Abierto',
         mensaje: `Tu emprendimiento "${currentBusiness.nombre}" ha sido verificado y aprobado. Ya se encuentra abierto y activo en UniPide.`,
         tipo: 'APROBACION_NEGOCIO',
         url: '/emprendedor/suscripcion',

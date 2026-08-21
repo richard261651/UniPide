@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
     // Notificación In-App para el Emprendedor Responsable
     await createNotification({
       userId: business.userId,
-      titulo: `🛒 ¡Nuevo Pedido #${newOrder.codigoPedido}!`,
+      titulo: `Nuevo Pedido #${newOrder.codigoPedido}`,
       mensaje: `Has recibido un nuevo pedido de ${session.nombre} por $${total.toLocaleString('es-CO')} en ${zonaEntregaNombre || estimate.destinoNombre}.`,
       tipo: 'NUEVO_PEDIDO',
       url: '/emprendedor/pedidos',
@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
     // Notificación In-App para el Cliente
     await createNotification({
       userId: session.id,
-      titulo: `📦 Pedido #${newOrder.codigoPedido} Registrado`,
+      titulo: `Pedido #${newOrder.codigoPedido} Registrado`,
       mensaje: `Tu pedido en "${business.nombre}" ha sido recibido. Tiempo estimado de entrega: ${estimate.tiempoTotalMin} min.`,
       tipo: 'ESTADO_PEDIDO',
       url: `/pedidos/${newOrder.id}`,
