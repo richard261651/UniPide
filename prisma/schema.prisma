@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String      @id @default(cuid())
+  nombre           String
+  correo           String      @unique // Correo institucional @uninorte.edu.co
+  correoPersonal   String?     // Correo personal para recibir códigos de confirmación y notificaciones
+  passwordHash     String
+  rol              String      @default("CLIENTE") // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
+  telefono         String?
+  foto             String?
+  twoFactorSecret         String?     // Secreto TOTP para Google Authenticator
+  twoFactorEnabled        Boolean     @default(false)
+  correoVerificado        Boolean     @default(false) // Verificación de correo
+  tokenVerificacionCorreo String?     // Código de verificación enviado al correo personal
+  activo                  Boolean     @default(true)
+  fechaRegistro           DateTime    @default(now())
+
+  businesses    Business[]
+  orders        Order[]
+  ratings       Rating[]
+  chatMessages  ChatMessage[]
+  pqrs          PQRS[]
+  favorites     Favorite[]
+  notifications Notification[]
+}
+
+model Business {
+  id                String       @id @default(cuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nombre            String
+  slug              String       @unique
+  categoria         String       // "Comida Rápida", "Postres & Dulces", "Bebidas & Café", "Tecnología & Gadgets", "Accesorios & Merch", "Ropa & Moda", "Papelería & Stickers", "Librería & Libros", "Belleza & Cuidado", "Servicios & Tutorías"
+  descripcion       String
+  logo              String?
+  banner            String?
+  ubicacionCampus   String       @default("Venta Móvil / Entrega en Campus")
+  zonaCampusCodigo  String       @default("ZONA_EMPRENDIMIENTOS")
+  tiempoBasePrepMin Int          @default(0) // Obsoleto - ventas directas en campus
+  estadoAprobacion  String       @default("PENDIENTE") // "PENDIENTE" | "APROBADO" | "RECHAZADO" | "SUSPENDIDO"
+  activo            Boolean      @default(true)
+  fechaCreacion     DateTime     @default(now())
+
+  // Datos Promoción Lanzamiento y Suscripción
+  esFundador                  Boolean      @default(false)
+  fechaAprobacion             DateTime?
+  fechaInicioPromocion        DateTime?
+  fechaFinPromocion           DateTime?
+  suscripcionEstado           String       @default("ACTIVA") // "ACTIVA" | "PENDIENTE_PAGO" | "INACTIVA"
+  suscripcionMonto            Float        @default(19900)    // 19900 o 29900
+  tipoSuscripcion             String       @default("PREPAGADO") // "PREPAGADO" | "DEBITO_AUTOMATICO"
+  metodoPagoSuscripcion       String?      // "PSE" | "NEQUI" | "DAVIPLATA" | "TARJETA"
+  fechaUltimoPago             DateTime?
+  pagoVerificado              Boolean      @default(false)
+  fechaPagoVerificado         DateTime?
+  wompiTransactionId          String?
+  wompiReference              String?
+  fechaNotificacionExpiracion DateTime?
+
+  // Firma Digital de Política de Responsabilidad e Higiene (POL-EMP-001)
+  firmaPoliticaHigiene        Boolean      @default(false)
+  fechaFirmaPolitica          DateTime?
+  versionPolitica             String?      @default("POL-EMP-001 v1.0")
+  nombreFirmante              String?
+  documentoFirmante           String?
+  firmaVirtualBase64          String?      // Imagen PNG en Base64 de la firma manuscrita trazada en canvas
+  contratoDriveUrl            String?
+  contratoDriveId             String?
+
+  products          Product[]
+  orders            Order[]
+  ratings           Rating[]
+  pqrs              PQRS[]
+}
+
+model Product {
+  id                String       @id @default(cuid())
+  businessId        String
+  business          Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  nombre            String
+  descripcion       String
+  precio            Float
+  foto              String?
+  fotos             String[]     @default([])
+  stock             Int          @default(20)
+  disponible        Boolean      @default(true) // Switch "Agotado hoy"
+  categoria         String?      // Subcategoría interna del negocio (ej. "Combos", "Bebidas", "Postres", "Stickers")
+  esOferta          Boolean      @default(false)
+  precioOferta      Float?
+  descripcionOferta String?      // Ej: "2x1 los Miércoles", "Combo Almuerzo"
+  fechaInicioOferta DateTime?
+  fechaFinOferta    DateTime?
+  
+  // Módulo opcional de personalización / variantes
+  tieneTallas         Boolean    @default(false)
+  tallasDisponibles   String[]   @default([])
+  tieneColores        Boolean    @default(false)
+  coloresDisponibles  String[]   @default([])
+  tieneVariaciones    Boolean    @default(false)
+  nombreVariaciones   String?    // Ej: "Presentación", "Sabor", "Estilo", "Término"
+  opcionesVariaciones String[]   @default([])
+
+  fechaCreacion     DateTime     @default(now())
+
+  orderItems        OrderItem[]
+  favorites         Favorite[]
+}
+
+model CampusZone {
+  id             String    @id @default(cuid())
+  codigo         String    @unique // Ej: "BLOQUE_A", "BLOQUE_F", "BAMBU_1", "BIBLIOTECA"
+  nombre         String    // "Bloque A", "B1: Bambú 1"
+  descripcion    String?
+  coordenadaRefX Float?    // Posición porcentual X en el mapa Uninorte (0-100)
+  coordenadaRefY Float?    // Posición porcentual Y en el mapa Uninorte (0-100)
+}
+
+model ZoneDistance {
+  id              String   @id @default(cuid())
+  origenCodigo    String
+  destinoCodigo   String
+  minutosTraslado Int      @default(5)
+
+  @@unique([origenCodigo, destinoCodigo])
+}
+
+model Order {
+  id                         String       @id @default(cuid())
+  codigoPedido               String       @unique // Ej: "ORD-1092"
+  clienteId                  String
+  cliente                    User         @relation(fields: [clienteId], references: [id])
+  businessId                 String
+  business                   Business     @relation(fields: [businessId], references: [id])
+  estado                     String       @default("RECIBIDO") // "RECIBIDO" | "EN_PREPARACION" | "EN_CAMINO" | "ENTREGADO" | "CANCELADO"
+  subtotal                   Float
+  total                      Float
+  zonaEntregaCodigo          String       // Código de CampusZone del cliente
+  zonaEntregaNombre          String       // Nombre legible de la zona (ej. "Bloque F")
+  detalleUbicacion           String?      // Ej: "Piso 3 salón 302"
+  tiempoEstimadoMin          Int          // Minutos calculados de caminata
+  instrucciones              String?
+  metodoPago                 String       @default("Efectivo / Nequi / Daviplata al recibir")
+  repartidorLat              Float?       // Latitud GPS
+  repartidorLng              Float?       // Longitud GPS
+  ubicacionRepartidorNombre  String?      // Ubicación actual reportada por el emprendedor (ej. "Bloque F")
+  ultimaUbicacionActualizada DateTime?    // Timestamp
+  fechaCreacion              DateTime     @default(now())
+  fechaActualizacion         DateTime     @updatedAt
+
+  items                      OrderItem[]
+  rating                     Rating?
+  chatMessages               ChatMessage[]
+}
+
+model OrderItem {
+  id                   String    @id @default(cuid())
+  orderId              String
+  order                Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId            String?
+  product              Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  nombreProducto       String
+  cantidad             Int
+  precioUnitario       Float
+  opcionesSeleccionadas String?   // Ej: "Talla: M | Color: Negro | Presentación: 250g"
+  notas                String?
+}
+
+model Rating {
+  id            String    @id @default(cuid())
+  orderId       String    @unique
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  clienteId     String
+  cliente       User      @relation(fields: [clienteId], references: [id])
+  businessId    String
+  business      Business  @relation(fields: [businessId], references: [id])
+  puntuacion    Int       // 1 a 5 estrellas
+  comentario    String?
+  fechaCreacion DateTime  @default(now())
+}
+
+model ChatMessage {
+  id            String    @id @default(cuid())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  remitenteId   String
+  remitente     User      @relation(fields: [remitenteId], references: [id])
+  rolRemitente  String    // "CLIENTE" | "EMPRENDEDOR" | "ADMIN"
+  mensaje       String
+  fechaCreacion DateTime  @default(now())
+}
+
+model PQRS {
+  id            String    @id @default(cuid())
+  usuarioId     String
+  usuario       User      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  businessId    String?
+  business      Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  tipo          String    // "QUEJA" | "RECLAMO" | "PETICION" | "SUGERENCIA"
+  asunto        String
+  mensaje       String
+  respuesta     String?
+  estado        String    @default("PENDIENTE") // "PENDIENTE" | "EN_REVISION" | "RESUELTO"
+  fechaCreacion DateTime  @default(now())
+  fechaRespuesta DateTime?
+}
+
+model Favorite {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fechaCreacion DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model Notification {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  titulo        String
+  mensaje       String
+  tipo          String   // "NUEVO_PEDIDO" | "PAGO_CONFIRMADO" | "ESTADO_PEDIDO" | "APROBACION_NEGOCIO" | "SISTEMA" | "PQRS"
+  leido         Boolean  @default(false)
+  url           String?
+  fechaCreacion DateTime @default(now())
+}

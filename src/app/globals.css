@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #F8F6F4;     /* Blanco Lino Cálido (60%) */
+    --foreground: #1F222E;     /* Gris Asfalto Profundo (30%) */
+    --body-text: #4A4E5A;      /* Gris Grafito */
+    
+    /* Escala Oficial de Marca UniPide (10%) */
+    --primary-red: #F56649;    /* Nivel 5: Color Primario de Acción */
+    --primary-hover: #F77C64;  /* Nivel 4: Hover Vibrante */
+    --primary-mid: #F9A190;    /* Nivel 3: Acento Intermedio */
+    --primary-border: #FBC6BB; /* Nivel 2: Borde Suave */
+    --primary-light: #FEEBE7;  /* Nivel 1: Fondo Suave de Selección */
+    
+    --border-light: #E5E2DC;   /* Gris Niebla */
+    --card-white: #FFFFFF;     /* Tarjeta Blanco Puro */
+  }
+
+  html,
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+  }
+
+  p, label, input, textarea {
+    color: #4A4E5A; /* Texto de Lectura en Gris Grafito */
+  }
+}
+
+/* Forzar que elementos dentro de botones e insignias hereden color de texto */
+button *, a.btn-primary *, [class*="bg-[#F56649]"] *, [class*="bg-uninorte-red"] * {
+  color: inherit;
+}
+
+/* Ocultar barra de desplazamiento en navegación móvil preservando el scroll táctil */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Soporte para Inset de Área Segura en iPhone y Android Notch */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Transiciones táctiles */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.transition-smooth {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilo Tarjeta */
+.card-aesthetic {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E2DC;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 16px -2px rgba(31, 34, 46, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-aesthetic:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -4px rgba(245, 102, 73, 0.18);
+  border-color: #FBC6BB;
+}
+
+/* Botón Primario de Acción #F56649 con Hover #F77C64 y Texto Blanco Nítido (#FFFFFF) */
+.btn-primary {
+  background-color: #F56649;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  border-radius: 0.875rem;
+  box-shadow: 0 4px 14px rgba(245, 102, 73, 0.28);
+  transition: all 0.2s ease;
+}
+
+.btn-primary * {
+  color: #FFFFFF !important;
+}
+
+.btn-primary:hover {
+  background-color: #F77C64;
+  box-shadow: 0 6px 18px rgba(245, 102, 73, 0.38);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------
+   ANIMACIÓN PANTALLA DE BIENVENIDA (SPLASH SCREEN UNIPIDE)
+   ------------------------------------------------------------- */
+.splash-logo {
+  transform: scale(0);
+  opacity: 0;
+  animation: splashPopLogo 0.9s cubic-bezier(0.34, 1.35, 0.64, 1) 0.15s forwards;
+}
+
+.brand-title {
+  transform: translateX(-20px);
+  opacity: 0;
+  animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+.brand-tagline {
+  transform: translateX(-15px);
+  opacity: 0;
+  animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards;
+}
+
+@keyframes splashPopLogo {
+  0% {
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15) rotate(3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInText {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
