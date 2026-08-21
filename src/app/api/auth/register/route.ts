@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { hashPassword, signJwtToken, TOKEN_COOKIE_NAME } from '@/lib/auth';
 import { slugify, isValidEmail } from '@/lib/utils';
 
-import { sendEmailVerificationCode } from '@/lib/email';
+import { sendEmailVerificationCode, sendContractAcceptedEmail } from '@/lib/email';
 import { generateDigitalContractDocument } from '@/lib/contractGenerator';
 import { uploadContractToGoogleDrive } from '@/lib/googleDrive';
 
@@ -225,14 +225,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Enviar código de verificación prioritariamente al correo personal
     const targetDeliveryEmail = cleanPersonalEmail || cleanEmail;
-    await sendEmailVerificationCode({
-      toEmail: targetDeliveryEmail,
-      nombre: nombre.trim(),
-      code: emailVerificationCode,
-      correoInstitucional: cleanEmail,
-    });
 
     let primaryBusiness = null;
 
@@ -302,6 +295,26 @@ export async function POST(request: NextRequest) {
           contratoDriveUrl: driveResult.driveUrl,
           contratoDriveId: driveResult.fileId,
         },
+      });
+
+      // Enviar correo formal: "Gracias por aceptar nuestros términos + Contrato POL-EMP-001"
+      await sendContractAcceptedEmail({
+        toEmail: targetDeliveryEmail,
+        nombreEmprendedor: nombre.trim(),
+        nombreNegocio: nombreNegocio.trim(),
+        nombreFirmante: nombreFirmanteFinal,
+        documentoFirmante: documentoFirmanteFinal,
+        correoInstitucional: cleanEmail,
+        contratoUrl: driveResult.driveUrl || 'https://unipide.com/emprendedor/suscripcion',
+        businessId: primaryBusiness.id,
+      });
+    } else {
+      // Para clientes regulares, enviar código de confirmación
+      await sendEmailVerificationCode({
+        toEmail: targetDeliveryEmail,
+        nombre: nombre.trim(),
+        code: emailVerificationCode,
+        correoInstitucional: cleanEmail,
       });
     }
 

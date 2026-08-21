@@ -412,3 +412,77 @@ export async function sendSubscriptionExpiringEmail(data: {
 
   return await sendEmail({ to: data.toEmail, subject, html });
 }
+
+/**
+ * Envía el correo formal "Gracias por aceptar nuestros términos y contrato" al Emprendedor
+ */
+export async function sendContractAcceptedEmail(data: {
+  toEmail: string;
+  nombreEmprendedor: string;
+  nombreNegocio: string;
+  nombreFirmante: string;
+  documentoFirmante: string;
+  correoInstitucional: string;
+  contratoUrl?: string | null;
+  businessId?: string;
+}) {
+  const fechaActual = new Date().toLocaleDateString('es-CO', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const subject = `UniPide — Gracias por aceptar nuestros términos y contrato (${data.nombreNegocio})`;
+  const contractLink = data.contratoUrl || `https://unipide.com/emprendedor/suscripcion`;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 540px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff;">
+      <div style="text-align: center; margin-bottom: 24px; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px;">
+        <span style="font-size: 28px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
+        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Marketplace Oficial Emprendimientos Uninorte</p>
+      </div>
+
+      <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 12px; text-align: center;">¡Gracias por aceptar nuestros términos y contrato!</h2>
+      
+      <p style="font-size: 14px; color: #334155; line-height: 1.6; text-align: justify; margin-bottom: 20px;">
+        Hola <strong>${data.nombreEmprendedor}</strong>, te confirmamos que hemos recibido satisfactoriamente el registro de tu emprendimiento <strong>${data.nombreNegocio}</strong> y la firma digital de la <strong>Política de Calidad e Higiene POL-EMP-001 (Versión 1.0)</strong>.
+      </p>
+
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin: 20px 0;">
+        <h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Resumen del Contrato y Registro Legal</h4>
+        <p style="margin: 5px 0; font-size: 12px; color: #334155;"><strong>Emprendimiento:</strong> ${data.nombreNegocio}</p>
+        <p style="margin: 5px 0; font-size: 12px; color: #334155;"><strong>Firmante Autorizado:</strong> ${data.nombreFirmante}</p>
+        <p style="margin: 5px 0; font-size: 12px; color: #334155;"><strong>Cédula / Documento:</strong> ${data.documentoFirmante}</p>
+        <p style="margin: 5px 0; font-size: 12px; color: #334155;"><strong>Correo Institucional Uninorte:</strong> ${data.correoInstitucional}</p>
+        <p style="margin: 5px 0; font-size: 12px; color: #334155;"><strong>Fecha de Firma:</strong> ${fechaActual}</p>
+        <p style="margin: 5px 0; font-size: 12px; color: #0F6E56;"><strong>Documento Aceptado:</strong> Política Institucional POL-EMP-001 v1.0</p>
+      </div>
+
+      <div style="background-color: #FFF5F2; border: 1px dashed #D85A30; border-radius: 14px; padding: 16px; margin: 20px 0; text-align: center;">
+        <p style="font-size: 12.5px; color: #9A3412; margin: 0 0 12px 0; line-height: 1.5;">
+          Tu copia digital del contrato legal ha sido archivada y firmada electrónicamente. Puedes consultarla o descargarla en cualquier momento:
+        </p>
+        <a href="${contractLink}" style="background-color: #D85A30; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 800; font-size: 12.5px; text-decoration: none; display: inline-block;">
+          Ver Mi Contrato Firmado POL-EMP-001
+        </a>
+      </div>
+
+      <div style="background-color: #f1f5f9; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px;">
+        <p style="font-size: 11.5px; color: #475569; margin: 0; line-height: 1.5;">
+          <strong>Siguiente Paso:</strong> Ingresa a tu panel de emprendedor para completar la activación de tu tienda y comenzar a vender en el campus Uninorte.
+        </p>
+      </div>
+
+      <div style="border-top: 1px solid #f1f5f9; text-align: center; margin-top: 24px; padding-top: 14px;">
+        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla, Colombia</p>
+      </div>
+    </div>
+  `;
+
+  return await sendEmail({
+    to: data.toEmail,
+    subject,
+    html,
+    text: `Gracias por aceptar nuestros términos. Tu emprendimiento ${data.nombreNegocio} y contrato POL-EMP-001 han sido registrados exitosamente.`,
+  });
+}

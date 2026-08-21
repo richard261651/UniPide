@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 import { generateDigitalContractDocument } from '@/lib/contractGenerator';
 import { uploadContractToGoogleDrive } from '@/lib/googleDrive';
+import { sendContractAcceptedEmail } from '@/lib/email';
 
 export async function POST(
   request: NextRequest,
@@ -74,6 +75,19 @@ export async function POST(
         contratoDriveUrl: driveResult.driveUrl,
         contratoDriveId: driveResult.fileId,
       },
+    });
+
+    // 4. Enviar correo de "Gracias por aceptar nuestros términos y contrato"
+    const targetEmail = business.user?.correoPersonal || business.user?.correo || session.correo;
+    await sendContractAcceptedEmail({
+      toEmail: targetEmail,
+      nombreEmprendedor: business.user?.nombre || nombreFirmante.trim(),
+      nombreNegocio: business.nombre,
+      nombreFirmante: nombreFirmante.trim(),
+      documentoFirmante: documentoFirmante.trim(),
+      correoInstitucional: business.user?.correo || session.correo,
+      contratoUrl: driveResult.driveUrl || 'https://unipide.com/emprendedor/suscripcion',
+      businessId: business.id,
     });
 
     return NextResponse.json({

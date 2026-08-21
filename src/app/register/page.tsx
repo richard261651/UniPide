@@ -219,10 +219,11 @@ export default function RegisterPage() {
         return;
       }
 
-      // Si es emprendedor, avanzar al Paso 3 para verificar código recibido en correo personal
+      // Si es emprendedor, redirigir al portal de suscripción y activación
       if (rol === 'EMPRENDEDOR') {
         setLoading(false);
-        setStep(3);
+        window.location.href = '/emprendedor/suscripcion';
+        return;
       }
     } catch (err: any) {
       setError(err.message || 'Error al completar registro con 2FA');
