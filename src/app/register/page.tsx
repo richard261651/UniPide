@@ -415,7 +415,7 @@ export default function RegisterPage() {
         />
       </div>
       <p className="text-[10px] text-gray-500 mt-1">
-        🎓 Obligatorio para validar que eres estudiante o miembro activo de Uninorte.
+        Obligatorio para validar que eres estudiante o miembro activo de Uninorte.
       </p>
     </div>
 
@@ -440,7 +440,7 @@ export default function RegisterPage() {
         />
       </div>
       <p className="text-[10px] text-emerald-700 mt-1">
-        ⚡ Aquí recibirás tus códigos de confirmación, pedidos y facturas al instante sin bloqueos institucionales.
+        Aquí recibirás tus códigos de confirmación, pedidos y facturas al instante sin bloqueos institucionales.
       </p>
     </div>
 
@@ -809,7 +809,7 @@ export default function RegisterPage() {
  </div>
 
  <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/70 text-[11px] text-amber-900 text-center leading-relaxed">
- 💡 <strong>Revisa tu Bandeja de Entrada, Promociones o SPAM</strong> en tu correo personal.
+ <strong>Revisa tu Bandeja de Entrada, Promociones o SPAM</strong> en tu correo personal.
  </div>
  </form>
  )}

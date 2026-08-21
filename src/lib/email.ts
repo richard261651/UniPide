@@ -199,7 +199,7 @@ export async function sendEmailVerificationCode(data: {
   code: string;
   correoInstitucional?: string;
 }): Promise<{ sent: boolean; provider: string; error?: string }> {
-  const subject = `🎓 UniPide — Código de Verificación (${data.code})`;
+  const subject = `UniPide — Código de Verificación (${data.code})`;
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff; text-align: center;">
       <div style="margin-bottom: 20px;">
