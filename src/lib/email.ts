@@ -1,353 +1,312 @@
+/**
+ * Servicio Centralizado de Envío de Correos Electrónicos con Resend API
+ */
+
+export async function sendEmailViaResend({
+ to,
+ subject,
+ html,
+ replyTo = 'richardbb839@gmail.com',
+}: {
+ to: string;
+ subject: string;
+ html: string;
+ replyTo?: string;
+}): Promise<{ sent: boolean; error?: string }> {
+ const resendApiKey = process.env.RESEND_API_KEY;
+
+ if (!resendApiKey) {
+ console.warn(' [EMAIL NO ENVIADO] Falta la clave RESEND_API_KEY en las variables de entorno (.env / Vercel).');
+ console.log(` [EMAIL SIMULADO EN CONSOLA] Para: ${to} | Asunto: "${subject}"`);
+ return { sent: false, error: 'Falta RESEND_API_KEY en variables de entorno' };
+ }
+
+ // Resend exige un remitente de dominio verificado o onboarding@resend.dev (gmail.com directo no está permitido por Resend API)
+ let fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide <onboarding@resend.dev>';
+ if (fromEmail.includes('@gmail.com')) {
+ fromEmail = 'UniPide Administrador <onboarding@resend.dev>';
+ }
+
+ try {
+ const res = await fetch('https://api.resend.com/emails', {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ Authorization: `Bearer ${resendApiKey}`,
+ },
+ body: JSON.stringify({
+ from: fromEmail,
+ to: [to],
+ reply_to: replyTo,
+ subject,
+ html,
+ }),
+ });
+
+ if (res.ok) {
+ console.log(` [EMAIL ENVIADO] Remitente: ${fromEmail} (Respuesta a: ${replyTo}) | Destino: ${to} | Asunto: "${subject}"`);
+ return { sent: true };
+ } else {
+ const errBody = await res.json().catch(() => ({}));
+ console.error(` [ERROR RESEND ${res.status}]`, errBody);
+ return { sent: false, error: errBody.message || `Error HTTP ${res.status} desde Resend` };
+ }
+ } catch (err: any) {
+ console.error(' [ERROR ENVIANDO CORREO]', err);
+ return { sent: false, error: err.message };
+ }
+}
+
+/**
+ * Envía el Código de Verificación de Recuperación de Contraseña
+ */
 export async function sendRecoveryEmail(
-  toEmail: string,
-  code: string
+ toEmail: string,
+ code: string
 ): Promise<{ sent: boolean; provider: string; error?: string }> {
-  const resendApiKey = process.env.RESEND_API_KEY;
+ const subject = 'Código de verificación de contraseña - UniPide';
+ const html = `
+ <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #f0f0f0; border-radius: 16px; background-color: #ffffff;">
+ <div style="text-align: center; margin-bottom: 20px;">
+ <span style="font-size: 24px; font-weight: 900; color: #000000; letter-spacing: -0.5px;">Uni<span style="color: #D85A30;">Pide</span></span>
+ <p style="font-size: 11px; color: #888; margin-top: 2px;">Marketplace Universitario Uninorte</p>
+ </div>
 
-  if (resendApiKey) {
-    try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide <onboarding@resend.dev>';
+ <h3 style="font-size: 16px; font-weight: 700; color: #111; margin-bottom: 8px; text-align: center;">Recuperación de Contraseña</h3>
+ <p style="font-size: 13px; color: #555; line-height: 1.5; text-align: center;">
+ Has solicitado restablecer tu contraseña en <strong>UniPide</strong>. Utiliza el siguiente código de verificación:
+ </p>
 
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${resendApiKey}`,
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [toEmail],
-          subject: '🔒 Código de verificación de contraseña - UniPide',
-          html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #f0f0f0; border-radius: 16px; background-color: #ffffff;">
-              <div style="text-align: center; margin-bottom: 20px;">
-                <span style="font-size: 24px; font-weight: 900; color: #000000; letter-spacing: -0.5px;">Uni<span style="color: #D85A30;">Pide</span></span>
-                <p style="font-size: 11px; color: #888; margin-top: 2px;">Marketplace Universitario Uninorte</p>
-              </div>
+ <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; text-align: center; padding: 18px; margin: 20px 0;">
+ <span style="font-size: 32px; font-weight: 900; letter-spacing: 8px; color: #D85A30; font-family: monospace;">${code}</span>
+ </div>
 
-              <h3 style="font-size: 16px; font-weight: 700; color: #111; margin-bottom: 8px; text-align: center;">Recuperación de Contraseña</h3>
-              <p style="font-size: 13px; color: #555; line-height: 1.5; text-align: center;">
-                Has solicitado restablecer tu contraseña en <strong>UniPide</strong>. Utiliza el siguiente código de verificación:
-              </p>
+ <p style="font-size: 11px; color: #777; text-align: center; line-height: 1.4;">
+ Este código expira en <strong>15 minutos</strong>.
+ </p>
+ </div>
+ `;
 
-              <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; text-align: center; padding: 18px; margin: 20px 0;">
-                <span style="font-size: 32px; font-weight: 900; letter-spacing: 8px; color: #D85A30; font-family: monospace;">${code}</span>
-              </div>
-
-              <p style="font-size: 11px; color: #777; text-align: center; line-height: 1.4;">
-                ⏱️ Este código expira en <strong>15 minutos</strong>.
-              </p>
-            </div>
-          `,
-        }),
-      });
-
-      if (res.ok) {
-        return { sent: true, provider: 'Resend' };
-      }
-    } catch (err: any) {
-      console.error('Error enviando correo de recuperación:', err);
-    }
-  }
-
-  console.log(`🔒 [UNIPIDE RECOVERY] Código para ${toEmail}: ${code}`);
-  return { sent: false, provider: 'Console' };
+ const result = await sendEmailViaResend({ to: toEmail, subject, html });
+ return { sent: result.sent, provider: result.sent ? 'Resend' : 'Console', error: result.error };
 }
 
 /**
  * Envía el Código de Verificación de Correo Gmail al Emprendedor al registrarse
  */
 export async function sendEmailVerificationCode(data: {
-  toEmail: string;
-  nombre: string;
-  code: string;
+ toEmail: string;
+ nombre: string;
+ code: string;
 }): Promise<{ sent: boolean; provider: string; error?: string }> {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Administrador <richardbb839@gmail.com>';
-  const subject = `📧 Código de Verificación de Correo Gmail - UniPide (${data.code})`;
-  const htmlContent = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 18px; background-color: #ffffff; text-align: center;">
-      <div style="margin-bottom: 18px;">
-        <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
-        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
-      </div>
+ const subject = `Código de Verificación de Correo Gmail - UniPide (${data.code})`;
+ const html = `
+ <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 18px; background-color: #ffffff; text-align: center;">
+ <div style="margin-bottom: 18px;">
+ <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
+ <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
+ </div>
 
-      <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Verificación de tu Correo Gmail</h3>
-      <p style="font-size: 13px; color: #334155; line-height: 1.5; text-align: justify; margin-bottom: 20px;">
-        Hola <strong>${data.nombre}</strong>, para completar tu registro de emprendedor en <strong>UniPide</strong> y activar tu cuenta, ingresa el siguiente código de verificación de 6 dígitos:
-      </p>
+ <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Verificación de tu Correo Gmail</h3>
+ <p style="font-size: 13px; color: #334155; line-height: 1.5; text-align: justify; margin-bottom: 20px;">
+ Hola <strong>${data.nombre}</strong>, para completar tu registro de emprendedor en <strong>UniPide</strong> y activar tu cuenta, ingresa el siguiente código de verificación de 6 dígitos:
+ </p>
 
-      <div style="background-color: #FAF8F5; border: 2px border-dashed #D85A30; border-radius: 14px; text-align: center; padding: 20px; margin: 20px 0;">
-        <span style="font-size: 34px; font-weight: 900; letter-spacing: 8px; color: #D85A30; font-family: monospace;">${data.code}</span>
-      </div>
+ <div style="background-color: #FAF8F5; border: 2px border-dashed #D85A30; border-radius: 14px; text-align: center; padding: 20px; margin: 20px 0;">
+ <span style="font-size: 34px; font-weight: 900; letter-spacing: 8px; color: #D85A30; font-family: monospace;">${data.code}</span>
+ </div>
 
-      <p style="font-size: 11px; color: #64748b; text-align: center; line-height: 1.4;">
-        🔒 Este código es personal e intransferible. Si no realizaste este registro, puedes ignorar este correo.
-      </p>
+ <p style="font-size: 11px; color: #64748b; text-align: center; line-height: 1.4;">
+ Este código es personal e intransferible. Si no realizaste este registro, puedes ignorar este correo.
+ </p>
 
-      <div style="border-top: 1px solid #f1f5f9; margin-top: 28px; padding-top: 14px;">
-        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla</p>
-      </div>
-    </div>
-  `;
+ <div style="border-top: 1px solid #f1f5f9; margin-top: 28px; padding-top: 14px;">
+ <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla</p>
+ </div>
+ </div>
+ `;
 
-  if (resendApiKey) {
-    try {
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
-        body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
-      });
-
-      if (res.ok) {
-        console.log(`📧 [GMAIL VERIFICATION CODE] Código enviado desde ${fromEmail} a ${data.toEmail}`);
-        return { sent: true, provider: 'Resend' };
-      }
-    } catch (err: any) {
-      console.error('Error enviando código de verificación por correo:', err);
-    }
-  }
-
-  console.log(`📧 [GMAIL VERIFICATION CONSOLE] Código para ${data.toEmail}: ${data.code} (Remitente: ${fromEmail})`);
-  return { sent: false, provider: 'Console' };
+ const result = await sendEmailViaResend({ to: data.toEmail, subject, html });
+ return { sent: result.sent, provider: result.sent ? 'Resend' : 'Console', error: result.error };
 }
 
 interface InvoiceEmailData {
-  toEmail: string;
-  nombreEmprendedor: string;
-  nombreNegocio: string;
-  monto: number;
-  wompiRef: string;
-  tipoSuscripcion: 'PREPAGADO' | 'DEBITO_AUTOMATICO';
-  metodoPago: string;
-  esFundador: boolean;
+ toEmail: string;
+ nombreEmprendedor: string;
+ nombreNegocio: string;
+ monto: number;
+ wompiRef: string;
+ tipoSuscripcion: 'PREPAGADO' | 'DEBITO_AUTOMATICO';
+ metodoPago: string;
+ esFundador: boolean;
 }
 
 /**
  * Envía la Factura Digital y Recibo de Pago de Suscripción al Emprendedor
  */
 export async function sendSubscriptionInvoiceEmail(data: InvoiceEmailData) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const fechaActual = new Date().toLocaleDateString('es-CO', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+ const fechaActual = new Date().toLocaleDateString('es-CO', {
+ year: 'numeric',
+ month: 'long',
+ day: 'numeric',
+ });
 
-  const subject = `🧾 Factura Digital UniPide - Recibo de Suscripción (${data.wompiRef})`;
-  const htmlContent = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 540px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff;">
-      <div style="text-align: center; margin-bottom: 24px; border-b: 1px solid #f1f5f9; padding-bottom: 16px;">
-        <span style="font-size: 26px; font-weight: 900; color: #1e293b;">Uni<span style="color: #D85A30;">Pide</span></span>
-        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Factura Digital de Suscripción & Afiliación</p>
-      </div>
+ const subject = `Factura Digital UniPide - Recibo de Suscripción (${data.wompiRef})`;
+ const html = `
+ <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 540px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff;">
+ <div style="text-align: center; margin-bottom: 24px; border-b: 1px solid #f1f5f9; padding-bottom: 16px;">
+ <span style="font-size: 26px; font-weight: 900; color: #1e293b;">Uni<span style="color: #D85A30;">Pide</span></span>
+ <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Factura Digital de Suscripción & Afiliación</p>
+ </div>
 
-      <div style="background-color: #f8fafc; border: 1px border-dashed #cbd5e1; border-radius: 14px; padding: 16px; margin-bottom: 20px;">
-        <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 14px; font-weight: 800;">Detalles del Recibo</h4>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Cliente:</strong> ${data.nombreEmprendedor}</p>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Emprendimiento:</strong> ${data.nombreNegocio}</p>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Ref. Wompi:</strong> <span font-family: monospace; color: #D85A30;">${data.wompiRef}</span></p>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Fecha:</strong> ${fechaActual}</p>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Modalidad:</strong> ${data.tipoSuscripcion === 'DEBITO_AUTOMATICO' ? 'Débito Automático Recurrente Wompi' : 'Prepagado Mensual (PSE / Nequi)'}</p>
-        <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Método:</strong> ${data.metodoPago}</p>
-      </div>
+ <div style="background-color: #f8fafc; border: 1px border-dashed #cbd5e1; border-radius: 14px; padding: 16px; margin-bottom: 20px;">
+ <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 14px; font-weight: 800;">Detalles del Recibo</h4>
+ <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Cliente:</strong> ${data.nombreEmprendedor}</p>
+ <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Emprendimiento:</strong> ${data.nombreNegocio}</p>
 
-      <div style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 14px; padding: 16px; margin-bottom: 20px; text-align: center;">
-        <span style="font-size: 11px; font-weight: 700; color: #991B1B; text-transform: uppercase; tracking-wider: 1px;">Monto Total Cobrado</span>
-        <h2 style="margin: 4px 0 0 0; font-size: 32px; font-weight: 900; color: #D85A30;">$${data.monto.toLocaleString('es-CO')} COP</h2>
-        <p style="font-size: 11px; color: #0F6E56; margin-top: 4px; font-weight: 700;">
-          ${data.esFundador ? '⭐ Incluye Descuento del 33% (Tarifa Fundador UniPide por 3 meses)' : 'Tarifa Estándar Mensual'}
-        </p>
-      </div>
+ <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Fecha:</strong> ${fechaActual}</p>
 
-      <div style="background-color: #f1f5f9; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px;">
-        <p style="font-size: 12px; color: #334155; margin: 0; line-height: 1.5;">
-          ✅ <strong>Estado del Pago:</strong> Verificado por Wompi Colombia.<br />
-          ⏳ <strong>Próximo Paso:</strong> Tu emprendimiento ha sido notificado al equipo Administrador de UniPide para su autorización final de publicación en el campus.
-        </p>
-      </div>
+ <p style="margin: 4px 0; font-size: 12px; color: #334155;"><strong>Método:</strong> ${data.metodoPago}</p>
+ </div>
 
-      <div style="border-top: 1px solid #f1f5f9; pt-16; text-align: center; margin-top: 20px;">
-        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla</p>
-      </div>
-    </div>
-  `;
+ <div style="background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 14px; padding: 16px; margin-bottom: 20px; text-align: center;">
+ <span style="font-size: 11px; font-weight: 700; color: #991B1B; text-transform: uppercase;">Monto Total Cobrado</span>
+ <h2 style="margin: 4px 0 0 0; font-size: 32px; font-weight: 900; color: #D85A30;">$${data.monto.toLocaleString('es-CO')} COP</h2>
+ <p style="font-size: 11px; color: #0F6E56; margin-top: 4px; font-weight: 700;">
+ ${data.esFundador ? 'Incluye Descuento del 33% (Tarifa Fundador UniPide por 3 meses)' : 'Tarifa Estándar Mensual'}
+ </p>
+ </div>
 
-  if (resendApiKey) {
-    try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Facturación <onboarding@resend.dev>';
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
-        body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
-      });
-      console.log(`[FACTURA ENVIADA] Factura enviada a ${data.toEmail} (${data.wompiRef})`);
-    } catch (e) {
-      console.error('Error enviando factura por Resend:', e);
-    }
-  }
+ <div style="background-color: #f1f5f9; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px;">
+ <p style="font-size: 12px; color: #334155; margin: 0; line-height: 1.5;">
+ <strong>Estado del Pago:</strong> Verificado por la administración.<br />
+ <strong>Próximo Paso:</strong> Tu emprendimiento ha sido notificado al equipo Administrador de UniPide para la apertura de tu tienda.
+ </p>
+ </div>
 
-  console.log(`🧾 [FACTURA DIGITAL] Para ${data.toEmail}: Monto $${data.monto} COP | Ref: ${data.wompiRef}`);
+ <div style="border-top: 1px solid #f1f5f9; text-align: center; margin-top: 20px; padding-top: 12px;">
+ <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla</p>
+ </div>
+ </div>
+ `;
+
+ await sendEmailViaResend({ to: data.toEmail, subject, html });
 }
 
 /**
  * Notifica al Administrador que hay un nuevo negocio con Pago Verificado listo para Aprobación
  */
 export async function sendAdminNewPendingBusinessEmail(data: {
-  adminEmail: string;
-  nombreNegocio: string;
-  nombreEmprendedor: string;
-  wompiRef: string;
-  monto: number;
+ adminEmail: string;
+ nombreNegocio: string;
+ nombreEmprendedor: string;
+ wompiRef: string;
+ monto: number;
 }) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const subject = `🔔 [ADMIN ALERT] Nuevo Emprendimiento Pendiente de Aprobación: ${data.nombreNegocio}`;
-  const htmlContent = `
-    <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 14px;">
-      <h3 style="color: #1e293b; margin-top: 0;">Solicitud de Emprendimiento con Pago Verificado</h3>
-      <p style="font-size: 13px; color: #475569;">El emprendimiento <strong>${data.nombreNegocio}</strong> (Responsable: ${data.nombreEmprendedor}) ha completado su firma legal POL-EMP-001 y verificado su pago de suscripción con Wompi.</p>
-      <div style="background: #f8fafc; padding: 12px; border-radius: 10px; font-size: 12px; margin: 15px 0;">
-        <p style="margin: 3px 0;"><strong>Ref. Wompi:</strong> ${data.wompiRef}</p>
-        <p style="margin: 3px 0;"><strong>Monto Pagado:</strong> $${data.monto.toLocaleString('es-CO')} COP</p>
-        <p style="margin: 3px 0; color: #0F6E56;"><strong>Firma POL-EMP-001:</strong> Registrada ✅</p>
-      </div>
-      <p style="font-size: 12px; color: #64748b;">Por favor ingresa al portal de administración en <strong>/admin/solicitudes</strong> para dar la autorización final.</p>
-    </div>
-  `;
+ const subject = `[ADMIN ALERT] Nuevo Emprendimiento Pendiente de Aprobación: ${data.nombreNegocio}`;
+ const html = `
+ <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 14px;">
+ <h3 style="color: #1e293b; margin-top: 0;">Solicitud de Emprendimiento con Pago Verificado</h3>
+ <p style="font-size: 13px; color: #475569;">El emprendimiento <strong>${data.nombreNegocio}</strong> (Responsable: ${data.nombreEmprendedor}) ha completado su firma legal POL-EMP-001 y verificado su pago de suscripción.</p>
+ <div style="background: #f8fafc; padding: 12px; border-radius: 10px; font-size: 12px; margin: 15px 0;">
+ <p style="margin: 3px 0;"><strong>Monto Pagado:</strong> $${data.monto.toLocaleString('es-CO')} COP</p>
+ <p style="margin: 3px 0; color: #0F6E56;"><strong>Firma POL-EMP-001:</strong> Registrada</p>
+ </div>
+ <p style="font-size: 12px; color: #64748b;">Por favor ingresa al portal de administración en <strong>/admin/solicitudes</strong> para dar la autorización final.</p>
+ </div>
+ `;
 
-  if (resendApiKey) {
-    try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Admin Alert <onboarding@resend.dev>';
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
-        body: JSON.stringify({ from: fromEmail, to: [data.adminEmail], subject, html: htmlContent }),
-      });
-    } catch (e) {
-      console.error('Error enviando alerta admin:', e);
-    }
-  }
-
-  console.log(`🔔 [ADMIN NOTIFICATION] Alerta a ${data.adminEmail} para aprobar ${data.nombreNegocio}`);
+ await sendEmailViaResend({ to: data.adminEmail, subject, html });
 }
 
 /**
  * Notifica al Emprendedor que su pago ha sido verificado por el Administrador y su emprendimiento ha sido APROBADO Y ABIERTO
  */
 export async function sendBusinessApprovedEmail(data: {
-  toEmail: string;
-  nombreEmprendedor: string;
-  nombreNegocio: string;
+ toEmail: string;
+ nombreEmprendedor: string;
+ nombreNegocio: string;
 }) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const subject = `🎉 ¡Pago Confirmado! Tu emprendimiento ${data.nombreNegocio} ha sido APROBADO y ABIERTO en UniPide`;
-  const htmlContent = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff; text-align: center;">
-      <div style="margin-bottom: 20px;">
-        <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
-        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
-      </div>
+ const subject = `¡Pago Confirmado! Tu emprendimiento ${data.nombreNegocio} ha sido APROBADO y ABIERTO en UniPide`;
+ const html = `
+ <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 28px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff; text-align: center;">
+ <div style="margin-bottom: 20px;">
+ <span style="font-size: 26px; font-weight: 900; color: #000000;">Uni<span style="color: #D85A30;">Pide</span></span>
+ <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Marketplace Universitario Uninorte</p>
+ </div>
 
-      <h2 style="color: #0F6E56; margin-top: 0; font-size: 20px; font-weight: 800;">¡Pago Confirmado y Tienda Abierta, ${data.nombreEmprendedor}! 🎉</h2>
-      
-      <p style="font-size: 13.5px; color: #334155; line-height: 1.6; text-align: justify; margin-top: 14px;">
-        El Administrador de <strong>UniPide</strong> ha verificado exitosamente tu pago de afiliación y ha <strong>APROBADO Y ACTIVADO</strong> tu emprendimiento <strong>${data.nombreNegocio}</strong>.
-      </p>
+ <h2 style="color: #0F6E56; margin-top: 0; font-size: 20px; font-weight: 800;">¡Pago Confirmado y Tienda Abierta, ${data.nombreEmprendedor}!</h2>
+ 
+ <p style="font-size: 13.5px; color: #334155; line-height: 1.6; text-align: justify; margin-top: 14px;">
+ El Administrador de <strong>UniPide</strong> ha verificado exitosamente tu pago de afiliación y ha <strong>APROBADO Y ACTIVADO</strong> tu emprendimiento <strong>${data.nombreNegocio}</strong>.
+ </p>
 
-      <div style="background-color: #F0FDF4; border: 2px border-dashed #4ADE80; padding: 18px; border-radius: 16px; margin: 24px 0; text-align: left;">
-        <p style="margin: 0 0 6px 0; font-size: 13px; color: #166534; font-weight: 800;">
-          ✅ Estado del Negocio: ABIERTO Y OPERATIVO
-        </p>
-        <p style="margin: 0; font-size: 12px; color: #15803D; line-height: 1.5;">
-          • Pago verificado manualmente por la administración.<br />
-          • Catálogo de productos visible para estudiantes en campus Uninorte.<br />
-          • Recepción de pedidos en tiempo real activada.
-        </p>
-      </div>
+ <div style="background-color: #F0FDF4; border: 2px border-dashed #4ADE80; padding: 18px; border-radius: 16px; margin: 24px 0; text-align: left;">
+ <p style="margin: 0 0 6px 0; font-size: 13px; color: #166534; font-weight: 800;">
+ Estado del Negocio: ABIERTO Y OPERATIVO
+ </p>
+ <p style="margin: 0; font-size: 12px; color: #15803D; line-height: 1.5;">
+ • Pago verificado manualmente por la administración.<br />
+ • Catálogo de productos visible para estudiantes en campus Uninorte.<br />
+ • Recepción de pedidos en tiempo real activada.
+ </p>
+ </div>
 
-      <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 24px;">
-        Ya puedes ingresar a tu portal con tu correo (<strong>${data.toEmail}</strong>) para publicar tus productos, combos y gestionar tus pedidos.
-      </p>
+ <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 24px;">
+ Ya puedes ingresar a tu portal con tu correo (<strong>${data.toEmail}</strong>) para publicar tus productos, combos y gestionar tus pedidos.
+ </p>
 
-      <div style="margin-top: 20px;">
-        <a href="https://unipide.app/login" style="background-color: #D85A30; color: #ffffff; padding: 13px 28px; border-radius: 12px; font-weight: 800; font-size: 13px; text-decoration: none; display: inline-block;">
-          Ingresar al Portal del Emprendedor
-        </a>
-      </div>
+ <div style="margin-top: 20px;">
+ <a href="https://unipide.app/login" style="background-color: #D85A30; color: #ffffff; padding: 13px 28px; border-radius: 12px; font-weight: 800; font-size: 13px; text-decoration: none; display: inline-block;">
+ Ingresar al Portal del Emprendedor
+ </a>
+ </div>
 
-      <div style="border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 16px;">
-        <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla, Colombia</p>
-      </div>
-    </div>
-  `;
+ <div style="border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 16px;">
+ <p style="font-size: 10px; color: #94a3b8; margin: 0;">UniPide — Universidad del Norte, Barranquilla, Colombia</p>
+ </div>
+ </div>
+ `;
 
-  if (resendApiKey) {
-    try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Administrador <richardbb839@gmail.com>';
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
-        body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
-      });
-      console.log(`[CORREO PAGO CONFIRMADO] Enviado desde ${fromEmail} a ${data.toEmail} para ${data.nombreNegocio}`);
-    } catch (e) {
-      console.error('Error enviando correo de aprobación:', e);
-    }
-  }
-
-  console.log(`🎉 [BUSINESS APPROVED & PAYMENT CONFIRMED] Correo notificado a ${data.toEmail} para ${data.nombreNegocio}`);
+ await sendEmailViaResend({ to: data.toEmail, subject, html });
 }
 
 /**
  * Notifica al Emprendimiento que su suscripción o periodo de promoción está por caducar
  */
 export async function sendSubscriptionExpiringEmail(data: {
-  toEmail: string;
-  nombreEmprendedor: string;
-  nombreNegocio: string;
-  diasRestantes: number;
-  fechaFin: string;
-  montoRenovacion: number;
+ toEmail: string;
+ nombreEmprendedor: string;
+ nombreNegocio: string;
+ diasRestantes: number;
+ fechaFin: string;
+ montoRenovacion: number;
 }) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const subject = `⚠️ [ALERTA] Tu suscripción de UniPide para ${data.nombreNegocio} vence en ${data.diasRestantes} días`;
-  const htmlContent = `
-    <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #fbc6bb; border-radius: 16px; background: #fff8f6;">
-      <div style="text-align: center; margin-bottom: 16px;">
-        <span style="font-size: 20px; font-weight: 900; color: #D85A30;">UniPide Alerta de Suscripción</span>
-      </div>
+ const subject = `[ALERTA] Tu suscripción de UniPide para ${data.nombreNegocio} vence en ${data.diasRestantes} días`;
+ const html = `
+ <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #fbc6bb; border-radius: 16px; background: #fff8f6;">
+ <div style="text-align: center; margin-bottom: 16px;">
+ <span style="font-size: 20px; font-weight: 900; color: #D85A30;">UniPide Alerta de Suscripción</span>
+ </div>
 
-      <h3 style="color: #991B1B; margin-top: 0; text-align: center;">⏱️ Tu Suscripción caduca pronto</h3>
+ <h3 style="color: #991B1B; margin-top: 0; text-align: center;">Tu Suscripción caduca pronto</h3>
 
-      <p style="font-size: 13px; color: #334155; line-height: 1.5;">
-        Hola <strong>${data.nombreEmprendedor}</strong>, te recordamos que la suscripción activa de tu negocio <strong>${data.nombreNegocio}</strong> vence el <strong>${data.fechaFin}</strong> (en ${data.diasRestantes} días).
-      </p>
+ <p style="font-size: 13px; color: #334155; line-height: 1.5;">
+ Hola <strong>${data.nombreEmprendedor}</strong>, te recordamos que la suscripción activa de tu negocio <strong>${data.nombreNegocio}</strong> vence el <strong>${data.fechaFin}</strong> (en ${data.diasRestantes} días).
+ </p>
 
-      <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 12px; padding: 14px; margin: 16px 0;">
-        <p style="margin: 4px 0; font-size: 12px; color: #475569;"><strong>Monto de Renovación:</strong> $${data.montoRenovacion.toLocaleString('es-CO')} COP</p>
-        <p style="margin: 4px 0; font-size: 12px; color: #D85A30;"><strong>Mantén tu beneficio:</strong> Renueva a tiempo para conservar tu posición destacada de primero en tu categoría.</p>
-      </div>
+ <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 12px; padding: 14px; margin: 16px 0;">
+ <p style="margin: 4px 0; font-size: 12px; color: #475569;"><strong>Monto de Renovación:</strong> $${data.montoRenovacion.toLocaleString('es-CO')} COP</p>
+ <p style="margin: 4px 0; font-size: 12px; color: #D85A30;"><strong>Mantén tu beneficio:</strong> Renueva a tiempo para conservar tu posición destacada de primero en tu categoría.</p>
+ </div>
 
-      <div style="text-align: center; margin-top: 20px;">
-        <a href="https://unipide.app/emprendedor/suscripcion" style="background-color: #D85A30; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: bold; font-size: 13px; text-decoration: none; display: inline-block;">
-          Renovar Suscripción Ahora por PSE / Nequi
-        </a>
-      </div>
-    </div>
-  `;
+ <div style="text-align: center; margin-top: 20px;">
+ <a href="https://unipide.app/emprendedor/suscripcion" style="background-color: #D85A30; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: bold; font-size: 13px; text-decoration: none; display: inline-block;">
+ Renovar Suscripción Ahora
+ </a>
+ </div>
+ </div>
+ `;
 
-  if (resendApiKey) {
-    try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'UniPide Recordatorios <onboarding@resend.dev>';
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendApiKey}` },
-        body: JSON.stringify({ from: fromEmail, to: [data.toEmail], subject, html: htmlContent }),
-      });
-    } catch (e) {
-      console.error('Error enviando notificación de expiración:', e);
-    }
-  }
-
-  console.log(`⚠️ [SUBSCRIPTION EXPIRING ALERT] Notificado ${data.toEmail} (${data.nombreNegocio}): vence en ${data.diasRestantes} días.`);
+ await sendEmailViaResend({ to: data.toEmail, subject, html });
 }
