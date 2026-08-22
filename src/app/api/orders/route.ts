@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/auth';
 import { generateOrderCode } from '@/lib/utils';
 import { calculateEstimatedDeliveryTime } from '@/lib/deliveryTime';
 import { createNotification } from '@/lib/notifications';
+import { sendNewOrderPush } from '@/lib/pushNotifications';
 
 export async function GET(request: NextRequest) {
   try {
@@ -198,6 +199,24 @@ export async function POST(request: NextRequest) {
       mensaje: `Tu pedido en "${business.nombre}" ha sido recibido. Tiempo estimado de entrega: ${estimate.tiempoTotalMin} min.`,
       tipo: 'ESTADO_PEDIDO',
       url: `/pedidos/${newOrder.id}`,
+    });
+
+    // Enviar Notificaciones Push
+    await sendNewOrderPush({
+      id: newOrder.id,
+      codigoPedido: newOrder.codigoPedido,
+      total,
+      zonaEntregaNombre: zonaEntregaNombre || estimate.destinoNombre,
+      tiempoEstimadoMin: estimate.tiempoTotalMin,
+      business: {
+        id: business.id,
+        userId: business.userId,
+        nombre: business.nombre,
+      },
+      cliente: {
+        id: session.id,
+        nombre: session.nombre,
+      },
     });
 
     return NextResponse.json({

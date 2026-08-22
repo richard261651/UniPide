@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import WelcomeSplashScreen from '@/components/WelcomeSplashScreen';
+import PushPromptBanner from '@/components/PushPromptBanner';
 
 const questrial = Questrial({ weight: '400', subsets: ['latin'] });
 
@@ -94,6 +95,7 @@ export default function RootLayout({
           <FavoritesProvider>
             <CartProvider>
               <WelcomeSplashScreen />
+              <PushPromptBanner />
               <Navbar />
               <CartDrawer />
               <main className="flex-1 pb-20 md:pb-8">{children}</main>

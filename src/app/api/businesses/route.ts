@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest, hashPassword } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
+import { sendNewBusinessPush } from '@/lib/pushNotifications';
 
 // Función para poblar datos iniciales si la base de datos está vacía
 async function ensureInitialData() {
@@ -191,6 +192,14 @@ export async function POST(request: NextRequest) {
         suscripcionMonto: isFounder ? 19900 : 29900,
         suscripcionEstado: 'ACTIVA',
       },
+    });
+
+    // Enviar notificación push a administradores sobre el nuevo emprendimiento
+    await sendNewBusinessPush({
+      id: business.id,
+      nombre: business.nombre,
+      categoria: business.categoria,
+      userNombre: session.nombre,
     });
 
     return NextResponse.json({ success: true, business });

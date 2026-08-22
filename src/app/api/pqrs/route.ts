@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
+import { sendPqrsPush } from '@/lib/pushNotifications';
 
 export async function GET(request: NextRequest) {
   try {
@@ -81,6 +82,17 @@ export async function POST(request: NextRequest) {
       include: {
         business: true,
       },
+    });
+
+    // Enviar notificación push a administradores (y al dueño del negocio si aplica)
+    await sendPqrsPush({
+      id: newPqrs.id,
+      tipo,
+      asunto: newPqrs.asunto,
+      usuarioNombre: session.nombre,
+      businessId: newPqrs.businessId,
+      businessName: newPqrs.business?.nombre,
+      businessUserId: newPqrs.business?.userId,
     });
 
     return NextResponse.json({ success: true, pqrs: newPqrs });

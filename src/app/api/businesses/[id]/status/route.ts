@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 import { sendBusinessApprovedEmail } from '@/lib/email';
 import { createNotification } from '@/lib/notifications';
+import { sendBusinessApprovedPush } from '@/lib/pushNotifications';
 
 export async function PATCH(
   request: NextRequest,
@@ -88,6 +89,12 @@ export async function PATCH(
         mensaje: `Tu emprendimiento "${currentBusiness.nombre}" ha sido verificado y aprobado. Ya se encuentra abierto y activo en UniPide.`,
         tipo: 'APROBACION_NEGOCIO',
         url: '/emprendedor/suscripcion',
+      });
+
+      await sendBusinessApprovedPush({
+        id: currentBusiness.id,
+        nombre: currentBusiness.nombre,
+        userId: currentBusiness.userId,
       });
     }
 

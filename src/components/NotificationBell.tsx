@@ -15,7 +15,9 @@ import {
   ExternalLink,
   MessageSquare,
   Clock,
+  Settings,
 } from 'lucide-react';
+import NotificationSettingsModal from './NotificationSettingsModal';
 
 interface NotificationItem {
   id: string;
@@ -32,6 +34,7 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -154,15 +157,27 @@ export default function NotificationBell() {
               </h3>
             </div>
 
-            {unreadCount > 0 && (
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-[11px] font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1 cursor-pointer"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Marcar leídas</span>
+                </button>
+              )}
               <button
-                onClick={markAllAsRead}
-                className="text-[11px] font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1 cursor-pointer"
+                onClick={() => {
+                  setIsOpen(false);
+                  setSettingsModalOpen(true);
+                }}
+                className="p-1 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                title="Configuración de Notificaciones Push"
               >
-                <Check className="w-3.5 h-3.5" />
-                <span>Marcar leídas</span>
+                <Settings className="w-4 h-4" />
               </button>
-            )}
+            </div>
           </div>
 
           {/* Filtros */}
@@ -240,6 +255,11 @@ export default function NotificationBell() {
           </div>
         </div>
       )}
+
+      <NotificationSettingsModal
+        isOpen={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
+import { sendOrderChatMessagePush } from '@/lib/pushNotifications';
 
 export async function GET(
   request: NextRequest,
@@ -100,6 +101,23 @@ export async function POST(
           select: { id: true, nombre: true, foto: true },
         },
       },
+    });
+
+    // Enviar notificación push al destinatario
+    await sendOrderChatMessagePush({
+      order: {
+        id: order.id,
+        codigoPedido: order.codigoPedido,
+        clienteId: order.clienteId,
+        business: {
+          userId: order.business.userId,
+          nombre: order.business.nombre,
+        },
+      },
+      senderId: session.id,
+      senderName: session.nombre,
+      senderRole: rolRemitente,
+      messageSnippet: mensaje.trim(),
     });
 
     return NextResponse.json({ success: true, message: newMessage });

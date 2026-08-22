@@ -17,6 +17,7 @@
 .DS_Store
 *.pem
 *.exe
+*.docx
 Antigravity IDE.exe
 
 # debug

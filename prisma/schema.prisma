@@ -23,13 +23,20 @@ model User {
   activo                  Boolean     @default(true)
   fechaRegistro           DateTime    @default(now())
 
-  businesses    Business[]
-  orders        Order[]
-  ratings       Rating[]
-  chatMessages  ChatMessage[]
-  pqrs          PQRS[]
-  favorites     Favorite[]
-  notifications Notification[]
+  // Preferencias de Notificaciones Push
+  notifPushEnabled        Boolean     @default(true)
+  notifPedidos            Boolean     @default(true)
+  notifChat               Boolean     @default(true)
+  notifAdmin              Boolean     @default(true)
+
+  businesses        Business[]
+  orders            Order[]
+  ratings           Rating[]
+  chatMessages      ChatMessage[]
+  pqrs              PQRS[]
+  favorites         Favorite[]
+  notifications     Notification[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Business {
@@ -233,4 +240,19 @@ model Notification {
   leido         Boolean  @default(false)
   url           String?
   fechaCreacion DateTime @default(now())
+}
+
+model PushSubscription {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint           String   @unique
+  p256dh             String
+  auth               String
+  userAgent          String?
+  activo             Boolean  @default(true)
+  fechaCreacion      DateTime @default(now())
+  fechaActualizacion DateTime @updatedAt
+
+  @@index([userId])
 }
