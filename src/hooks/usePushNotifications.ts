@@ -212,13 +212,53 @@ export function usePushNotifications() {
    */
   const sendTestNotification = async (): Promise<{ success: boolean; message: string }> => {
     try {
+      // 1. Si no está suscrito o permiso pendiente, suscribir primero
+      if (!isSubscribed || permission !== 'granted') {
+        const subResult = await subscribeToPush();
+        if (!subResult.success && Notification.permission !== 'granted') {
+          return {
+            success: false,
+            message:
+              subResult.error ||
+              'Por favor concede permiso de notificaciones en tu navegador para continuar.',
+          };
+        }
+      }
+
+      // 2. Disparar notificación visual inmediata a través del Service Worker
+      let showedDirectly = false;
+      if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+        try {
+          const reg = await navigator.serviceWorker.ready;
+          await reg.showNotification('🔔 ¡Notificación de Prueba UniPide!', {
+            body: '¡Excelente! Las notificaciones en tu dispositivo están activas y funcionando.',
+            icon: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+            badge: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+            tag: 'test-direct-notification',
+            vibrate: [200, 100, 200],
+            data: { url: '/' },
+          });
+          showedDirectly = true;
+        } catch (swErr) {
+          if (window.Notification && Notification.permission === 'granted') {
+            new Notification('🔔 ¡Notificación de Prueba UniPide!', {
+              body: '¡Excelente! Las notificaciones en tu dispositivo están activas y funcionando.',
+              icon: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+            });
+            showedDirectly = true;
+          }
+        }
+      }
+
+      // 3. Solicitar al backend que envíe el Web Push a través del servidor
       const res = await fetch('/api/push/send-test', {
         method: 'POST',
       });
       const data = await res.json();
+
       return {
-        success: data.success || false,
-        message: data.message || 'Prueba completada',
+        success: showedDirectly || data.success || false,
+        message: '¡Notificación enviada! Deberías verla en la pantalla de tu dispositivo.',
       };
     } catch (err: any) {
       return {

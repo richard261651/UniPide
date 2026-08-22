@@ -288,16 +288,11 @@ export default function NotificationSettingsModal({
           <button
             type="button"
             onClick={handleSendTest}
-            disabled={testing || !isSubscribed}
-            className={`flex-1 py-2.5 font-bold text-white rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 ${
-              isSubscribed
-                ? 'bg-uninorte-red hover:bg-uninorte-darkRed'
-                : 'bg-gray-300 cursor-not-allowed'
-            }`}
-            title={!isSubscribed ? 'Activa las notificaciones primero para probar' : ''}
+            disabled={testing || !isSupported}
+            className="flex-1 py-2.5 font-bold text-white bg-uninorte-red hover:bg-uninorte-darkRed rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
             <Send className={`w-3.5 h-3.5 ${testing ? 'animate-spin' : ''}`} />
-            <span>{testing ? 'Enviando...' : 'Probar Notificación'}</span>
+            <span>{testing ? 'Probando...' : 'Probar Notificación'}</span>
           </button>
         </div>
       </div>

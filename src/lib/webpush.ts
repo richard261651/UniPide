@@ -6,14 +6,14 @@ import prisma from '@/lib/prisma';
 export const VAPID_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
   process.env.VAPID_PUBLIC_KEY ||
-  'BIjV6q0t4f46zK7KkQZ3PZtB0E4f8mHk4t5y1s_l6e7n8p9q0r1s2t3u4v5w6x7y8z9a0b1c2d3e4f5g6h7i8j9k';
+  'BMH464W_nbYgS5YCDroP-ecRgqk_AtviDH5P0bHY6SiYNZqZAKPytF9ztb9yWE7zrxpPow5XPb3es7bW6HhGttE';
 
 export const VAPID_PRIVATE_KEY =
   process.env.VAPID_PRIVATE_KEY ||
-  '9q8w7e6r5t4y3u2i1o0p9a8s7d6f5g4h3j2k1l0z9x8';
+  'Z_OYLqus9sJTSkIiUASyhENOty6ujSTxAEvC2svEqDA';
 
 export const VAPID_SUBJECT =
-  process.env.VAPID_SUBJECT || 'mailto:admin@unipide.uninorte.edu.co';
+  process.env.VAPID_SUBJECT || 'mailto:soporte@unipide.com';
 
 let isVapidConfigured = false;
 
