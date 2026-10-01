@@ -36,7 +36,7 @@ function DrawerOverlay({
 		<DrawerPrimitive.Overlay
 			data-slot="drawer-overlay"
 			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-black/50 fixed inset-0 z-50 backdrop-blur-xs',
+				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-black/60 fixed inset-0 z-50 backdrop-blur-xs',
 				className,
 			)}
 			{...props}
@@ -100,7 +100,7 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<'div'>) {
 		<div
 			data-slot="drawer-footer"
 			className={cn(
-				'mt-auto grid w-full gap-2 border-t border-gray-100 px-5 py-4 bg-white',
+				'mt-auto grid w-full gap-2 border-t border-gray-100 p-5',
 				className,
 			)}
 			{...props}
@@ -115,7 +115,7 @@ function DrawerTitle({
 	return (
 		<DrawerPrimitive.Title
 			data-slot="drawer-title"
-			className={cn('text-gray-900 font-black text-lg tracking-tight', className)}
+			className={cn('text-gray-900 font-black text-lg', className)}
 			{...props}
 		/>
 	);
@@ -128,7 +128,7 @@ function DrawerDescription({
 	return (
 		<DrawerPrimitive.Description
 			data-slot="drawer-description"
-			className={cn('text-gray-500 text-xs', className)}
+			className={cn('text-gray-500 text-xs font-medium', className)}
 			{...props}
 		/>
 	);
