@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 import { sendBusinessApprovedEmail } from '@/lib/email';
 import { createNotification } from '@/lib/notifications';
+import { generateDigitalContractDocument } from '@/lib/contractGenerator';
 
 export async function PATCH(
   request: NextRequest,
@@ -40,32 +41,7 @@ export async function PATCH(
       if (estadoAprobacion === 'APROBADO') {
         const now = new Date();
         updateData.fechaAprobacion = now;
-        updateData.pagoVerificado = true;
-        updateData.fechaPagoVerificado = now;
         updateData.activo = true;
-        updateData.suscripcionEstado = 'ACTIVA';
-
-        // Verificar cupos de lanzamiento (máximo 10)
-        const founderCount = await prisma.business.count({
-          where: {
-            esFundador: true,
-            estadoAprobacion: { in: ['APROBADO', 'PENDIENTE'] },
-            id: { not: id },
-          },
-        });
-
-        if (founderCount < 10) {
-          const threeMonthsLater = new Date(now);
-          threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
-
-          updateData.esFundador = true;
-          updateData.fechaInicioPromocion = now;
-          updateData.fechaFinPromocion = threeMonthsLater;
-          updateData.suscripcionMonto = 19900;
-        } else {
-          updateData.esFundador = false;
-          updateData.suscripcionMonto = 29900;
-        }
       }
     }
 
@@ -74,20 +50,34 @@ export async function PATCH(
       data: updateData,
     });
 
-    // Si fue APROBADO por el Administrador, enviar correo de confirmación de pago y crear notificación in-app
+    // Si fue APROBADO por el Administrador, enviar correo de confirmación y contrato con adjuntos
     if (estadoAprobacion === 'APROBADO' && currentBusiness.estadoAprobacion !== 'APROBADO') {
+      const now = new Date();
+      const contractDoc = await generateDigitalContractDocument({
+        nombreNegocio: currentBusiness.nombre,
+        nombreFirmante: currentBusiness.nombreFirmante || currentBusiness.user?.nombre || 'Estudiante Responsable',
+        documentoFirmante: currentBusiness.documentoFirmante || 'Cédula Estudiantil',
+        correo: currentBusiness.user?.correo || session.correo,
+        fechaFirma: currentBusiness.fechaFirmaPolitica ? new Date(currentBusiness.fechaFirmaPolitica) : now,
+        versionPolitica: currentBusiness.versionPolitica || 'POL-EMP-001 v1.0',
+        firmaVirtualBase64: currentBusiness.firmaVirtualBase64 || null,
+      });
+
       await sendBusinessApprovedEmail({
         toEmail: currentBusiness.user.correo,
         nombreEmprendedor: currentBusiness.user.nombre,
         nombreNegocio: currentBusiness.nombre,
-      });
+        businessId: currentBusiness.id,
+        contractHtmlContent: contractDoc.htmlDocument,
+        contractFileName: contractDoc.fileName,
+      }).catch((err) => console.error('⚠️ [Aviso] Error enviando correo de aprobación:', err));
 
       await createNotification({
         userId: currentBusiness.userId,
-        titulo: '✅ ¡Pago Confirmado y Negocio Abierto!',
-        mensaje: `Tu emprendimiento "${currentBusiness.nombre}" ha sido verificado y aprobado. Ya se encuentra abierto y activo en UniPide.`,
+        titulo: '✅ ¡Emprendimiento Aprobado y Tienda Abierta!',
+        mensaje: `Tu emprendimiento "${currentBusiness.nombre}" ha sido revisado y aprobado. Ya se encuentra abierto y activo en UniPide.`,
         tipo: 'APROBACION_NEGOCIO',
-        url: '/emprendedor/suscripcion',
+        url: '/emprendedor',
       });
     }
 

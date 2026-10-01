@@ -75,7 +75,7 @@ export default function AdminSolicitudesPage() {
             <span>Solicitudes & Aperturas de Emprendimientos</span>
           </h1>
           <p className="text-xs text-slate-500 font-medium mt-1">
-            Revisa y confirma la verificación de pago de los nuevos emprendimientos para autorizar su apertura en UniPide.
+            Revisa las solicitudes de los nuevos emprendimientos para autorizar su apertura en el campus UniPide.
           </p>
         </div>
 
@@ -114,11 +114,6 @@ export default function AdminSolicitudesPage() {
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
                       {b.categoria}
                     </span>
-                    {b.esFundador && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
-                        Plan Fundador (33% OFF)
-                      </span>
-                    )}
                   </div>
                   <p className="text-xs text-slate-500 font-medium">
                     Registrado el {formatShortDate(b.fechaCreacion)}
@@ -137,7 +132,7 @@ export default function AdminSolicitudesPage() {
                     ) : (
                       <>
                         <CheckCircle className="w-4 h-4" />
-                        <span>Confirmar Pago y Abrir Negocio</span>
+                        <span>Aprobar y Abrir Tienda</span>
                       </>
                     )}
                   </button>
@@ -243,16 +238,6 @@ export default function AdminSolicitudesPage() {
                         >
                           <FileText className="w-3.5 h-3.5 text-[#D85A30]" />
                           <span>Ver Online</span>
-                        </a>
-
-                        <a
-                          href={`/api/businesses/${b.id}/receipt`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-[11px] font-black text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-2.5 py-1.5 rounded-lg transition"
-                        >
-                          <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Ver Constancia Pago</span>
                         </a>
                       </div>
                     </div>

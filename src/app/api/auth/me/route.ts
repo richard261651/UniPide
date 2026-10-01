@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       where: { id: session.id },
       include: {
         businesses: {
-          select: { id: true, nombre: true, slug: true, estadoAprobacion: true, pagoVerificado: true, activo: true },
+          select: { id: true, nombre: true, slug: true, estadoAprobacion: true, activo: true },
         },
       },
     });
@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
       businessSlug: primaryBusiness?.slug || null,
       businessName: primaryBusiness?.nombre || null,
       businessEstadoAprobacion: primaryBusiness?.estadoAprobacion || null,
-      businessPagoVerificado: primaryBusiness?.pagoVerificado || false,
       businessActivo: primaryBusiness?.activo || false,
     };
 

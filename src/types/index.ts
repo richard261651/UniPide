@@ -15,7 +15,6 @@ export interface UserSession {
   businessSlug?: string | null;
   businessName?: string | null;
   businessEstadoAprobacion?: string | null;
-  businessPagoVerificado?: boolean;
   businessActivo?: boolean;
 }
 
@@ -34,20 +33,7 @@ export interface BusinessItem {
   estadoAprobacion: BusinessStatus;
   activo: boolean;
   fechaCreacion: string | Date;
-  esFundador?: boolean;
   fechaAprobacion?: string | Date | null;
-  fechaInicioPromocion?: string | Date | null;
-  fechaFinPromocion?: string | Date | null;
-  suscripcionEstado?: string;
-  suscripcionMonto?: number;
-  metodoPagoSuscripcion?: string | null;
-  fechaUltimoPago?: string | Date | null;
-  tipoSuscripcion?: string;
-  pagoVerificado?: boolean;
-  fechaPagoVerificado?: string | Date | null;
-  wompiTransactionId?: string | null;
-  wompiReference?: string | null;
-  fechaNotificacionExpiracion?: string | Date | null;
   firmaPoliticaHigiene?: boolean;
   fechaFirmaPolitica?: string | Date | null;
   versionPolitica?: string | null;

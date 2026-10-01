@@ -128,12 +128,7 @@ export default function BusinessDetailPage() {
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-red-600/80 text-white backdrop-blur-xs">
                   {business.categoria}
                 </span>
-                {business.esFundador && (
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 flex items-center gap-1 shadow-sm border border-amber-300">
-                    <Award className="w-3.5 h-3.5 fill-slate-950 text-slate-950" />
-                    <span>Insignia de Fundador UniPide</span>
-                  </span>
-                )}
+
                 <div className="flex items-center gap-1 bg-amber-400/20 text-amber-300 text-xs font-bold px-2 py-0.5 rounded-full backdrop-blur-xs">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{(business.avgRating || 4.8).toFixed(1)}</span>

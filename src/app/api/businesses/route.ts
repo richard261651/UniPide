@@ -101,7 +101,6 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: [
-        { esFundador: 'desc' },
         { fechaAprobacion: 'desc' },
         { fechaCreacion: 'desc' },
       ],
@@ -162,13 +161,7 @@ export async function POST(request: NextRequest) {
       count++;
     }
 
-    const founderCount = await prisma.business.count({
-      where: { esFundador: true, estadoAprobacion: 'APROBADO' },
-    });
-    const isFounder = founderCount < 10;
     const now = new Date();
-    const threeMonths = new Date(now);
-    threeMonths.setMonth(threeMonths.getMonth() + 3);
 
     const business = await prisma.business.create({
       data: {
@@ -184,12 +177,7 @@ export async function POST(request: NextRequest) {
         tiempoBasePrepMin: Number(tiempoBasePrepMin) || 15,
         estadoAprobacion: 'APROBADO', // Auto-aprobado para visibilidad inmediata en el campus
         activo: true,
-        esFundador: isFounder,
         fechaAprobacion: now,
-        fechaInicioPromocion: isFounder ? now : null,
-        fechaFinPromocion: isFounder ? threeMonths : null,
-        suscripcionMonto: isFounder ? 19900 : 29900,
-        suscripcionEstado: 'ACTIVA',
       },
     });
 

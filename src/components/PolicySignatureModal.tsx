@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ShieldCheck, FileText, CheckCircle2, Lock, X, AlertCircle, ScrollText, UserCheck, Eraser, PenTool } from 'lucide-react';
+import { ShieldCheck, FileText, CheckCircle2, Lock, X, AlertCircle, ScrollText, UserCheck, Eraser, PenTool, Maximize2, Minimize2, ExternalLink } from 'lucide-react';
 
 interface PolicySignatureModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ export default function PolicySignatureModal({
   const [documentoFirmante, setDocumentoFirmante] = useState('');
   const [hasReadAndAgreed, setHasReadAndAgreed] = useState(false);
   const [error, setError] = useState('');
+  const [isExpandedText, setIsExpandedText] = useState(false);
 
   // Canvas de Firma Virtual Manuscrita
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -169,25 +170,146 @@ export default function PolicySignatureModal({
             <p><strong>APROBACIÓN Y VALIDACIÓN LEGAL:</strong> CEO Richard Francisco Guzmán Guzmán</p>
           </div>
 
-          {/* Texto Oficial de la Política */}
-          <div className="space-y-4 text-slate-700 bg-white p-4 sm:p-6 rounded-2xl border border-slate-150 shadow-inner max-h-60 overflow-y-auto">
-            <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm border-b border-slate-200 pb-1 mb-2">
-                1. Objetivo
+          {/* Barra de Controles de Lectura Completa */}
+          <div className="flex flex-wrap items-center justify-between gap-2 bg-amber-50 p-3.5 rounded-2xl border border-amber-200 text-xs">
+            <div className="flex items-center gap-2 text-slate-800 font-bold">
+              <ScrollText className="w-4 h-4 text-[#D85A30]" />
+              <span>Contrato Institucional POL-EMP-001 (8 Secciones Legales)</span>
+            </div>
+            
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setIsExpandedText(!isExpandedText)}
+                className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-900 font-extrabold rounded-xl border border-slate-300 shadow-2xs transition flex items-center gap-1.5 cursor-pointer text-xs"
+              >
+                {isExpandedText ? (
+                  <>
+                    <Minimize2 className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Reducir Vista</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="w-3.5 h-3.5 text-[#D85A30]" />
+                    <span>Ampliar / Ver Todo el Contrato</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href="/politica-higiene"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-2xs transition flex items-center gap-1.5 text-xs"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                <span>Abrir en Nueva Pestaña</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Texto Oficial Completo de la Política POL-EMP-001 v1.0 */}
+          <div className={`space-y-5 text-slate-700 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-inner transition-all duration-300 ${
+            isExpandedText ? 'max-h-none' : 'max-h-[380px] overflow-y-auto scrollbar-thin'
+          }`}>
+            <div className="text-center border-b border-slate-200 pb-3 mb-4">
+              <h3 className="font-black text-[#1F222E] text-base uppercase">
+                POLÍTICA INSTITUCIONAL DE RESPONSABILIDAD, HIGIENE Y CALIDAD
               </h3>
-              <p>
-                Establecer las condiciones, responsabilidades y procedimientos que deben cumplir los emprendimientos afiliados para garantizar la calidad, higiene y seguridad de los productos ofrecidos, delimitando que la responsabilidad recae de forma exclusiva en el emprendedor.
+              <p className="text-[11px] text-slate-500 font-mono">POL-EMP-001 v1.0 — Universidad del Norte, Barranquilla</p>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                1. OBJETIVO
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                Establecer las condiciones, responsabilidades y procedimientos que deben cumplir los emprendimientos afiliados a la plataforma UniPide para garantizar la calidad, higiene y seguridad de los productos y servicios ofrecidos a la comunidad universitaria, delimitando claramente que dicha responsabilidad recae de forma exclusiva en el emprendedor, y definiendo el rol de la plataforma como intermediario tecnológico no productor.
               </p>
             </div>
 
             <div>
-              <h3 className="font-extrabold text-[#1F222E] text-sm border-b border-slate-200 pb-1 mb-2">
-                2. Directrices & Exención de Responsabilidad
-              </h3>
-              <p>
-                El emprendimiento es el único responsable de la inocuidad, frescura y calidad de sus productos. La plataforma UniPide actúa únicamente como intermediario tecnológico.
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                2. ALCANCE
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                Esta política aplica a todos los emprendimientos estudiantiles que soliciten afiliación o se encuentren afiliados a la plataforma UniPide en la Universidad del Norte, especialmente aquellos que comercialicen alimentos, bebidas, ropa, accesorios, productos manufacturados o presten servicios en el campus.
               </p>
             </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                3. DEFINICIONES
+              </h4>
+              <ul className="text-xs space-y-1 list-disc pl-4 text-slate-700">
+                <li><strong>Emprendimiento Afiliado:</strong> Persona natural o grupo de estudiantes inscritos que ofrecen bienes o servicios a través de la plataforma UniPide.</li>
+                <li><strong>Plataforma (UniPide):</strong> Canal digital que facilita el contacto, catálogo y recepción de pedidos entre estudiantes usuarios y emprendimientos de Uninorte.</li>
+                <li><strong>Buenas Prácticas de Manufactura (BPM):</strong> Principios básicos y prácticas de higiene en la manipulación, almacenamiento y preparación de alimentos y artículos.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                4. DIRECTRICES Y RESPONSABILIDAD EXCLUSIVA DE CALIDAD E HIGIENE
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                El emprendedor afiliado asume la <strong>responsabilidad total y exclusiva</strong> de la inocuidad, frescura, vigencia de fechas de vencimiento, etiquetado, empaque y calidad de sus productos. La plataforma UniPide, su equipo directivo y su representante legal Richard Francisco Guzmán Guzmán (CEO), actúan únicamente como un canal de intermediación tecnológica y no ejercen labores de producción, preparación, empaque ni distribución directa de los bienes comercializados, quedando exentos de responsabilidad sanitaria, civil o legal.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                5. BUENAS PRÁCTICAS EN LA PREPARACIÓN Y ENTREGA EN CAMPUS
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700 mb-1.5">
+                Los emprendimientos afiliados se comprometen expresamente a:
+              </p>
+              <ul className="text-xs space-y-1 list-disc pl-4 text-slate-700">
+                <li>Utilizar insumos frescos, utensilios limpios y empaques debidamente sellados que protejan el contenido de contaminación externa.</li>
+                <li>Mantener la cadena de frío y temperaturas adecuadas de conservación para productos perecederos durante su transporte y entrega en Uninorte.</li>
+                <li>Abstenerse estrictamente de vender productos vencidos, alterados, deteriorados o no autorizados por el reglamento del campus.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                6. AUTONOMÍA E INDEPENDENCIA OPERATIVA
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                La afiliación a UniPide no constituye relación laboral, subordinación de empleo, representación mercantil ni sociedad comercial entre el emprendedor y UniPide. Cada emprendedor opera como comerciante independiente.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                7. DERECHO DE SUSPENSIÓN Y RETIRO DE LA PLATAFORMA
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                UniPide se reserva la facultad de suspender o retirar de forma definitiva la tienda virtual de cualquier emprendimiento que registre quejas reiteradas o graves sobre calidad, higiene o violaciones al reglamento institucional.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1F222E] text-xs uppercase tracking-wider border-b border-slate-150 pb-1 mb-1.5 text-[#D85A30]">
+                8. DECLARACIÓN JURAMENTADA Y ACEPTACIÓN DE TÉRMINOS
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-700">
+                Al diligenciar los datos a continuación y trazar la firma manuscrita, el estudiante o representante legal declara bajo gravedad de juramento haber leído, comprendido y aceptado en su totalidad las cláusulas de esta Política POL-EMP-001 v1.0.
+              </p>
+            </div>
+
+            {!isExpandedText && (
+              <div className="text-center pt-3 pb-1 border-t border-slate-200 bg-amber-50/50 rounded-xl p-2">
+                <button
+                  type="button"
+                  onClick={() => setIsExpandedText(true)}
+                  className="text-xs font-black text-[#D85A30] hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Haz clic aquí para ampliar y desplegar las 8 cláusulas completas sin desplazarte</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Formulario de Firma Digital Juramentada & Canvas Manuscrito */}

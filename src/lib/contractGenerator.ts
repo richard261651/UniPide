@@ -69,33 +69,57 @@ export async function generateDigitalContractDocument(data: ContractData) {
  <p>Establecer las condiciones, responsabilidades y procedimientos que deben cumplir los emprendimientos afiliados a la plataforma UniPide para garantizar la calidad, higiene y seguridad de los productos que ofrecen a los usuarios universitarios, delimitando claramente que dicha responsabilidad recae de forma exclusiva en el emprendedor, y definiendo el rol de la plataforma como intermediario tecnológico no productor.</p>
 
  <h3 class="section-title">2. ALCANCE</h3>
- <p>Esta política aplica a todos los emprendimientos estudiantiles que soliciten afiliación o se encuentren afiliados a la plataforma UniPide en la Universidad del Norte, especialmente aquellos que comercialicen alimentos, bebidas y productos manufacturados.</p>
+ <p>Esta política aplica a todos los emprendimientos estudiantiles que soliciten afiliación o se encuentren afiliados a la plataforma UniPide en la Universidad del Norte, especialmente aquellos que comercialicen alimentos, bebidas, ropa, accesorios, productos manufacturados o servicios dentro del campus universitario.</p>
 
  <h3 class="section-title">3. DEFINICIONES</h3>
  <ul>
- <li><strong>Emprendimiento Afiliado:</strong> Persona natural o grupo de estudiantes inscritos que ofrecen bienes a través de la plataforma.</li>
- <li><strong>Plataforma (UniPide):</strong> Canal digital que facilita el contacto, catálogo y pedido entre usuarios y emprendimientos de Uninorte.</li>
- <li><strong>Buenas Prácticas de Manufactura (BPM):</strong> Principios básicos y prácticas de higiene en la manipulación y preparación de alimentos.</li>
+ <li><strong>Emprendimiento Afiliado:</strong> Persona natural o grupo de estudiantes inscritos que ofrecen bienes o servicios a través de la plataforma UniPide.</li>
+ <li><strong>Plataforma (UniPide):</strong> Canal digital que facilita el contacto, catálogo y recepción de pedidos entre estudiantes usuarios y emprendimientos de Uninorte.</li>
+ <li><strong>Buenas Prácticas de Manufactura (BPM):</strong> Principios básicos y prácticas de higiene en la manipulación, almacenamiento y preparación de alimentos y artículos.</li>
  </ul>
 
- <h3 class="section-title">4. DIRECTRICES Y RESPONSABILIDAD EXCLUSIVA</h3>
- <p>El emprendedor afiliado asume la responsabilidad total de la inocuidad, frescura, etiquetado y calidad de sus productos. La plataforma UniPide, representada por Richard Francisco Guzmán Guzmán (CEO), actúa únicamente como facilitador tecnológico y no ejerce labores de producción ni empaque directo.</p>
+ <h3 class="section-title">4. DIRECTRICES Y RESPONSABILIDAD EXCLUSIVA DE CALIDAD E HIGIENE</h3>
+ <p>El emprendedor afiliado asume la <strong>responsabilidad total y exclusiva</strong> de la inocuidad, frescura, vigencia de fechas de vencimiento, etiquetado, empaque y calidad de sus productos. La plataforma UniPide, su equipo directivo y su representante legal Richard Francisco Guzmán Guzmán (CEO), actúan únicamente como un canal de intermediación tecnológica y no ejercen labores de producción, preparación, empaque ni distribución directa de los bienes comercializados, quedando exentos de responsabilidad sanitaria, civil o legal.</p>
 
- <h3 class="section-title">5. DECLARACIÓN JURAMENTADA DE ACEPTACIÓN</h3>
- <p>Yo, <strong>${data.nombreFirmante}</strong>, identificado con documento/código <strong>${data.documentoFirmante}</strong>, en calidad de representante de <strong>${data.nombreNegocio}</strong>, declaro juramentadamente haber leído, entendido y aceptado de manera voluntaria los términos de la Política POL-EMP-001 v1.0 emitida el 18 de agosto de 2026.</p>
+ <h3 class="section-title">5. BUENAS PRÁCTICAS EN LA PREPARACIÓN Y ENTREGA EN CAMPUS</h3>
+ <p>Los emprendimientos afiliados se comprometen a:</p>
+ <ul>
+ <li>Utilizar insumos frescos, utensilios higiénicos y empaques debidamente sellados que protejan el contenido de contaminación externa.</li>
+ <li>Mantener las condiciones adecuadas de conservación y temperatura para productos perecederos durante la estadía y entrega en el campus de la Universidad del Norte.</li>
+ <li>Abstenerse estrictamente de vender productos vencidos, alterados, deteriorados o prohibidos por el reglamento institucional.</li>
+ </ul>
 
-  <div class="stamp-box">
+ <h3 class="section-title">6. AUTONOMÍA E INDEPENDENCIA OPERATIVA</h3>
+ <p>La afiliación a la plataforma UniPide no constituye relación laboral, subordinación de empleo, representación mercantil ni sociedad comercial entre el emprendedor y UniPide. Cada emprendedor opera con total autonomía e independencia.</p>
+
+ <h3 class="section-title">7. DERECHO DE SUSPENSIÓN Y RETIRO DE LA TIENDA</h3>
+ <p>UniPide se reserva la facultad de suspender o retirar de forma preventiva o definitiva la tienda virtual de cualquier emprendimiento que registre quejas graves o reiteradas sobre la calidad de los productos, falta de higiene, manipulación inadecuada o violaciones al reglamento del campus universitario.</p>
+
+ <h3 class="section-title">8. DECLARACIÓN JURAMENTADA Y ACEPTACIÓN DE TÉRMINOS</h3>
+ <p>Yo, <strong>${data.nombreFirmante}</strong>, identificado con documento/código <strong>${data.documentoFirmante}</strong>, en calidad de representante de <strong>${data.nombreNegocio}</strong>, declaro juramentadamente haber leído, entendido y aceptado de manera voluntaria los términos y condiciones de la Política POL-EMP-001 v1.0 emitida el 18 de agosto de 2026.</p>
+
+  <div class="stamp-box" style="background-color: #F0FDF4; border: 2px border-dashed #4ADE80; border-radius: 14px; padding: 20px; margin-top: 35px; text-align: center;">
     <div style="font-size: 14px; font-weight: 800; color: #15803D;">FIRMADO LEGALMENTE Y VERIFICADO DIGITALMENTE</div>
+    
+    <div style="margin: 12px 0; font-size: 13px; color: #1f2937;">
+      <strong>Firmante Responsable:</strong> ${data.nombreFirmante} | <strong>Cédula:</strong> ${data.documentoFirmante}
+    </div>
+
     ${
       data.firmaVirtualBase64
         ? `<div style="margin: 15px 0; text-align: center;">
             <p style="font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 6px;">FIRMA VIRTUAL MANUSCRITA TRAZADA:</p>
-            <img src="${data.firmaVirtualBase64}" alt="Firma Manuscrita Virtual" style="max-height: 80px; max-width: 280px; margin: 0 auto; display: block; border-bottom: 1.5px solid #0f172a;" />
+            <div style="display: inline-block; background-color: #ffffff; padding: 8px 16px; border-radius: 10px; border: 1px solid #cbd5e1;">
+              <img src="${data.firmaVirtualBase64}" alt="Firma Manuscrita Virtual" style="max-height: 90px; max-width: 320px; margin: 0 auto; display: block; border-bottom: 2px solid #0f172a; padding-bottom: 4px;" />
+            </div>
           </div>`
-        : ''
+        : `<div style="margin: 12px 0; text-align: center; font-style: italic; color: #475569; font-size: 11px;">
+            Firma Aceptada mediante Verificación de Cuenta de Usuario y Código de Cédula (${data.documentoFirmante})
+          </div>`
     }
-    <div style="font-size: 11px; color: #166534; margin-top: 4px;">Estampa de Firma Digital Criptográfica (SHA-256):</div>
-    <div class="hash">${digitalHash}</div>
+    
+    <div style="font-size: 11px; color: #166534; margin-top: 8px;">Estampa de Firma Digital Criptográfica (SHA-256):</div>
+    <div class="hash" style="font-family: monospace; font-size: 11px; color: #166534; word-break: break-all; margin-top: 4px; font-weight: bold;">${digitalHash}</div>
   </div>
 
  <div class="footer">

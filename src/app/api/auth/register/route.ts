@@ -128,14 +128,7 @@ export async function POST(request: NextRequest) {
         count++;
       }
 
-      const founderCount = await prisma.business.count({
-        where: { esFundador: true, estadoAprobacion: { in: ['APROBADO', 'PENDIENTE'] } },
-      });
-      const isFounder = founderCount < 10;
       const now = new Date();
-      const threeMonths = new Date(now);
-      threeMonths.setMonth(threeMonths.getMonth() + 3);
-
       const nombreFirmanteFinal = body.nombreFirmante?.trim() || nombre.trim();
       const documentoFirmanteFinal = body.documentoFirmante?.trim() || body.telefono || 'ID Estudiantil Uninorte';
 
@@ -168,13 +161,7 @@ export async function POST(request: NextRequest) {
           tiempoBasePrepMin: 0,
           estadoAprobacion: 'PENDIENTE',
           activo: false,
-          pagoVerificado: false,
-          esFundador: isFounder,
           fechaAprobacion: null,
-          fechaInicioPromocion: null,
-          fechaFinPromocion: null,
-          suscripcionMonto: isFounder ? 19900 : 29900,
-          suscripcionEstado: 'PENDIENTE_PAGO',
           firmaPoliticaHigiene: true,
           fechaFirmaPolitica: now,
           versionPolitica: 'POL-EMP-001 v1.0',

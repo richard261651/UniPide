@@ -40,7 +40,6 @@ export default function EmprendedorLayout({ children }: { children: React.ReactN
     { href: '/emprendedor', label: 'Resumen & Métricas', icon: LayoutDashboard, exact: true },
     { href: '/emprendedor/pedidos', label: 'Pedidos Entrantes', icon: ShoppingBag },
     { href: '/emprendedor/productos', label: 'Catálogo de Productos', icon: UtensilsCrossed },
-    { href: '/emprendedor/suscripcion', label: 'Mi Suscripción & Pago', icon: CreditCard },
     { href: '/emprendedor/pqrs', label: 'PQRS Recibidas', icon: FileText },
     { href: '/emprendedor/perfil', label: 'Perfil del Negocio', icon: Store },
   ];

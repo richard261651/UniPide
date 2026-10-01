@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { getSessionFromRequest } from '@/lib/auth';
 import { generateDigitalContractDocument } from '@/lib/contractGenerator';
 import { uploadContractToGoogleDrive } from '@/lib/googleDrive';
+import { sendSignedContractEmail } from '@/lib/email';
 
 export async function POST(
   request: NextRequest,
@@ -60,6 +61,20 @@ export async function POST(
       nombreNegocio: business.nombre,
       documentoFirmante: documentoFirmante.trim(),
     });
+
+    // 3. Enviar copia oficial del contrato firmado por correo electrónico (Mailjet / Resend)
+    const recipientEmail = business.user?.correo || session.correo;
+    await sendSignedContractEmail({
+      toEmail: recipientEmail,
+      nombreEmprendedor: nombreFirmante.trim(),
+      nombreNegocio: business.nombre,
+      documentoFirmante: documentoFirmante.trim(),
+      fechaFirma: now,
+      contractFileName: contractDoc.fileName,
+      contractHtmlContent: contractDoc.htmlDocument,
+      businessId: business.id,
+      driveUrl: driveResult.driveUrl,
+    }).catch((err) => console.error('⚠️ [Aviso] Error enviando correo con contrato:', err));
 
     // 3. Actualizar la base de datos con los datos de firma y la imagen de firma manuscrita
     const updated = await prisma.business.update({

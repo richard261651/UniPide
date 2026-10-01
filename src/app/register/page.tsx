@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { isValidEmail } from '@/lib/utils';
-import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin, QrCode, Sparkles, Copy, Check, ShieldCheck, FileText } from 'lucide-react';
+import { ShoppingBag, Store, Shield, Loader2, ArrowRight, CheckCircle2, Lock, Mail, User, Phone, MapPin, QrCode, Sparkles, Copy, Check, ShieldCheck, FileText, ExternalLink, RefreshCw, AlertCircle } from 'lucide-react';
 import PolicySignatureModal from '@/components/PolicySignatureModal';
 
 const CAMPUS_ZONES = [
@@ -40,6 +40,8 @@ export default function RegisterPage() {
  const [emailCode, setEmailCode] = useState('');
  const [verifyingEmail, setVerifyingEmail] = useState(false);
  const [emailVerified, setEmailVerified] = useState(false);
+ const [resendingEmail, setResendingEmail] = useState(false);
+ const [resendSuccess, setResendSuccess] = useState('');
 
  // Datos de usuario
  const [nombre, setNombre] = useState('');
@@ -224,6 +226,29 @@ export default function RegisterPage() {
  setVerifyingEmail(false);
  }
  };
+
+  const handleResendEmailCode = async () => {
+    setResendingEmail(true);
+    setError('');
+    setResendSuccess('');
+    try {
+      const res = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, action: 'resend' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Error al reenviar el código por correo');
+      } else {
+        setResendSuccess('¡Nuevo código enviado! Revisa tu bandeja de entrada o carpeta de Spam/Promociones.');
+      }
+    } catch (err: any) {
+      setError('Error al conectar para reenviar código por correo');
+    } finally {
+      setResendingEmail(false);
+    }
+  };
 
  const copySecretToClipboard = () => {
  navigator.clipboard.writeText(totpSecret);
@@ -621,7 +646,7 @@ export default function RegisterPage() {
  <div className="bg-slate-900 text-white rounded-2xl p-4 text-xs space-y-2 text-center">
  <div className="flex items-center justify-center gap-2 text-amber-400 font-bold text-sm">
  <Mail className="w-5 h-5 text-amber-400 shrink-0" />
- <span>Verificación de Correo Gmail Obligatoria</span>
+ <span>Verificación de Correo Obligatoria</span>
  </div>
  <p className="text-[11px] text-slate-300 leading-relaxed">
  Enviamos un código de verificación de 6 dígitos a tu correo registrado: <strong className="text-white font-mono">{correo}</strong>.
@@ -631,9 +656,27 @@ export default function RegisterPage() {
  </p>
  </div>
 
+ {resendSuccess && (
+ <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl font-bold flex items-center gap-2">
+ <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+ <span>{resendSuccess}</span>
+ </div>
+ )}
+
+ {/* Aviso sobre carpeta SPAM / Correo No Deseado */}
+ <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 text-[11px] rounded-xl font-medium space-y-1">
+ <div className="font-bold flex items-center gap-1.5 text-amber-800">
+ <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+ <span>¿No ves el correo en tu bandeja principal?</span>
+ </div>
+ <p className="leading-relaxed">
+ Por favor revisa tu carpeta de <strong>SPAM, Correo No Deseado o Promociones</strong> en tu cuenta de correo ({correo}). A veces los servicios de correo filtran los mensajes automáticos.
+ </p>
+ </div>
+
  <div>
  <label className="block text-xs font-bold text-gray-800 mb-1.5 text-center">
- Ingresa el Código de 6 dígitos recibido en tu Gmail *
+ Ingresa el Código de 6 dígitos recibido por Correo *
  </label>
  <div className="relative max-w-xs mx-auto">
  <input
@@ -648,7 +691,7 @@ export default function RegisterPage() {
  </div>
  </div>
 
- <div className="flex gap-2 pt-2">
+ <div className="space-y-2 pt-2">
  <button
  type="submit"
  disabled={verifyingEmail || emailCode.trim().length !== 6}
@@ -657,12 +700,31 @@ export default function RegisterPage() {
  {verifyingEmail ? (
  <>
  <Loader2 className="w-4 h-4 animate-spin text-white" />
- <span>Verificando Correo Gmail...</span>
+ <span>Verificando Correo...</span>
  </>
  ) : (
  <>
  <CheckCircle2 className="w-4 h-4 text-white" />
- <span>Verificar Correo Gmail y Activar Cuenta</span>
+ <span>Verificar Correo y Activar Cuenta</span>
+ </>
+ )}
+ </button>
+
+ <button
+ type="button"
+ onClick={handleResendEmailCode}
+ disabled={resendingEmail}
+ className="w-full py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer"
+ >
+ {resendingEmail ? (
+ <>
+ <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-700" />
+ <span>Reenviando Nuevo Código...</span>
+ </>
+ ) : (
+ <>
+ <RefreshCw className="w-3.5 h-3.5 text-slate-600" />
+ <span>¿No recibiste el correo? Reenviar Código Ahora</span>
  </>
  )}
  </button>

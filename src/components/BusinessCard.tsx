@@ -34,13 +34,7 @@ export default function BusinessCard({ business }: BusinessCardProps) {
 
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
 
-          {/* Insignia de Fundador */}
-          {business.esFundador && (
-            <span className="absolute top-3 left-3 bg-amber-400 text-slate-900 text-[10px] font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1 border border-amber-300">
-              <Award className="w-3 h-3 text-slate-900 fill-slate-900" />
-              <span>Fundador UniPide</span>
-            </span>
-          )}
+
 
           {/* Badge de Categoría */}
           <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-[#1F222E] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs tracking-wider">

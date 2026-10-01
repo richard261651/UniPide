@@ -30,7 +30,7 @@ export default function PreciosPage() {
         </div>
       </section>
 
-      {/* Rejilla de Precios Duales (Lanzamiento $19.900 vs Estándar $29.900) */}
+      {/* Beneficios 100% Gratuitos */}
       <LaunchPricingSection />
 
       {/* Proceso de Afiliación en 4 Pasos */}
@@ -62,9 +62,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#D85A30] text-white font-black text-xs rounded-full flex items-center justify-center">
                 2
               </span>
-              <h3 className="font-extrabold text-slate-900 text-sm">Pago de Suscripción</h3>
+              <h3 className="font-extrabold text-slate-900 text-sm">Creación de Catálogo</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
-                Realizas el pago de la tarifa correspondiente por Nequi, Daviplata o Transferencia Bancaria directa a la administración.
+                Añades tus productos, postres o servicios con imágenes, descripciones y precios para tus compradores estudiantiles.
               </p>
             </div>
 
@@ -73,9 +73,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#D85A30] text-white font-black text-xs rounded-full flex items-center justify-center">
                 3
               </span>
-              <h3 className="font-extrabold text-slate-900 text-sm">Verificación del Admin</h3>
+              <h3 className="font-extrabold text-slate-900 text-sm">Aprobación del Admin</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
-                El Administrador confirma la recepción del pago en el Portal Admin, activa tu cuenta de emprendedor y autoriza la apertura del negocio.
+                El Administrador revisa la información de tu negocio y la firma de la política para autorizar la apertura oficial.
               </p>
             </div>
 
@@ -84,9 +84,9 @@ export default function PreciosPage() {
               <span className="w-7 h-7 bg-[#0F6E56] text-white font-black text-xs rounded-full flex items-center justify-center">
                 4
               </span>
-              <h3 className="font-extrabold text-emerald-950 text-sm">Apertura & Correo</h3>
+              <h3 className="font-extrabold text-emerald-950 text-sm">Tienda Abierta</h3>
               <p className="text-emerald-800 font-medium leading-relaxed">
-                Recibes un correo electrónico automático informándote que tu negocio está abierto y listo para publicar productos en el campus Uninorte.
+                Recibes la notificación por correo y tu emprendimiento queda activo para recibir pedidos de todo el campus Uninorte.
               </p>
             </div>
           </div>
