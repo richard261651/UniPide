@@ -128,7 +128,7 @@ export default function Navbar() {
               >
                 <ShoppingBag className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#D9534F] text-white text-[10px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#F56649] text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-md border border-white leading-none">
                     {totalItems}
                   </span>
                 )}
@@ -398,7 +398,7 @@ export default function Navbar() {
           <div className="relative">
             <ShoppingBag className="w-5 h-5 text-slate-700" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-amber-500 text-slate-950 text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+              <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] px-1 bg-[#F56649] text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-md border border-white leading-none">
                 {totalItems}
               </span>
             )}
