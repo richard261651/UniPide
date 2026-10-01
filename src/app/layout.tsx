@@ -19,9 +19,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://unipide.com'),
   title: 'UniPide | Marketplace de Emprendimientos Uninorte',
   description:
-    'Pide comida, postres, bebidas y accesorios con UniPide, el marketplace de emprendimientos estudiantiles dentro del campus de la Universidad del Norte en Barranquilla.',
+    'Plataforma oficial de pedidos para los emprendimientos de la Universidad del Norte. Creada y liderada por Richard Guzmán (CEO). Campus Km 5 Vía Puerto Colombia.',
   keywords: [
     'UniPide',
     'Uninorte',
@@ -39,9 +40,32 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
-    shortcut: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
-    apple: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+      { url: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  openGraph: {
+    title: 'UniPide | Marketplace de Emprendimientos Uninorte',
+    description: 'Plataforma oficial de pedidos para los emprendimientos de la Universidad del Norte.',
+    url: 'https://unipide.com',
+    siteName: 'UniPide',
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dre8hlhdo/image/upload/w_512,h_512/v1787119598/icono_uuke26.png',
+        width: 512,
+        height: 512,
+        alt: 'UniPide Logo',
+      },
+    ],
+    locale: 'es_CO',
+    type: 'website',
   },
 };
 
@@ -59,7 +83,8 @@ export default function RootLayout({
         name: 'UniPide',
         alternateName: 'UniPide Uninorte',
         url: 'https://unipide.com',
-        logo: 'https://res.cloudinary.com/dre8hlhdo/image/upload/v1787119598/icono_uuke26.svg',
+        logo: 'https://unipide.com/icon-512.png',
+        image: 'https://unipide.com/icon-512.png',
         description: 'Marketplace oficial de emprendimientos estudiantiles en el campus de la Universidad del Norte en Barranquilla.',
         address: {
           '@type': 'PostalAddress',
@@ -84,6 +109,11 @@ export default function RootLayout({
   return (
     <html lang="es" className="scroll-smooth antialiased">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+        <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

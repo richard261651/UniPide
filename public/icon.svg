@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Base Squircle Terracota Oscuro -->
+  <rect x="16" y="16" width="480" height="480" rx="110" ry="110" fill="#B43E1B" />
+
+  <!-- Estructura 'U' -->
+  <path d="M 160 170 
+           L 160 300 
+           A 65 65 0 0 0 290 300 
+           L 290 260" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="48" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Mástil vertical de la 'P' -->
+  <line x1="290" y1="110" x2="290" y2="390" 
+        stroke="#FFFFFF" 
+        stroke-width="48" 
+        stroke-linecap="round" />
+
+  <!-- Bucle superior de la 'P' (Estilo Pin) -->
+  <path d="M 290 110 
+           C 380 110, 380 250, 290 250" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="48" 
+        stroke-linecap="round" />
+
+  <!-- Punto interior del pin -->
+  <circle cx="290" cy="180" r="13" fill="#FFFFFF" />
+</svg>
